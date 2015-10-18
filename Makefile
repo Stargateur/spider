@@ -5,7 +5,7 @@
 ## Login   <plasko_a@epitech.eu>
 ## 
 ## Started on  Sun Oct 18 06:48:22 2015 Antoine Plaskowski
-## Last update Sun Oct 18 06:58:36 2015 Antoine Plaskowski
+## Last update Sun Oct 18 07:05:25 2015 Antoine Plaskowski
 ##
 
 SERVER		=	spider_server
@@ -24,14 +24,9 @@ LEVEL		?=	3
 
 COLOR		?=	no
 
-LIB		=	
+LIB		=	$(shell pkg-config --libs libssl)
 
-INCLUDE		=	-I include -I include/server -I include/client
-
-CFLAGS		+=	-Wall -Wextra -O$(LEVEL)
-CFLAGS		+=	-ansi -pedantic
-CFLAGS		+=	$(INCLUDE)
-CFLAGS          +=      -D _POSIX_SOURCE -D _GNU_SOURCE -D _XOPEN_SOURCE
+INCLUDE		=	-I include -I include/server -I include/client $(shell pkg-config --cflags libssl)
 
 CXXFLAGS	+=	-Wall -Wextra -O$(LEVEL)
 CXXFLAGS	+=	-ansi -pedantic
