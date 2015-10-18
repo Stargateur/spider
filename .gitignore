@@ -1,0 +1,6 @@
+*.o
+*~
+*.dpd
+\#*#
+/spider_server
+/spider_ai
