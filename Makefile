@@ -5,7 +5,7 @@
 ## Login   <plasko_a@epitech.eu>
 ## 
 ## Started on  Sun Oct 18 06:48:22 2015 Antoine Plaskowski
-## Last update Sun Oct 18 07:05:25 2015 Antoine Plaskowski
+## Last update Tue Oct 20 14:37:44 2015 Antoine Plaskowski
 ##
 
 SERVER		=	spider_server
@@ -24,12 +24,15 @@ LEVEL		?=	3
 
 COLOR		?=	no
 
-LIB		=	$(shell pkg-config --libs libssl)
+LIB		=	$(shell pkg-config --libs libssl libcrypto)
+LIB		+=	$(shell mysql_config --libs)
 
-INCLUDE		=	-I include -I include/server -I include/client $(shell pkg-config --cflags libssl)
+INCLUDE		=	-I include -I include/server -I include/client
+INCLUDE		+=	$(shell pkg-config --cflags libssl)
+INCLUDE		+=	$(shell mysql_config --cflags)
 
 CXXFLAGS	+=	-Wall -Wextra -O$(LEVEL)
-CXXFLAGS	+=	-ansi -pedantic
+CXXFLAGS	+=	-ansi -pedantic -std=c++11
 CXXFLAGS	+=	$(INCLUDE)
 
 ifeq ($(CC), clang)
@@ -70,7 +73,7 @@ OBJ_CLIENT	=	$(SRC_CLIENT:.cpp=.o)
 all		:	$(SERVER) $(CLIENT)
 
 $(SERVER)	:	$(OBJ_SERVER)
-			$(CC) $(OBJ_SERVER) -o $(SERVER) $(LDFLAGS)
+			$(CXX) $(OBJ_SERVER) -o $(SERVER) $(LDFLAGS)
 
 $(CLIENT)	:	$(OBJ_CLIENT)
 			$(CXX) $(OBJ_CLIENT) -o $(CLIENT) $(LDFLAGS)
