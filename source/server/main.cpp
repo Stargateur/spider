@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 18 06:53:16 2015 Antoine Plaskowski
-// Last update Tue Oct 20 15:54:17 2015 Antoine Plaskowski
+// Last update Tue Oct 20 22:01:37 2015 Antoine Plaskowski
 //
 
 #include	<unistd.h>
@@ -61,7 +61,6 @@ int		main(int argc, char **argv)
     if (result)
       {
 	/* yes; process rows and free the result set */
-	process_result_set(con, result);
 	mysql_free_result(result);
       }
     else          /* no result set or error */
@@ -78,9 +77,9 @@ int		main(int argc, char **argv)
 	  }
       }
     /* more results? -1 = no, >0 = error, 0 = yes (keep looping) */
-    if ((status = mysql_next_result(con)) > 0)
+    if ((ret = mysql_next_result(con)) > 0)
       printf("Could not execute statement\n");
-  } while (status == 0);
+  } while (ret == 0);
   mysql_close(con);
   exit(0);
   int           sfd;
