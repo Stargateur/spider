@@ -5,12 +5,15 @@
 ## Login   <plasko_a@epitech.eu>
 ## 
 ## Started on  Sun Oct 18 06:48:22 2015 Antoine Plaskowski
-## Last update Thu Oct 22 01:28:21 2015 Antoine Plaskowski
+## Last update Thu Oct 22 01:57:51 2015 Antoine Plaskowski
 ##
 
 SERVER		=	spider_server
 
 CLIENT		=	spider_client
+
+PATH_TIME	=	lib/time/
+TIME		=	$(PATH_TIME)lib_time_linux.so
 
 CXX		?=	g++
 
@@ -64,13 +67,16 @@ DPD_CLIENT	=	$(SRC_CLIENT:.cpp=.dpd)
 
 OBJ_CLIENT	=	$(SRC_CLIENT:.cpp=.o)
 
-all		:	$(SERVER) $(CLIENT)
+all		:	$(SERVER) $(CLIENT) $(TIME)
 
 $(SERVER)	:	$(OBJ_SERVER)
 			$(CXX) $(OBJ_SERVER) -o $(SERVER) $(LDFLAGS)
 
 $(CLIENT)	:	$(OBJ_CLIENT)
 			$(CXX) $(OBJ_CLIENT) -o $(CLIENT) $(LDFLAGS)
+
+$(TIME)		:
+			$(MAKE) -C $(PATH_TIME)
 
 clean		:
 			$(RM) -f $(OBJ_SERVER)
