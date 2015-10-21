@@ -5,7 +5,7 @@
 ## Login   <plasko_a@epitech.eu>
 ## 
 ## Started on  Sun Oct 18 06:48:22 2015 Antoine Plaskowski
-## Last update Tue Oct 20 14:37:44 2015 Antoine Plaskowski
+## Last update Thu Oct 22 01:28:21 2015 Antoine Plaskowski
 ##
 
 SERVER		=	spider_server
@@ -35,21 +35,15 @@ CXXFLAGS	+=	-Wall -Wextra -O$(LEVEL)
 CXXFLAGS	+=	-ansi -pedantic -std=c++11
 CXXFLAGS	+=	$(INCLUDE)
 
-ifeq ($(CC), clang)
-CFLAGS		+=	-Weverything -Wno-padded -Wno-disabled-macro-expansion
-endif
-
 ifeq ($(CXX), clang++)
 CXXFLAGS	+=	-Weverything -Wno-padded -Wno-disabled-macro-expansion
 endif
 
 ifneq ($(DEBUG), no)
-CFLAGS		+=	-g
 CXXFLAGS	+=	-g
 endif
 
 ifneq ($(COLOR), no)
-CFLAGS		+=	-fdiagnostics-color
 CXXFLAGS	+=	-fdiagnostics-color
 endif
 

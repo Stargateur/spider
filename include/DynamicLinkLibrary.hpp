@@ -1,40 +1,40 @@
 //
-// Dll.hpp for Dll in /home/plasko_a/projet/cplusplus/cpp_nibbler
+// DynamicLinkLibrary.hpp for DynamicLinkLibrary in /home/plasko_a/projet/cplusplus/cpp_nibbler
 // 
 // Made by Antoine Plaskowski
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Mon Mar 30 22:26:06 2015 Antoine Plaskowski
-// Last update Wed Apr  1 16:53:17 2015 Antoine Plaskowski
+// Last update Thu Oct 22 01:20:16 2015 Antoine Plaskowski
 //
 
-#ifndef		DLL_HPP_
-# define	DLL_HPP_
+#ifndef		DYNAMICLINKLIBRARY_HPP_
+# define	DYNAMICLINKLIBRARY_HPP_
 
 # include	<string>
 # include	<dlfcn.h>
-# include	"DllException.hpp"
+# include	"DynamicLinkLibraryException.hpp"
 
-class		Dll
+class		DynamicLinkLibrary
 {
 public:
-  Dll(std::string const &path_lib);
-  ~Dll(void);
+  DynamicLinkLibrary(std::string const &path_lib);
+  ~DynamicLinkLibrary(void);
   template<typename T>
   T const	getSymbole(std::string const &str_symbole) const
   {
     if (m_handle == NULL)
       {
 	if (m_dlopen_dlerror != NULL)
-	  throw (DllException(m_dlopen_dlerror));
-	throw (DllException("Error unknown"));
+	  throw (DynamicLinkLibraryException(m_dlopen_dlerror));
+	throw (DynamicLinkLibraryException("Error unknown"));
       }
     
     (void)dlerror();
     T	const symbole = reinterpret_cast<T>(dlsym(m_handle, str_symbole.c_str()));
     char const * const	str = dlerror();
     if (str != NULL)
-      throw (DllException(str));
+      throw (DynamicLinkLibraryException(str));
     return (symbole);
   }
 private:
@@ -42,4 +42,4 @@ private:
   char const *	m_dlopen_dlerror;
 };
 
-#endif		/* !DLL_HPP_ */
+#endif		/* !DYNAMICLINKLIBRARY_HPP_ */

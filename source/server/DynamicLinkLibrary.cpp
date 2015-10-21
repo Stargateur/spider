@@ -1,20 +1,20 @@
 //
-// Dll.cpp for Dll in /home/plasko_a/projet/cplusplus/cpp_nibbler
+// DynamicLinkLibrary.cpp for DynamicLinkLibrary in /home/plasko_a/projet/cplusplus/cpp_nibbler
 // 
 // Made by Antoine Plaskowski
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Mon Mar 30 22:28:36 2015 Antoine Plaskowski
-// Last update Sun Apr  5 20:03:28 2015 Antoine Plaskowski
+// Last update Thu Oct 22 01:19:18 2015 Antoine Plaskowski
 //
 
 #include	<dlfcn.h>
 #include	<iostream>
 #include	<string>
-#include	"Dll.hpp"
-#include	"DllException.hpp"
+#include	"DynamicLinkLibrary.hpp"
+#include	"DynamicLinkLibraryException.hpp"
 
-Dll::Dll(std::string const &path_lib) :
+DynamicLinkLibrary::DynamicLinkLibrary(std::string const &path_lib) :
   m_handle(dlopen(path_lib.c_str(), RTLD_LAZY)),
   m_dlopen_dlerror(NULL)
 {
@@ -22,7 +22,7 @@ Dll::Dll(std::string const &path_lib) :
     m_dlopen_dlerror = dlerror();
 }
 
-Dll::~Dll(void)
+DynamicLinkLibrary::~DynamicLinkLibrary(void)
 {
   if (m_handle != NULL)
     {
