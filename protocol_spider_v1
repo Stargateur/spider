@@ -156,10 +156,13 @@ Table of Contents
     | 5          | Client already muted                  |
     | 6          | Client not muted                      |
     | 7          | Invalid command                       |
-    | 8          | Invalid input                         |
-    | 9          | Unknown client ID                     |
+    | 8          | Invalid keyboard input                |
+    | 8          | Invalid mouse input                   |
+    | 9          | Unknown ID                            |
     | 10         | Wrong protocol version                |
     | 11         | Wrong Mac address                     |
+    | 12         | Connect fail                          |
+    | 13         | Disconnect fail                       |
     +------------+---------------------------------------+
   
       Table 6: error code definition
@@ -351,19 +354,19 @@ Table of Contents
    
       Table 20: Keyboard packet data structure
 
-    +--------+---------+----------------------------+
-    | name   | Type    | Description                |
-    +--------+---------+----------------------------+
-    | second | int64_t | The timestamp of the event |
-    | event  | uint8_t | Type of the keyboard event |
-    | name   | string  | Name of the key            |
-    +--------+---------+----------------------------+
+    +---------+---------+----------------------------+
+    | name    | Type    | Description                |
+    +---------+---------+----------------------------+
+    | second  | int64_t | The timestamp of the event |
+    | nano    | int64_t | The timestamp of the event |
+    | event   | uint8_t | Type of the keyboard event |
+    | name    | string  | Name of the key            |
+    | process | string  | proccesus name             |
+    +---------+---------+----------------------------+
 
       Table 21: Keyboard structure
 
     * "name" : The readable name of the key ("a", "b", ";").
-    This doesn't include modifier keys (if "<MAJ>" is pressed, the key
-    still be "a")
 
     * "event" :
 
@@ -375,43 +378,6 @@ Table of Contents
     +------------+----------+--------------------------+
 
       Table 22: Event code definition
-
-    +---------+---------------+
-    | Value   | Description   |
-    +---------+---------------+
-    | ALT     | Alt left      |
-    | ALTGR   | Alt right     |
-    | BCKSP   | Backspace     |
-    | CAPS    | Capslock      |
-    | CTRLL   | Control Left  |
-    | CTRLR   | Control Right |
-    | DEL     | Delete        |
-    | DOWN    | Down          |
-    | END     | End           |
-    | ENTER   | Enter         |
-    | F1      | F1            |
-    | F12     | F12           |
-    | FN      | FN            |
-    | HOME    | Home          |
-    | INSER   | Insert        |
-    | LEFT    | Left          |
-    | MAJL    | Shift Left    |
-    | MAJR    | Shift Right   |
-    | MENU    | Menu          |
-    | NLOCK   | Num Lock      |
-    | PAUSE   | Pause         |
-    | PGDOWN  | Page Down     |
-    | PGUP    | Page Up       |
-    | PSCREEN | Print Screen  |
-    | RIGHT   | Right         |
-    | SLOCK   | Scroll Lock   |
-    | SUPER   | Super (Win)   |
-    | TABL    | Tab Left      |
-    | TABR    | Tab Right     |
-    | UP      | Up            |
-    +---------+---------------+
-
-      Table 23: Specials Key definition
 
 4.8.  Mouse input
 
@@ -437,11 +403,13 @@ Table of Contents
     | name       | Field type | Description                |
     +------------+------------+----------------------------+
     | second     | int64_t    | The timestamp of the event |
+    | nano       | int64_t    | The timestamp of the event |
     | pos_x      | uint32_t   | Position x of the mouse    |
     | pos_y      | uint32_t   | Position y of the mouse    |
     | amount     | uint64_t   | Amount                     |
     | event      | uint8_t    | Type of the button event   |
     | name       | string     | Name of the button         |
+    | process    | string     | proccesus name             |
     +------------+------------+----------------------------+
 
       Table 26: Mouse structure
