@@ -229,6 +229,22 @@ Table of Contents
 
       Table 11: Connect packet header structure
 
+4.5.  Disconnect packet
+
+    The "Disconnect" packet is used by a client to disconnect to a server.
+
+    This packet must be send if a client want to disconnect from server.
+
+    +--------+-------+
+    | Name   | Value |
+    +--------+-------+
+    | opcode | ?     |
+    | id     | ?     |
+    | size   | 0     |
+    +--------+-------+
+
+      Table ??: Disconnect packet header structure
+
 4.4.  ServerCmd packet
 
     The "ServerCmd" is used by the server to control the client's behavior.
