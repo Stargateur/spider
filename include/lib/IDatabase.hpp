@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Wed Oct 21 23:43:13 2015 Antoine Plaskowski
-// Last update Wed Oct 21 23:46:01 2015 Antoine Plaskowski
+// Last update Thu Oct 22 09:21:25 2015 Antoine Plaskowski
 //
 
 #ifndef		IDATABASE_HPP_
@@ -16,8 +16,8 @@
 class	IDatabase
 {
 public:
-  bool connect(string const * host = nullptr, string const * port = nullptr, string const * user = nullptr, string const * passwd = nullptr, string const * db = nullptr);
-  bool select_db(string const & db);
+  bool connect(std::string const * host = nullptr, std::string const * port = nullptr, std::string const * user = nullptr, std::string const * passwd = nullptr, std::string const * db = nullptr);
+  bool select_db(std::string const & db);
 };
 
 #endif		/* !IDATABASE_HPP_ */

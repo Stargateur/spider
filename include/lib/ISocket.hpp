@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 20:47:26 2015 Bertrand-Rapello Baptiste
-// Last update Thu Oct 22 07:20:49 2015 Antoine Plaskowski
+// Last update Thu Oct 22 09:33:50 2015 Antoine Plaskowski
 //
 
 #ifndef		ISOCKET_HPP_
@@ -38,8 +38,8 @@ public:
 
 extern "C"
 {
-# define	NAME_FCT_NEW_ISOCKET	new_isocket
-  ISocket	*NAME_FCT_NEW_ISOCKET(void);
+# define	NAME_FCT_NEW_ISOCKET	"new_isocket"
+  ISocket	*new_isocket(void);
   typedef	ISocket *(*fct_new_isocket)(void);
 }
 

@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 22:51:48 2015 Bertrand-Rapello Baptiste
-// Last update Thu Oct 22 07:03:27 2015 Antoine Plaskowski
+// Last update Thu Oct 22 09:35:14 2015 Antoine Plaskowski
 //
 
 #include	<sys/socket.h>
@@ -257,7 +257,7 @@ bool	Socket::set_fd(int fd)
   return (true);
 }
 
-ISocket	*NAME_FCT_NEW_ISOCKET(void)
+ISocket	*new_socket(void)
 {
   return (new Socket());
 }

@@ -5,7 +5,7 @@
 ## Login   <plasko_a@epitech.eu>
 ## 
 ## Started on  Sun Oct 18 06:48:22 2015 Antoine Plaskowski
-## Last update Thu Oct 22 07:02:02 2015 Antoine Plaskowski
+## Last update Thu Oct 22 09:51:35 2015 Antoine Plaskowski
 ##
 
 SERVER		=	spider_server
@@ -15,6 +15,8 @@ CLIENT		=	spider_client
 PATH_TIME	=	lib/time/
 
 PATH_SOCKET	=	lib/socket/
+
+PATH_PROTOCOLV1	=	lib/protocolv1/
 
 CXX		?=	g++
 
@@ -71,6 +73,7 @@ OBJ_CLIENT	=	$(SRC_CLIENT:.cpp=.o)
 all		:	$(SERVER) $(CLIENT) $(TIME) $(SOCKET)
 			$(MAKE) -C $(PATH_TIME)
 			$(MAKE) -C $(PATH_SOCKET)
+			$(MAKE) -C $(PATH_PROTOCOLV1)
 
 $(SERVER)	:	$(OBJ_SERVER)
 			$(CXX) $(OBJ_SERVER) -o $(SERVER) $(LDFLAGS)
@@ -85,13 +88,14 @@ clean		:
 			$(RM) -f $(DPD_CLIENT)
 			$(MAKE) -C $(PATH_TIME) clean
 			$(MAKE) -C $(PATH_SOCKET) clean
-
+			$(MAKE) -C $(PATH_PROTOCOLV1) clean
 
 fclean		:	clean
 			$(RM) -f $(SERVER)
 			$(RM) -f $(CLIENT)
 			$(MAKE) -C $(PATH_TIME) fclean
 			$(MAKE) -C $(PATH_SOCKET) fclean
+			$(MAKE) -C $(PATH_PROTOCOLV1) fclean
 
 re		:	fclean
 			$(MAKE) -C .

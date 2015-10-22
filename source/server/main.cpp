@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 18 06:53:16 2015 Antoine Plaskowski
-// Last update Thu Oct 22 07:05:08 2015 Antoine Plaskowski
+// Last update Thu Oct 22 09:46:41 2015 Antoine Plaskowski
 //
 
 #include	"DynamicLinkLibrary.hpp"
@@ -17,6 +17,7 @@
 #include	<openssl/conf.h>
 #include	<mysql.h>
 #include	<string.h>
+#include	<time.h>
 #include	"create_binded_socket.h"
 #include	"accept_client.h"
 #include	"ITime.hpp"
@@ -29,9 +30,11 @@ int		main(int argc, char **argv)
   MYSQL_RES *result;
 
   dll.load_dll(argv[1]);
-  fct_new_itime lol = dll.get_symbole<fct_new_itime>("NAME_FCT_NEW_ITIME");
+  fct_new_itime lol = dll.get_symbole<fct_new_itime>(NAME_FCT_NEW_ITIME);
   ITime *titi = lol();
   titi->now();
+  time_t timexd = titi->get_second();
+  std::cout << ctime(&timexd) << std::endl;
   std::cout << titi->get_second() << std::endl;
   std::cout << titi->get_nano() << std::endl;
   return (0);
