@@ -1,4 +1,4 @@
-Antoine PLASKOWSKI
+Antoine PLASKOWSKI : antoine.plaskowski@epitech.eu
 
 
                        Spider Network Protocol v1
@@ -16,14 +16,15 @@ Table of Contents
     4.  Protocol packets definition . . . . . . . . . . . . . . . . .
       4.1.  Result packet . . . . . . . . . . . . . . . . . . . . . .
       4.2.  MAC address packet  . . . . . . . . . . . . . . . . . . .
-      4.3.  Connect packet  . . . . . . . . . . . . . . . . . . . . .
-      4.4.  ServerCmd packet  . . . . . . . . . . . . . . . . . . . .
-      4.5.  ClientLog packet  . . . . . . . . . . . . . . . . . . . .
-      4.6.  Ping packet . . . . . . . . . . . . . . . . . . . . . . .
-      4.7.  Pong packet . . . . . . . . . . . . . . . . . . . . . . .
-      4.8.  Keyboard packet . . . . . . . . . . . . . . . . . . . . .
-      4.8.  mouse packet  . . . . . . . . . . . . . . . . . . . . . .
-    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .
+      4.3.  Version packet  . . . . . . . . . . . . . . . . . . . . .
+      4.4.  Connect packet  . . . . . . . . . . . . . . . . . . . . .
+      4.5.  Disconnect packet . . . . . . . . . . . . . . . . . . . .
+      4.6.  ServerCmd packet  . . . . . . . . . . . . . . . . . . . .
+      4.7.  ClientLog packet  . . . . . . . . . . . . . . . . . . . .
+      4.8.  Ping packet . . . . . . . . . . . . . . . . . . . . . . .
+      4.9.  Pong packet . . . . . . . . . . . . . . . . . . . . . . .
+      4.10.  Keyboard packet . . . . . . . . . . . . . . . . . . . . .
+      4.11.  mouse packet  . . . . . . . . . . . . . . . . . . . . . .
 
 1.  Introduction
 
@@ -246,9 +247,9 @@ Table of Contents
     | size   | 0     |
     +--------+-------+
 
-      Table ??: Disconnect packet header structure
+      Table 12: Disconnect packet header structure
 
-4.4.  ServerCmd packet
+4.6.  ServerCmd packet
 
     The "ServerCmd" is used by the server to control the client's behavior.
 
@@ -260,7 +261,7 @@ Table of Contents
     | Data size | 1     |
     +-----------+-------+
 
-      Table 12: Connect packet header structure
+      Table 13: Connect packet header structure
 
     +---------+----------------+---------------------+
     | Name    | Data type      | Description         |
@@ -268,7 +269,7 @@ Table of Contents
     | command | uint8_t        | Command code        |
     +---------+----------------+---------------------+
 
-      Table 13: Connect packet data structure
+      Table 14: Connect packet data structure
 
     +--------------+--------+---------------------------------------+
     | Command code | name   | Description                           |
@@ -279,9 +280,9 @@ Table of Contents
     | 3            | unmute | stops the client from sending inputs  |
     +--------------+--------+---------------------------------------+
 
-      Table 14: Command code definition
+      Table 15: Command code definition
 
-4.5.  ClientLog packet
+4.7.  ClientLog packet
 
    The "ClientLog" packet is used by the client to send log messages to
    the server, for debug or other.
@@ -294,7 +295,7 @@ Table of Contents
    | size   | ?     |
    +--------+-------+
 
-     Table 15: ClientLog packet header structure
+     Table 16: ClientLog packet header structure
 
    +-------+--------+---------------------+
    | Name  | type   | Description         |
@@ -302,9 +303,9 @@ Table of Contents
    | msg   | string | The message to send |
    +-------+--------+---------------------+
 
-     Table 16: ClientLog packet data structure
+     Table 17: ClientLog packet data structure
 
-4.6.  Ping packet
+4.8.  Ping packet
 
     When a "Ping" packet is sent, a "Pong" packet MUST be sent back to
     the sender.
@@ -320,9 +321,9 @@ Table of Contents
     | size   | 0     |
     +--------+-------+
 
-      Table 17: Ping packet header structure
+      Table 18: Ping packet header structure
 
-4.7.  Pong packet
+4.9.  Pong packet
 
     +--------+-------+
     | Name   | Value |
@@ -332,9 +333,9 @@ Table of Contents
     | size   | 0     |
     +--------+-------+
 
-      Table 18: Pong packet header structure
+      Table 19: Pong packet header structure
 
-4.8.  Keyboard packet
+4.10.  Keyboard packet
 
     +--------+-------+
     | Name   | Value |
@@ -344,7 +345,7 @@ Table of Contents
     | size   | ?     |
     +--------+-------+
 
-      Table 19: Keyboard packet header structure
+      Table 20: Keyboard packet header structure
 
     +-------+-----------------+------------------+
     | Name  | Type            | Description      |
@@ -352,7 +353,7 @@ Table of Contents
     | data  | array[keyboard] | Input data array |
     +-------+-----------------+------------------+
    
-      Table 20: Keyboard packet data structure
+      Table 21: Keyboard packet data structure
 
     +---------+---------+----------------------------+
     | name    | Type    | Description                |
@@ -364,7 +365,7 @@ Table of Contents
     | process | string  | proccesus name             |
     +---------+---------+----------------------------+
 
-      Table 21: Keyboard structure
+      Table 22: Keyboard structure
 
     * "name" : The readable name of the key ("a", "b", ";").
 
@@ -377,9 +378,9 @@ Table of Contents
     | 1          | released | when the key is releases |
     +------------+----------+--------------------------+
 
-      Table 22: Event code definition
+      Table 23: Event code definition
 
-4.8.  Mouse input
+4.11.  Mouse input
 
     +--------+-------+
     | Name   | Value |
