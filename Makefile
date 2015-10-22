@@ -5,7 +5,7 @@
 ## Login   <plasko_a@epitech.eu>
 ## 
 ## Started on  Sun Oct 18 06:48:22 2015 Antoine Plaskowski
-## Last update Thu Oct 22 01:57:51 2015 Antoine Plaskowski
+## Last update Thu Oct 22 02:04:09 2015 Antoine Plaskowski
 ##
 
 SERVER		=	spider_server
@@ -30,7 +30,7 @@ COLOR		?=	no
 LIB		=	$(shell pkg-config --libs libssl libcrypto)
 LIB		+=	$(shell mysql_config --libs)
 
-INCLUDE		=	-I include -I include/server -I include/client
+INCLUDE		=	-I include -I include/server -I include/client -I include/lib
 INCLUDE		+=	$(shell pkg-config --cflags libssl)
 INCLUDE		+=	$(shell mysql_config --cflags)
 

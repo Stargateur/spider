@@ -5,17 +5,18 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 22:51:48 2015 Bertrand-Rapello Baptiste
-// Last update Wed Oct 21 23:33:14 2015 Bertrand-Rapello Baptiste
+// Last update Thu Oct 22 02:09:56 2015 Antoine Plaskowski
 //
 
 #include "ISocket.hpp"
+#include "Socket.hpp"
 
-Socket::Socket()
+Socket::Socket(void)
 {
   
 }
 
-Socket::~Socket()
+Socket::~Socket(void)
 {
 
 }
@@ -35,28 +36,22 @@ bool Socket::accept(ISocket const & sock)
 
 }
 
-std::string const & get_ip()
+std::string const &get_ip(void)
 {
 
 }
 
-bool Socket::standard_io(ISocket::io )
-{
-  
-}
-
-bool Socket::can_read()
+bool Socket::standard_io(ISocket::io io)
 {
   
 }
 
-bool Socket::can_write()
-{
-
-}
-
-ITime const & Socket::get_timeout()
+bool Socket::can_read(void)
 {
   
 }
 
+bool Socket::can_write(void)
+{
+
+}
