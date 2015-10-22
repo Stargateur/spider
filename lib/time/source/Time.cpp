@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 21:04:15 2015 Bertrand-Rapello Baptiste
-// Last update Thu Oct 22 01:46:48 2015 Antoine Plaskowski
+// Last update Thu Oct 22 02:48:09 2015 Antoine Plaskowski
 //
 
 #include	"Time.hpp"
@@ -34,4 +34,9 @@ bool	Time::now(void)
   if (clock_gettime(CLOCK_REALTIME, &m_timespec) == -1)
     return true;
   return false;
+}
+
+ITime	*new_itime(void)
+{
+  return (new Time());
 }

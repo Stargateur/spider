@@ -5,9 +5,10 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 18 06:53:16 2015 Antoine Plaskowski
-// Last update Thu Oct 22 02:21:07 2015 Antoine Plaskowski
+// Last update Thu Oct 22 02:54:34 2015 Antoine Plaskowski
 //
 
+#include	"DynamicLinkLibrary.hpp"
 #include	<unistd.h>
 #include	<stdio.h>
 #include	<iostream>
@@ -22,9 +23,18 @@
 
 int		main(int argc, char **argv)
 {
+  DynamicLinkLibrary	dll;
   int		ret;
   MYSQL *con = mysql_init(NULL);
   MYSQL_RES *result;
+
+  dll.load_dll(argv[1]);
+  fct_new_itime lol = dll.get_symbole<fct_new_itime>(NAME_FCT_NEW_ITIME);
+  ITime *titi = lol();
+  titi->now();
+  std::cout << titi->get_second() << std::endl;
+  std::cout << titi->get_nano() << std::endl;
+  return (0);
   if (con == NULL)
     {
       fprintf(stderr, "%s\n", mysql_error(con));

@@ -5,7 +5,7 @@
 ## Login   <plasko_a@epitech.eu>
 ## 
 ## Started on  Sun Oct 18 06:48:22 2015 Antoine Plaskowski
-## Last update Thu Oct 22 02:19:01 2015 Antoine Plaskowski
+## Last update Thu Oct 22 03:00:13 2015 Antoine Plaskowski
 ##
 
 SERVER		=	spider_server
@@ -89,14 +89,14 @@ clean		:
 			$(RM) -f $(OBJ_CLIENT)
 			$(RM) -f $(DPD_SERVER)
 			$(RM) -f $(DPD_CLIENT)
-			$(MAKE) -C $(PATH_SOCKET) clean
+			$(MAKE) -C $(PATH_TIME) clean
 			$(MAKE) -C $(PATH_SOCKET) clean
 
 
 fclean		:	clean
 			$(RM) -f $(SERVER)
 			$(RM) -f $(CLIENT)
-			$(MAKE) -C $(PATH_SOCKET) fclean
+			$(MAKE) -C $(PATH_TIME) fclean
 			$(MAKE) -C $(PATH_SOCKET) fclean
 
 re		:	fclean
