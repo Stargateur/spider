@@ -5,7 +5,7 @@
 ## Login   <plasko_a@epitech.eu>
 ## 
 ## Started on  Sun Oct 18 06:48:22 2015 Antoine Plaskowski
-## Last update Thu Oct 22 09:51:35 2015 Antoine Plaskowski
+## Last update Thu Oct 22 21:59:24 2015 Bertrand-Rapello Baptiste
 ##
 
 SERVER		=	spider_server
@@ -17,6 +17,8 @@ PATH_TIME	=	lib/time/
 PATH_SOCKET	=	lib/socket/
 
 PATH_PROTOCOLV1	=	lib/protocolv1/
+
+PATH_DATABASE	=	lib/database/
 
 CXX		?=	g++
 
@@ -74,6 +76,7 @@ all		:	$(SERVER) $(CLIENT) $(TIME) $(SOCKET)
 			$(MAKE) -C $(PATH_TIME)
 			$(MAKE) -C $(PATH_SOCKET)
 			$(MAKE) -C $(PATH_PROTOCOLV1)
+			$(MAKE) -C $(PATH_DATABASE)
 
 $(SERVER)	:	$(OBJ_SERVER)
 			$(CXX) $(OBJ_SERVER) -o $(SERVER) $(LDFLAGS)
@@ -89,6 +92,7 @@ clean		:
 			$(MAKE) -C $(PATH_TIME) clean
 			$(MAKE) -C $(PATH_SOCKET) clean
 			$(MAKE) -C $(PATH_PROTOCOLV1) clean
+			$(MAKE) -C $(PATH_DATABASE) clean
 
 fclean		:	clean
 			$(RM) -f $(SERVER)
@@ -96,6 +100,7 @@ fclean		:	clean
 			$(MAKE) -C $(PATH_TIME) fclean
 			$(MAKE) -C $(PATH_SOCKET) fclean
 			$(MAKE) -C $(PATH_PROTOCOLV1) fclean
+			$(MAKE) -C $(PATH_DATABASE) fclean
 
 re		:	fclean
 			$(MAKE) -C .
