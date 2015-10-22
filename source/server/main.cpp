@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 18 06:53:16 2015 Antoine Plaskowski
-// Last update Thu Oct 22 02:54:34 2015 Antoine Plaskowski
+// Last update Thu Oct 22 07:05:08 2015 Antoine Plaskowski
 //
 
 #include	"DynamicLinkLibrary.hpp"
@@ -29,7 +29,7 @@ int		main(int argc, char **argv)
   MYSQL_RES *result;
 
   dll.load_dll(argv[1]);
-  fct_new_itime lol = dll.get_symbole<fct_new_itime>(NAME_FCT_NEW_ITIME);
+  fct_new_itime lol = dll.get_symbole<fct_new_itime>("NAME_FCT_NEW_ITIME");
   ITime *titi = lol();
   titi->now();
   std::cout << titi->get_second() << std::endl;
