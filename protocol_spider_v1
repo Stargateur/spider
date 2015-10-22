@@ -241,7 +241,7 @@ Table of Contents
     +--------+-------+
     | Name   | Value |
     +--------+-------+
-    | opcode | ?     |
+    | opcode | 4     |
     | id     | ?     |
     | size   | 0     |
     +--------+-------+
@@ -255,7 +255,7 @@ Table of Contents
     +-----------+-------+
     | Name      | Value |
     +-----------+-------+
-    | Opcode    | 4     |
+    | Opcode    | 5     |
     | id        | ?     |
     | Data size | 1     |
     +-----------+-------+
@@ -289,7 +289,7 @@ Table of Contents
    +--------+-------+
    | Name   | Value |
    +--------+-------+
-   | Opcode | 4     |
+   | Opcode | 6     |
    | id     | ?     |
    | size   | ?     |
    +--------+-------+
@@ -315,7 +315,7 @@ Table of Contents
     +--------+-------+
     | Name   | Value |
     +--------+-------+
-    | Opcode | 5     |
+    | Opcode | 7     |
     | id     | ?     |
     | size   | 0     |
     +--------+-------+
@@ -327,7 +327,7 @@ Table of Contents
     +--------+-------+
     | Name   | Value |
     +--------+-------+
-    | Opcode | 6     |
+    | Opcode | 8     |
     | id     | ?     |
     | size   | 0     |
     +--------+-------+
@@ -339,7 +339,7 @@ Table of Contents
     +--------+-------+
     | Name   | Value |
     +--------+-------+
-    | Opcode | 7     |
+    | Opcode | 9     |
     | id     | ?     |
     | size   | ?     |
     +--------+-------+
@@ -384,7 +384,7 @@ Table of Contents
     +--------+-------+
     | Name   | Value |
     +--------+-------+
-    | opcode | 8     |
+    | opcode | 10    |
     | id     | ?     |
     | size   | ?     |
     +--------+-------+

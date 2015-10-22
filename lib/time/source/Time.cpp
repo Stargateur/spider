@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 21:04:15 2015 Bertrand-Rapello Baptiste
-// Last update Thu Oct 22 02:48:09 2015 Antoine Plaskowski
+// Last update Thu Oct 22 07:37:18 2015 Antoine Plaskowski
 //
 
 #include	"Time.hpp"
@@ -36,7 +36,7 @@ bool	Time::now(void)
   return false;
 }
 
-ITime	*new_itime(void)
+ITime	*NAME_FCT_NEW_ITIME(void)
 {
   return (new Time());
 }
