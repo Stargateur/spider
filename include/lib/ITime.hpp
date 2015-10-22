@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 20:44:16 2015 Bertrand-Rapello Baptiste
-// Last update Thu Oct 22 02:52:01 2015 Antoine Plaskowski
+// Last update Thu Oct 22 03:46:52 2015 Antoine Plaskowski
 //
 
 #ifndef ITIME_HPP_
@@ -25,7 +25,7 @@ public:
 extern "C"
 {
 # define	NAME_FCT_NEW_ITIME	"new_itime"
-  ITime		*new_itime(void);
+  ITime	*new_itime(void);
   typedef	ITime *(*fct_new_itime)(void);
 }
 
