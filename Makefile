@@ -5,7 +5,7 @@
 ## Login   <plasko_a@epitech.eu>
 ## 
 ## Started on  Sun Oct 18 06:48:22 2015 Antoine Plaskowski
-## Last update Thu Oct 22 02:04:09 2015 Antoine Plaskowski
+## Last update Thu Oct 22 02:19:01 2015 Antoine Plaskowski
 ##
 
 SERVER		=	spider_server
@@ -14,6 +14,9 @@ CLIENT		=	spider_client
 
 PATH_TIME	=	lib/time/
 TIME		=	$(PATH_TIME)lib_time_linux.so
+
+PATH_SOCKET	=	lib/socket/
+SOCKET		=	$(PATH_SOCKET)lib_socket_linux.so
 
 CXX		?=	g++
 
@@ -67,7 +70,7 @@ DPD_CLIENT	=	$(SRC_CLIENT:.cpp=.dpd)
 
 OBJ_CLIENT	=	$(SRC_CLIENT:.cpp=.o)
 
-all		:	$(SERVER) $(CLIENT) $(TIME)
+all		:	$(SERVER) $(CLIENT) $(TIME) $(SOCKET)
 
 $(SERVER)	:	$(OBJ_SERVER)
 			$(CXX) $(OBJ_SERVER) -o $(SERVER) $(LDFLAGS)
@@ -78,18 +81,26 @@ $(CLIENT)	:	$(OBJ_CLIENT)
 $(TIME)		:
 			$(MAKE) -C $(PATH_TIME)
 
+$(SOCKET)	:
+			$(MAKE) -C $(PATH_SOCKET)
+
 clean		:
 			$(RM) -f $(OBJ_SERVER)
 			$(RM) -f $(OBJ_CLIENT)
 			$(RM) -f $(DPD_SERVER)
 			$(RM) -f $(DPD_CLIENT)
+			$(MAKE) -C $(PATH_SOCKET) clean
+			$(MAKE) -C $(PATH_SOCKET) clean
+
 
 fclean		:	clean
 			$(RM) -f $(SERVER)
 			$(RM) -f $(CLIENT)
+			$(MAKE) -C $(PATH_SOCKET) fclean
+			$(MAKE) -C $(PATH_SOCKET) fclean
 
 re		:	fclean
-			$(MAKE) -C . all
+			$(MAKE) -C .
 
 %.dpd		:	%.c
 			$(CC) -MM $(<) -o $(@) $(CFLAGS) -MT $(<:.c=.o)

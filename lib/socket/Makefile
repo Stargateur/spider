@@ -5,7 +5,7 @@
 ## Login   <plasko_a@epitech.eu>
 ## 
 ## Started on  Thu Oct 22 01:26:02 2015 Antoine Plaskowski
-## Last update Thu Oct 22 02:01:26 2015 Antoine Plaskowski
+## Last update Thu Oct 22 02:18:55 2015 Antoine Plaskowski
 ##
 
 NAME		=	lib_socket_linux.so
@@ -68,7 +68,8 @@ clean		:
 fclean		:	clean
 			$(RM) -f $(NAME)
 
-re		:	fclean all
+re		:	fclean
+			$(MAKE) -C .
 
 %.dpd		:	%.cpp
 			$(CXX) -MM $(<) -o $(@) $(CXXFLAGS) -MT $(<:.cpp=.o)
