@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 18 06:53:16 2015 Antoine Plaskowski
-// Last update Fri Oct 23 11:14:37 2015 Antoine Plaskowski
+// Last update Fri Oct 23 17:16:23 2015 Bertrand-Rapello Baptiste
 //
 
 #include	<unistd.h>
@@ -26,14 +26,20 @@
 int		main(int argc, char **argv)
 {
   DynamicLinkLibrary	dll;
+  std::string str = "";
+  DynamicLinkLibrary    dllbis;
 
   dll.load_dll(argv[1]);
   fct_new_idatabase lol = dll.get_symbole<fct_new_idatabase>(NAME_FCT_NEW_IDATABASE);
+  dll.load_dll(argv[2]);
+  fct_new_itime lolbis = dll.get_symbole<fct_new_itime>(NAME_FCT_NEW_ITIME);
   IDatabase *titi = lol();
+  ITime *toto = lolbis();
 
   titi->connect("localhost", "0", "root", "motsmint", "testspider");
+  titi->select_db("testspider");
+  titi->insert_keyboard("ieieriri", *toto, "pressed", "a", "explorer");
   
-
   return (0);
   // if (con == NULL)
   //   {

@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 21:04:15 2015 Bertrand-Rapello Baptiste
-// Last update Thu Oct 22 22:33:22 2015 Bertrand-Rapello Baptiste
+// Last update Fri Oct 23 17:17:26 2015 Bertrand-Rapello Baptiste
 //
 
 #include	"Database.hpp"
@@ -31,9 +31,16 @@ bool  Database::connect(std::string const &host, std::string const &port, std::s
 
 bool Database::select_db(std::string const & db)
 {
+  MYSQL_RES *res;
+  MYSQL_FIELD *field;
+  MYSQL_ROW row;
   int rtr = 0;
+  int ret = 0;
+  unsigned int nbFields = 0;
+  unsigned long long nbRows = 0;
   std::string cmd;
-
+  std::string rtrBis;
+  
   cmd = "CREATE DATABASE ";
   rtr = mysql_select_db(m_db, db.c_str());
   if (rtr != 0)
@@ -50,12 +57,87 @@ bool Database::select_db(std::string const & db)
 	  rtr = mysql_query(m_db, cmd.c_str());
 	}
     }
+  /*
+  mysql_query(m_db, "SELECT * FROM client");
+  res = mysql_store_result(m_db);
+  nbFields = mysql_num_fields(res);
+  nbRows = mysql_num_rows(res);
+  field = mysql_fetch_field(res);
+  std::cout << "nombre de champ " << nbFields << " nombre de row " <<  nbRows << "nom du champ " << field->name << std::endl;;
+  unsigned long *lengths;
+  unsigned int i = 0;
+  while ((row = mysql_fetch_row(res)) != NULL)
+    {
+      //lengths = mysql_fetch_lengths(res);
+      for (i = 0; i < nbFields; i++)
+	{
+	  std::cout << "row[" << i << "]  " << row[i] << std::endl;
+	}
+    }
+  */
   return false;
 }
 
 bool Database::insert_keyboard(const std::string  & mac_address, const ITime  & tme, std::string event, const std::string & key, const std::string & process)
 {
+  std::string cmd = "INSERT INTO keyboard_inputbis (id_client, day, hours, id_key, state, id_process) VALUES (";
+  std::string clientName;
+  MYSQL_RES *res;
+  MYSQL_FIELD *field;
+  MYSQL_ROW row;
+  unsigned int nbFields = 0;
+  unsigned long long nbRows = 0;
+  int rtr = 0;
+  int ret = 0;
+  int stop = 0;
+  unsigned int i = 0;
+  int	lastid = 0;
   
+  mysql_query(m_db, "SELECT * FROM client"); 
+  res = mysql_store_result(m_db);
+  nbFields = mysql_num_fields(res);
+  nbRows = mysql_num_rows(res);
+  field = mysql_fetch_field(res);
+
+  while ((row = mysql_fetch_row(res)) != NULL && stop != 1)
+    {
+      //lengths = mysql_fetch_lengths(res);
+      for (i = 0; i < nbFields; i+=2)
+	{
+	  lastid = std::stoi(row[i]);
+	  std::cout << "row[" << i << "]  " << row[i] << " et " << row[i+1]  << std::endl;
+	  clientName = row[i+1];
+	  if (clientName == mac_address)
+	    {
+	      cmd += row[i];
+	      cmd += ", ";
+	      stop = 1;
+	    }
+	}
+    }
+  std::cout << stop << std::endl;
+  if (stop != 1)
+    {
+      std::string toAdd = "INSERT INTO client (id, mac_addr) VALUES (";
+      toAdd += std::to_string(lastid+1);
+      toAdd += ", \"";
+      toAdd += mac_address;
+      toAdd += "\");";
+      //mysql_query(m_db, toAdd);
+      std::cout << "jai ajoute un client et ma ligne de cmd " << toAdd << std::endl;
+      mysql_query(m_db, toAdd.c_str());
+      cmd += std::to_string(lastid+1);
+      cmd += ", ";
+    }
+
+  std::cout << cmd << std::endl;
+  cmd += "NULL, NULL, NULL, \"";
+  cmd += event;
+  cmd += "\", 1);";
+  std::cout << cmd << std::endl;
+  mysql_query(m_db, cmd.c_str());
+  
+  //cmd = "INSERT INTO keyboard_inputbis (id_client\"";
   return false;
 }
 
