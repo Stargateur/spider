@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 18 06:53:16 2015 Antoine Plaskowski
-// Last update Fri Oct 23 11:10:26 2015 Antoine Plaskowski
+// Last update Fri Oct 23 11:14:37 2015 Antoine Plaskowski
 //
 
 #include	<unistd.h>
@@ -21,24 +21,27 @@
 #include	"ISocket.hpp"
 #include	"IProtocol.hpp"
 #include	"DynamicLinkLibrary.hpp"
+#include	"IDatabase.hpp"
 
 int		main(int argc, char **argv)
 {
-  // DynamicLinkLibrary	dll;
-  // int		ret;
-  // MYSQL *con = mysql_init(NULL);
-  // MYSQL_RES *result;
+  DynamicLinkLibrary	dll;
 
-  // dll.load_dll(argv[1]);
-  // fct_new_iprotocol lol = dll.get_symbole<fct_new_iprotocol>(NAME_FCT_NEW_IPROTOCOL);
-  // IProtocol *bite = lol(nullptr, nullptr);
-  // bite->run();
-  // return (0);
+  dll.load_dll(argv[1]);
+  fct_new_idatabase lol = dll.get_symbole<fct_new_idatabase>(NAME_FCT_NEW_IDATABASE);
+  IDatabase *titi = lol();
+
+  titi->connect("localhost", "0", "root", "motsmint", "testspider");
+  
+
+  return (0);
   // if (con == NULL)
   //   {
   //     fprintf(stderr, "%s\n", mysql_error(con));
   //     exit(1);
   //   }
+
+  //  MYSQL_RES *result;
 
   // if (mysql_real_connect(con, "localhost", "root", "paprika",
   // 			 NULL, 0, NULL, 0) == NULL)
