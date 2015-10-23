@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 22:51:48 2015 Bertrand-Rapello Baptiste
-// Last update Thu Oct 22 09:35:14 2015 Antoine Plaskowski
+// Last update Fri Oct 23 09:23:14 2015 Antoine Plaskowski
 //
 
 #include	<sys/socket.h>
@@ -34,7 +34,7 @@ Socket::~Socket(void)
     FD_CLR(m_fd, &m_fds);
 }
 
-bool	Socket::select(ITime const *timeout) const
+bool	Socket::select(ITime const *timeout)
 {
   std::memcpy(&m_readfds, &m_fds, sizeof(m_fds));
   std::memcpy(&m_writefds, &m_fds, sizeof(m_fds));
@@ -158,7 +158,7 @@ ISocket	*Socket::accept(void) const
   socklen_t	len = sizeof(sockaddr);
 
   std::memset(&socket->m_sockaddr.base, 0, sizeof(m_sockaddr));
-  int	fd = c_accept(m_fd, &socket->m_sockaddr.base, &len);
+  int	fd = ::accept(m_fd, &socket->m_sockaddr.base, &len);
   if (fd == -1)
     {
       perror("accept()");
@@ -181,8 +181,7 @@ bool	Socket::set_ip(void)
   switch (m_sockaddr.base.sa_family)
     {
     case AF_INET:
-      if (inet_ntop(AF_INET, &m_sockaddr.ipv4.sin_addr,
-		    ip.ipv4, sizeof(ip.ipv4)) != NULL)
+      if (inet_ntop(AF_INET, &m_sockaddr.ipv4.sin_addr, ip.ipv4, sizeof(ip.ipv4)) != NULL)
 	{
 	  ip.base = '\0';
 	  perror("inet_ntop()");
@@ -190,8 +189,7 @@ bool	Socket::set_ip(void)
 	}
       break;
     case AF_INET6:
-      if (inet_ntop(AF_INET6, &m_sockaddr.ipv6.sin6_addr,
-		    ip.ipv6, sizeof(ip.ipv6)) != NULL)
+      if (inet_ntop(AF_INET6, &m_sockaddr.ipv6.sin6_addr, ip.ipv6, sizeof(ip.ipv6)) != NULL)
 	{
 	  ip.base = '\0';
 	  perror("inet_ntop()");
@@ -257,7 +255,32 @@ bool	Socket::set_fd(int fd)
   return (true);
 }
 
+uintmax_t	Socket::read(uint8_t *buffer, uintmax_t size) const
+{
+  if (buffer == nullptr || m_fd == FAIL)
+    return (0);
+  ssize_t	ret = ::read(m_fd, buffer, size);
+  if (ret < 0)
+    return (0);
+  return (ret);
+}
+
+uintmax_t	Socket::write(uint8_t *buffer, uintmax_t size) const
+{
+  if (buffer == nullptr || m_fd == FAIL)
+    return (0);
+  ssize_t	ret = ::write(m_fd, buffer, size);
+  if (ret < 0)
+    return (0);
+  return (ret);
+}
+
 ISocket	*new_socket(void)
 {
   return (new Socket());
+}
+
+bool	iselect(ITime const *timeout)
+{
+  return (Socket::select(timeout));
 }

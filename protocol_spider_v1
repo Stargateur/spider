@@ -23,8 +23,8 @@ Table of Contents
       4.7.  ClientLog packet  . . . . . . . . . . . . . . . . . . . .
       4.8.  Ping packet . . . . . . . . . . . . . . . . . . . . . . .
       4.9.  Pong packet . . . . . . . . . . . . . . . . . . . . . . .
-      4.10.  Keyboard packet . . . . . . . . . . . . . . . . . . . . .
-      4.11.  mouse packet  . . . . . . . . . . . . . . . . . . . . . .
+      4.10.  Keyboard packet  . . . . . . . . . . . . . . . . . . . .
+      4.11.  mouse packet . . . . . . . . . . . . . . . . . . . . . .
 
 1.  Introduction
 
@@ -275,7 +275,7 @@ Table of Contents
     | Command code | name   | Description                           |
     +--------------+--------+---------------------------------------+
     | 0            | start  | start the client from handling inputs |
-    | 1            | end    | stops the client from handling inputs |
+    | 1            | stop   | stops the client from handling inputs |
     | 2            | mute   | start the client from sending inputs  |
     | 3            | unmute | stops the client from sending inputs  |
     +--------------+--------+---------------------------------------+
@@ -360,7 +360,7 @@ Table of Contents
     +---------+---------+----------------------------+
     | second  | int64_t | The timestamp of the event |
     | nano    | int64_t | The timestamp of the event |
-    | event   | uint8_t | Type of the keyboard event |
+    | event   | string  | Type of the keyboard event |
     | name    | string  | Name of the key            |
     | process | string  | proccesus name             |
     +---------+---------+----------------------------+
@@ -390,7 +390,7 @@ Table of Contents
     | size   | ?     |
     +--------+-------+
 
-      Table 24: Keyboard packet header structure
+      Table 24: Mouse packet header structure
 
     +------+--------------+------------------+
     | Name | type         | Description      |
@@ -398,7 +398,7 @@ Table of Contents
     | data | array[mouse] | Input data array |
     +------+--------------+------------------+
    
-      Table 25: Keyboard packet data structure
+      Table 25: Mouse packet data structure
 
     +------------+------------+----------------------------+
     | name       | Field type | Description                |
@@ -408,7 +408,7 @@ Table of Contents
     | pos_x      | uint32_t   | Position x of the mouse    |
     | pos_y      | uint32_t   | Position y of the mouse    |
     | amount     | uint64_t   | Amount                     |
-    | event      | uint8_t    | Type of the button event   |
+    | event      | string     | Type of the button event   |
     | name       | string     | Name of the button         |
     | process    | string     | proccesus name             |
     +------------+------------+----------------------------+

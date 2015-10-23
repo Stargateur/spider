@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 22:50:40 2015 Bertrand-Rapello Baptiste
-// Last update Thu Oct 22 06:54:21 2015 Antoine Plaskowski
+// Last update Fri Oct 23 09:20:30 2015 Antoine Plaskowski
 //
 
 #ifndef		SOCKET_HPP_
@@ -30,7 +30,7 @@ public:
 public:
   Socket(void);
   ~Socket(void);
-  bool	select(ITime const *timeout = nullptr) const;
+  static bool	select(ITime const *timeout = nullptr);
   bool	server(std::string host = "::1", std::string port = "4242");
   bool	client(std::string host = "::1", std::string port = "4242");
   ISocket	*accept(void) const;
@@ -38,6 +38,8 @@ public:
   bool	standard_io(ISocket::io io);
   bool	can_read(void) const;
   bool	can_write(void) const;
+  uintmax_t	read(uint8_t *buffer, uintmax_t size) const;
+  uintmax_t	write(uint8_t *buffer, uintmax_t size) const;
 private:
   bool	set_fd(int fd);
   bool	set_ip(void);
@@ -57,7 +59,5 @@ private:
     struct sockaddr_in6   ipv6;
   }             m_sockaddr;
 };
-
-int	c_accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
 
 #endif	/* !ISOCKET_HPP_ */

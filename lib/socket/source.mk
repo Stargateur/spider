@@ -5,7 +5,7 @@
 ## Login   <plasko_a@epitech.eu>
 ## 
 ## Started on  Thu Oct 22 01:33:52 2015 Antoine Plaskowski
-## Last update Thu Oct 22 09:42:03 2015 Antoine Plaskowski
+## Last update Thu Oct 22 17:59:16 2015 Antoine Plaskowski
 ##
 
 PATH_SRC	=	source/
@@ -13,4 +13,3 @@ PATH_SRC	=	source/
 SRC		=	$(PATH_SRC)start_lib.cpp
 SRC		+=	$(PATH_SRC)Socket.cpp
 SRC		+=	$(PATH_SRC)ISocket.cpp
-SRC		+=	$(PATH_SRC)c_accept.cpp
