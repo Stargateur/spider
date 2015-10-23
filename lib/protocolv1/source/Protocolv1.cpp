@@ -5,10 +5,11 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Thu Oct 22 09:18:51 2015 Antoine Plaskowski
-// Last update Fri Oct 23 11:08:51 2015 Antoine Plaskowski
+// Last update Fri Oct 23 23:40:37 2015 Antoine Plaskowski
 //
 
 #include	<iostream>
+#include	<cassert>
 #include	"Protocolv1.hpp"
 
 Protocolv1::Protocolv1(ISocket *socket, ITime *time) :
@@ -16,82 +17,137 @@ Protocolv1::Protocolv1(ISocket *socket, ITime *time) :
   m_last_read(time),
   m_mac_address(),
   m_packets({}),
-  m_write(),
-  m_buffer(),
+  m_write(0),
+  m_to_write(0),
+  m_buffer({}),
   m_read(0),
   m_is_connect(false),
   m_is_stop(false),
   m_is_mute(false)
 {
+  assert(sizeof(m_buffer) != sizeof(m_buffer.buffer));
 }
 
 Protocolv1::~Protocolv1(void)
 {
-  delete m_socket;
-  delete m_last_read;
+  delete (m_socket);
+  delete (m_last_read);
 }
 
-bool	Protocolv1::run(IDatabase *database, ITime const *timeout)
+bool	Protocolv1::run(IDatabase const &database, ITime const *time)
 {
   if (m_socket->can_read() == true)
-    {
-      uintmax_t	ret = m_socket->read(m_buffer.buffer, sizeof(m_buffer) - m_read);
-      if (ret == 0)
-	return (true);
-      m_read += ret;
-
-      if (m_read < sizeof(m_buffer.packet.header))
-	return (false);
-      if (m_read < sizeof(m_buffer.packet.header) + m_buffer.packet.header.size)
-	return (false);
-      m_read = 0;
-      switch (m_buffer.packet.header.opcode)
-	{
-	case (RESULT):
-	case (MAC_ADDRESS):
-	case (VERSION):
-	case (CONNECT):
-	case (DISCONNECT):
-	case (SERVERCMD):
-	case (CLIENTLOG):
-	case (PING):
-	case (PONG):
-	case (KEYBOARD):
-	case (MOUSE):
-	default:
-	  return (true);
-	};
-    }
+    return (read(database));
+  if (time != nullptr)
+    if (timeout(*time) == true)
+      return (true);
   if (m_socket->can_write() == true)
-    {
-      if (m_write.size() != 0)
-	{
-	  uintmax_t	idx = m_write.front();
-	  m_write.pop();
-	  Packet	&packet = m_packets[idx];
-	  uintmax_t	ret = m_socket->write(packet.buffer, sizeof(packet.packet.header) + packet.packet.header.size);
+    return (write());
+  return (false);
+}
 
-	  if (ret != sizeof(packet.packet.header) + packet.packet.header.size)
-	    return (true);
-	}
+bool	Protocolv1::timeout(ITime const &time)
+{
+  if (m_last_read == nullptr)
+    return (true);
+
+  uintmax_t	second = m_last_read->get_second();
+  uintmax_t	nano = m_last_read->get_nano();
+
+  m_last_read->now();
+  m_last_read->set_second(m_last_read->get_second() - second);
+  m_last_read->set_nano(m_last_read->get_nano() - nano);
+  if (m_last_read->get_second() > time.get_second())
+    return (true);
+  if (m_last_read->get_second() == time.get_second())
+    if (m_last_read->get_nano() > time.get_nano())
+      return (true);
+  if (m_last_read->get_second() > time.get_second() / 2)
+    return (write_ping());
+  if (m_last_read->get_second() == time.get_second() / 2)
+    if (m_last_read->get_nano() > time.get_nano() / 2)
+      return (write_ping());
+  return (false);
+}
+
+bool	Protocolv1::read(IDatabase const &database)
+{
+  if (m_last_read != nullptr)
+    m_last_read->now();
+
+  uintmax_t	ret = m_socket->read(m_buffer.buffer + m_read, sizeof(m_buffer) - m_read);
+  if (ret == 0)
+    return (true);
+
+  m_read += ret;
+  if (m_read < sizeof(m_buffer.packet.header))
+    return (false);
+  if (m_read < sizeof(m_buffer.packet.header) + m_buffer.packet.header.size)
+    return (false);
+  m_read = 0;
+
+  switch (m_buffer.packet.header.opcode)
+    {
+    case (RESULT):
+      return (read_result());
+    case (MAC_ADDRESS):
+      return (read_mac_address());
+    case (VERSION):
+      return (read_version());
+    case (CONNECT):
+      return (read_connect());
+    case (DISCONNECT):
+      return (read_disconnect());
+    case (SERVERCMD):
+      return (read_servercmd());
+    case (CLIENTLOG):
+      return (read_clientlog(database));
+    case (PING):
+      return (read_ping());
+    case (PONG):
+      return (read_pong());
+    case (KEYBOARD):
+      return (read_keyboard(database));
+    case (MOUSE):
+      return (read_mouse(database));
+      ;
+    };
+  return (true);
+}
+
+bool	Protocolv1::write(void)
+{   
+  if (m_to_write != m_write)
+    {
+      Packet	&packet = m_packets[m_to_write++];
+
+      uintmax_t	ret = m_socket->write(packet.buffer, sizeof(packet.packet.header) + packet.packet.header.size);
+      if (ret != sizeof(packet.packet.header) + packet.packet.header.size)
+	return (true);
     }
   return (false);
 }
 
-bool	Protocolv1::stop(void)
+bool	Protocolv1::set_socket(ISocket *socket)
 {
+  delete (m_socket);
+  m_socket = socket;
+  m_read = 0;
+  m_mac_address.erase();
+  m_is_connect = false;
+  m_is_stop = false;
+  m_is_mute = false;
 }
 
-bool	Protocolv1::start(void)
+bool	Protocolv1::set_last_read(ITime *time)
 {
+  delete (m_last_read);
+  m_last_read = time;
 }
 
-bool	Protocolv1::mute(void)
+bool	Protocolv1::server_command(Commandcode command)
 {
-}
-
-bool	Protocolv1::unmute(void)
-{
+  return (write_servercmd(command));
 }
 
 std::string const     &Protocolv1::get_mac_address(void) const
@@ -101,89 +157,216 @@ std::string const     &Protocolv1::get_mac_address(void) const
 
 bool	Protocolv1::mac_address(std::string const &mac_address)
 {
-  //verifié que c valide
-  m_mac_address = mac_address;
-  return (false);
+  return (write_mac_address(mac_address));
 }
 
 bool	Protocolv1::log(std::string const &log)
 {
-  
+  return (write_clientlog(log));
 }
 
 bool	Protocolv1::keyboard(ITime const &time, std::string const &event, std::string const &key, std::string const &process)
 {
+  return (write_keyboard());
 }
 
 bool	Protocolv1::mouse(ITime const &time, uintmax_t x, uintmax_t y, uintmax_t amout, std::string const &event, std::string const &button, std::string const &process)
 {
+  return (write_mouse());
 }
 
 bool	Protocolv1::read_result(void)
 {
+  switch (m_buffer.packet.data[0])
+    {
+    case (NO_ERROR):
+      std::cout << "no_error" << std::endl;
+      return (false);
+    case (IGNORED):
+      std::cout << "ignored" << std::endl;
+      break;
+    case (UNKNOWN_ERROR):
+      std::cout << "unknow_error" << std::endl;
+      break;
+    case (CLIENT_ALREADY_STARTED):
+      std::cout << "client_already_started" << std::endl;
+      break;
+    case (CLIENT_ALREADY_STOPPED):
+      std::cout << "client_already_stopped" << std::endl;
+      break;
+    case (CLIENT_ALREADY_MUTED):
+      std::cout << "client_already_muted" << std::endl;
+      break;
+    case (CLIENT_ALREADY_UNMUTED):
+      std::cout << "client_already_unmuted" << std::endl;
+      break;
+    case (INVALID_COMMAND):
+      std::cout << "invalid_command" << std::endl;
+      break;
+    case (INVALID_KEYBOARD_INPUT):
+      std::cout << "invalid_keyboard_input" << std::endl;
+      break;
+    case (INVALID_MOUSE_INPUT):
+      std::cout << "invalid_mouse_input" << std::endl;
+      break;
+    case (UNKNOWN_ID):
+      std::cout << "unknown_id" << std::endl;
+      break;
+    case (WRONG_PROTOCOL_VERSION):
+      std::cout << "wrong_protocol_version" << std::endl;
+      break;
+    case (WRONG_MAC_ADDRESS):
+      std::cout << "wrong_mac_address" << std::endl;
+      break;
+    case (CONNECT_FAIL):
+      std::cout << "connect_fail" << std::endl;
+      break;
+    case (DISCONNECT_FAIL):
+      std::cout << "disconnect_fail" << std::endl;
+      break;
+    }
+  std::cout << "id du proccesus " << m_buffer.packet.data[1] << std::endl;
+  return (true);
 }
-bool	Protocolv1::write_result(void)
+
+bool	Protocolv1::write_result(Errorcode code, uint8_t id)
 {
+  Packet	&packet = m_packets[m_write];
+
+  packet.packet.data[0] = code;
+  packet.packet.data[1] = id;
+  return (write_packet(RESULT, 2));
 }
+
 bool	Protocolv1::read_mac_address(void)
 {
+  m_mac_address.erase();
+  for (uintmax_t i = 0; i < 6; i++)
+    m_mac_address += m_buffer.packet.data[i];
+  return (false);
 }
-bool	Protocolv1::write_mac_address(void)
+
+bool	Protocolv1::write_mac_address(std::string const &mac_address)
 {
+  Packet	&packet = m_packets[m_write];
+
+  for (uintmax_t i = 0; i < 6 && i < mac_address.size(); i++)
+    packet.packet.data[i] = mac_address[i];
+  return (write_packet(MAC_ADDRESS, 6));
 }
+
 bool	Protocolv1::read_version(void)
 {
+  if (m_buffer.packet.data[0] == 1)
+    return (write_result(NO_ERROR, m_buffer.packet.header.id));
+  return (write_result(WRONG_PROTOCOL_VERSION, m_buffer.packet.header.id));
 }
+
 bool	Protocolv1::write_version(void)
 {
+  return (write_packet(VERSION, 0));
 }
+
 bool	Protocolv1::read_connect(void)
 {
+  m_is_connect = true;
+  return (false);
 }
+
 bool	Protocolv1::write_connect(void)
 {
+  return (write_packet(CONNECT, 0));
 }
+
 bool	Protocolv1::read_disconnect(void)
 {
+  m_is_connect = false;
+  return (true);
 }
+
 bool	Protocolv1::write_disconnect(void)
 {
+  return (write_packet(DISCONNECT, 0));
 }
+
 bool	Protocolv1::read_servercmd(void)
 {
+  switch (m_buffer.packet.data[0])
+    {
+    case (START):
+      m_is_stop = false;
+    case (STOP):
+      m_is_stop = true;
+    case (MUTE):
+      m_is_mute = true;
+    case (UNMUTE):
+      m_is_mute = false;
+    }
 }
-bool	Protocolv1::write_servercmd(void)
+
+bool	Protocolv1::write_servercmd(Commandcode command)
+{
+  return (write_packet(SERVERCMD, 0));
+}
+
+bool	Protocolv1::read_clientlog(IDatabase const &database)
 {
 }
-bool	Protocolv1::read_clientlog(void)
+
+bool	Protocolv1::write_clientlog(std::string const &log)
 {
+  return (write_packet(CLIENTLOG, 0));
 }
-bool	Protocolv1::write_clientlog(void)
-{
-}
+
 bool	Protocolv1::read_ping(void)
 {
+  return (write_pong());
 }
+
 bool	Protocolv1::write_ping(void)
 {
+  return (write_packet(PING, 0));
 }
+
 bool	Protocolv1::read_pong(void)
 {
+  return (write_ping());
 }
+
 bool	Protocolv1::write_pong(void)
 {
+  return (write_packet(PONG, 0));
 }
-bool	Protocolv1::read_keyboard(void)
+
+bool	Protocolv1::read_keyboard(IDatabase const &database)
 {
+  
 }
+
 bool	Protocolv1::write_keyboard(void)
 {
+  return (write_packet(KEYBOARD, 0));
 }
-bool	Protocolv1::read_mouse(void)
+
+bool	Protocolv1::read_mouse(IDatabase const &database)
 {
 }
+
 bool	Protocolv1::write_mouse(void)
 {
+  return (write_packet(MOUSE, 0));
+}
+
+bool	Protocolv1::write_packet(Opcode code, uint16_t size)
+{
+  Packet	&packet = m_packets[m_write];
+
+  packet.packet.header.opcode = code;
+  packet.packet.header.id = m_write;
+  packet.packet.header.size = size;
+  if (++m_write == m_to_write)
+    m_to_write++;
+  return (false);
 }
 
 IProtocol	*new_iprotocol(ISocket *socket, ITime *time)

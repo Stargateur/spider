@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Wed Oct 21 23:48:57 2015 Antoine Plaskowski
-// Last update Fri Oct 23 10:19:20 2015 Antoine Plaskowski
+// Last update Fri Oct 23 23:40:40 2015 Antoine Plaskowski
 //
 
 #ifndef		IPROTOCOL_HPP_
@@ -19,13 +19,19 @@
 class	IProtocol
 {
 public:
+  enum  Commandcode : uint8_t
+  {
+    START = 0,
+    STOP = 1,
+    MUTE = 2,
+    UNMUTE = 3
+  };
+public:
   ~IProtocol(void);
-  virtual bool	run(IDatabase *database = nullptr, ITime const *timeout = nullptr) = 0;
+  virtual bool	run(IDatabase const &database, ITime const *timeout = nullptr) = 0;
   virtual bool	set_socket(ISocket *socket) = 0;
-  virtual bool	start(void) = 0;
-  virtual bool	stop(void) = 0;
-  virtual bool	mute(void) = 0;
-  virtual bool	unmute(void) = 0;
+  virtual bool	set_last_read(ITime *time) = 0;
+  virtual bool	server_command(Commandcode command) = 0;
   virtual std::string const	&get_mac_address(void) const = 0;
   virtual bool	mac_address(std::string const &mac_address) = 0;
   virtual bool	keyboard(ITime const &time, std::string const &event, std::string const &key, std::string const &process) = 0;

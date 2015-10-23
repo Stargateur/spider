@@ -5,16 +5,12 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 18 06:53:16 2015 Antoine Plaskowski
-// Last update Fri Oct 23 17:16:23 2015 Bertrand-Rapello Baptiste
+// Last update Fri Oct 23 22:32:20 2015 Antoine Plaskowski
 //
 
 #include	<unistd.h>
 #include	<stdio.h>
 #include	<iostream>
-#include	<openssl/ssl.h>
-#include	<openssl/err.h>
-#include	<openssl/conf.h>
-#include	<mysql.h>
 #include	<string.h>
 #include	<time.h>
 #include	"ITime.hpp"

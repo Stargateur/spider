@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 20:44:16 2015 Bertrand-Rapello Baptiste
-// Last update Thu Oct 22 09:33:23 2015 Antoine Plaskowski
+// Last update Fri Oct 23 14:33:55 2015 Antoine Plaskowski
 //
 
 #ifndef ITIME_HPP_
@@ -17,8 +17,11 @@ class	ITime
 {
 public:
   virtual intmax_t	get_second(void) const = 0;
+  virtual bool	set_second(intmax_t) = 0;
   virtual intmax_t	get_nano(void) const = 0;
+  virtual bool	set_nano(intmax_t) = 0;
   virtual bool	now(void) = 0;
+  virtual ITime	*clone(void) const = 0;
   virtual	~ITime(void);
 };
 

@@ -155,15 +155,15 @@ Table of Contents
     | 3          | Client already started                |
     | 4          | Client already stopped                |
     | 5          | Client already muted                  |
-    | 6          | Client not muted                      |
+    | 6          | Client already unmuted                |
     | 7          | Invalid command                       |
     | 8          | Invalid keyboard input                |
-    | 8          | Invalid mouse input                   |
-    | 9          | Unknown ID                            |
-    | 10         | Wrong protocol version                |
-    | 11         | Wrong Mac address                     |
-    | 12         | Connect fail                          |
-    | 13         | Disconnect fail                       |
+    | 9          | Invalid mouse input                   |
+    | 10         | Unknown ID                            |
+    | 11         | Wrong protocol version                |
+    | 12         | Wrong Mac address                     |
+    | 13         | Connect fail                          |
+    | 14         | Disconnect fail                       |
     +------------+---------------------------------------+
   
       Table 6: error code definition
