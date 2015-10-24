@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 22:50:40 2015 Bertrand-Rapello Baptiste
-// Last update Fri Oct 23 17:01:53 2015 Antoine Plaskowski
+// Last update Sat Oct 24 12:33:32 2015 Antoine Plaskowski
 //
 
 #ifndef		PROTOCOLV1_HPP_
@@ -68,7 +68,7 @@ private:
       }		packet;
       uint8_t	buffer[sizeof(packet)];
     };
-    };
+  };
 public:
   Protocolv1(ISocket *socket = nullptr, ITime *time = nullptr);
   ~Protocolv1(void);
@@ -108,9 +108,9 @@ private:
   bool	read_pong(void);
   bool	write_pong(void);
   bool	read_keyboard(IDatabase const &database);
-  bool	write_keyboard(void);
+  bool	write_keyboard(ITime const &time, std::string const &event, std::string const &key, std::string const &process);
   bool	read_mouse(IDatabase const &database);
-  bool	write_mouse(void);
+  bool	write_mouse(ITime const &time, uintmax_t x, uintmax_t y, uintmax_t amout, std::string const &event, std::string const &button, std::string const &process);
   bool	write_packet(Opcode code, uint16_t size);
 private:
   ISocket	*m_socket;

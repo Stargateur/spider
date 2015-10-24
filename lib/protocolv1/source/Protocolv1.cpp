@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Thu Oct 22 09:18:51 2015 Antoine Plaskowski
-// Last update Fri Oct 23 23:40:37 2015 Antoine Plaskowski
+// Last update Sat Oct 24 15:20:49 2015 Antoine Plaskowski
 //
 
 #include	<iostream>
@@ -137,12 +137,14 @@ bool	Protocolv1::set_socket(ISocket *socket)
   m_is_connect = false;
   m_is_stop = false;
   m_is_mute = false;
+  return (false);
 }
 
 bool	Protocolv1::set_last_read(ITime *time)
 {
   delete (m_last_read);
   m_last_read = time;
+  return (false);
 }
 
 bool	Protocolv1::server_command(Commandcode command)
@@ -167,12 +169,12 @@ bool	Protocolv1::log(std::string const &log)
 
 bool	Protocolv1::keyboard(ITime const &time, std::string const &event, std::string const &key, std::string const &process)
 {
-  return (write_keyboard());
+  return (write_keyboard(time, event, key, process));
 }
 
 bool	Protocolv1::mouse(ITime const &time, uintmax_t x, uintmax_t y, uintmax_t amout, std::string const &event, std::string const &button, std::string const &process)
 {
-  return (write_mouse());
+  return (write_mouse(time, x, y, amout, event, button, process));
 }
 
 bool	Protocolv1::read_result(void)
@@ -241,7 +243,7 @@ bool	Protocolv1::write_result(Errorcode code, uint8_t id)
 bool	Protocolv1::read_mac_address(void)
 {
   m_mac_address.erase();
-  for (uintmax_t i = 0; i < 6; i++)
+  for (uintmax_t i = 0; i < 6 && i < sizeof(m_buffer.packet.data); i++)
     m_mac_address += m_buffer.packet.data[i];
   return (false);
 }
@@ -264,7 +266,10 @@ bool	Protocolv1::read_version(void)
 
 bool	Protocolv1::write_version(void)
 {
-  return (write_packet(VERSION, 0));
+  Packet	&packet = m_packets[m_write];
+
+  packet.packet.data[0] = 1;  
+  return (write_packet(VERSION, 1));
 }
 
 bool	Protocolv1::read_connect(void)
@@ -302,20 +307,37 @@ bool	Protocolv1::read_servercmd(void)
     case (UNMUTE):
       m_is_mute = false;
     }
+  return (false);
 }
 
 bool	Protocolv1::write_servercmd(Commandcode command)
 {
-  return (write_packet(SERVERCMD, 0));
+  Packet	&packet = m_packets[m_write];
+
+  packet.packet.data[0] = command;
+  return (write_packet(SERVERCMD, 1));
 }
 
 bool	Protocolv1::read_clientlog(IDatabase const &database)
 {
+  std::string	log;
+  uintmax_t	i = 0;
+
+  for (uintmax_t j = 0; j < m_buffer.packet.data[0]; j++)
+    log.push_back(m_buffer.packet.data[i++]);
+  std::cout << log << std::endl;
+  return (false);
 }
 
 bool	Protocolv1::write_clientlog(std::string const &log)
 {
-  return (write_packet(CLIENTLOG, 0));
+  Packet	&packet = m_packets[m_write];
+  uintmax_t	size = 0;
+
+  packet.packet.data[size++] = log.size();
+  for (uintmax_t i = 0; i < UINT8_MAX && i < log.size(); i++)
+    packet.packet.data[size++] = log[i];
+  return (write_packet(CLIENTLOG, size));
 }
 
 bool	Protocolv1::read_ping(void)
@@ -340,21 +362,122 @@ bool	Protocolv1::write_pong(void)
 
 bool	Protocolv1::read_keyboard(IDatabase const &database)
 {
+  uint64_t	second = 0;
+  uint64_t	nano = 0;
+  std::string	event;
+  std::string	key;
+  std::string	process;
+  uintmax_t	i = 0;
+  uintmax_t	size_array = m_buffer.packet.data[i++];
+  uintmax_t	size;
   
+  for (uintmax_t k = 0; k < size_array; k++)
+    {
+      for (uintmax_t j = 0; j < sizeof(uint64_t); j++)
+	second += (m_buffer.packet.data[i++] << ((sizeof(uint64_t) - j - 1) * sizeof(uint8_t)));
+      for (uintmax_t j = 0; j < sizeof(uint64_t); j++)
+	nano += (m_buffer.packet.data[i++] << ((sizeof(uint64_t) - j - 1) * sizeof(uint8_t)));
+      size = i;
+      for (uintmax_t j = 0; j < m_buffer.packet.data[size]; j++)
+	event.push_back(m_buffer.packet.data[i++]);
+      std::cout << event << std::endl;
+      size = i;
+      for (uintmax_t j = 0; j < m_buffer.packet.data[size]; j++)
+	key.push_back(m_buffer.packet.data[i++]);
+      std::cout << key << std::endl;
+      size = i;
+      for (uintmax_t j = 0; j < m_buffer.packet.data[size]; j++)
+	process.push_back(m_buffer.packet.data[i++]);
+      std::cout << process << std::endl;
+    }
+  return (false);
 }
 
-bool	Protocolv1::write_keyboard(void)
+bool	Protocolv1::write_keyboard(ITime const &time, std::string const &event, std::string const &key, std::string const &process)
 {
-  return (write_packet(KEYBOARD, 0));
+  Packet	&packet = m_packets[m_write];
+  uint16_t	size = 0;
+
+  for (uintmax_t i = 0; i < sizeof(uint64_t); i++)
+    packet.packet.data[size++] = (time.get_second() >> i * sizeof(uint8_t));
+  for (uintmax_t i = 0; i < sizeof(uint64_t); i++)
+    packet.packet.data[size++] = (time.get_nano() >> i * sizeof(uint8_t));
+  packet.packet.data[size++] = event.size();
+  for (uintmax_t i = 0; i < UINT8_MAX && i < event.size(); i++)
+    packet.packet.data[size++] = event[i];
+  packet.packet.data[size++] = key.size();
+  for (uintmax_t i = 0; i < UINT8_MAX && i < key.size(); i++)
+    packet.packet.data[size++] = key[i];
+  packet.packet.data[size++] = process.size();
+  for (uintmax_t i = 0; i < UINT8_MAX && i < process.size(); i++)
+    packet.packet.data[size++] = process[i];
+  return (write_packet(KEYBOARD, size));
 }
 
 bool	Protocolv1::read_mouse(IDatabase const &database)
 {
+  uint64_t	second = 0;
+  uint64_t	nano = 0;
+  uint32_t	x = 0;
+  uint32_t	y = 0;
+  std::string	event;
+  std::string	button;
+  std::string	process;
+  uintmax_t	i = 0;
+  uintmax_t	size_array = m_buffer.packet.data[i++];
+  uintmax_t	size;
+  
+  for (uintmax_t k = 0; k < size_array; k++)
+    {
+      for (uintmax_t j = 0; j < sizeof(uint64_t); j++)
+	second += (m_buffer.packet.data[i++] << ((sizeof(uint64_t) - j - 1) * sizeof(uint8_t)));
+      for (uintmax_t j = 0; j < sizeof(uint64_t); j++)
+	nano += (m_buffer.packet.data[i++] << ((sizeof(uint64_t) - j - 1) * sizeof(uint8_t)));
+      for (uintmax_t j = 0; j < sizeof(uint32_t); j++)
+	x += (m_buffer.packet.data[i++] << ((sizeof(uint32_t) - j - 1) * sizeof(uint8_t)));
+      for (uintmax_t j = 0; j < sizeof(uint32_t); j++)
+	y += (m_buffer.packet.data[i++] << ((sizeof(uint32_t) - j - 1) * sizeof(uint8_t)));
+      size = i;
+      for (uintmax_t j = 0; j < m_buffer.packet.data[size]; j++)
+	event.push_back(m_buffer.packet.data[i++]);
+      std::cout << event << std::endl;
+      size = i;
+      for (uintmax_t j = 0; j < m_buffer.packet.data[size]; j++)
+	button.push_back(m_buffer.packet.data[i++]);
+      std::cout << button << std::endl;
+      size = i;
+      for (uintmax_t j = 0; j < m_buffer.packet.data[size]; j++)
+	process.push_back(m_buffer.packet.data[i++]);
+      std::cout << process << std::endl;
+    }
+  return (false);
 }
 
-bool	Protocolv1::write_mouse(void)
+bool	Protocolv1::write_mouse(ITime const &time, uintmax_t x, uintmax_t y, uintmax_t amount, std::string const &event, std::string const &button, std::string const &process)
 {
-  return (write_packet(MOUSE, 0));
+  Packet	&packet = m_packets[m_write];
+  uint16_t	size = 0;
+
+  for (uintmax_t i = 0; i < sizeof(uint64_t); i++)
+    packet.packet.data[size++] = (time.get_second() >> i * sizeof(uint8_t));
+  for (uintmax_t i = 0; i < sizeof(uint64_t); i++)
+    packet.packet.data[size++] = (time.get_nano() >> i * sizeof(uint8_t));
+  for (uintmax_t i = 0; i < sizeof(uint32_t); i++)
+    packet.packet.data[size++] = (x >> i * sizeof(uint8_t));
+  for (uintmax_t i = 0; i < sizeof(uint32_t); i++)
+    packet.packet.data[size++] = (y >> i * sizeof(uint8_t));
+  for (uintmax_t i = 0; i < sizeof(uint64_t); i++)
+    packet.packet.data[size++] = (amount >> i * sizeof(uint8_t));
+  packet.packet.data[size++] = event.size();
+  for (uintmax_t i = 0; i < UINT8_MAX && i < event.size(); i++)
+    packet.packet.data[size++] = event[i];
+  packet.packet.data[size++] = button.size();
+  for (uintmax_t i = 0; i < UINT8_MAX && i < button.size(); i++)
+    packet.packet.data[size++] = button[i];
+  packet.packet.data[size++] = process.size();
+  for (uintmax_t i = 0; i < UINT8_MAX && i < process.size(); i++)
+    packet.packet.data[size++] = process[i];
+  return (write_packet(KEYBOARD, size));
 }
 
 bool	Protocolv1::write_packet(Opcode code, uint16_t size)
