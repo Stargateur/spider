@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sat Oct 24 17:20:22 2015 Antoine Plaskowski
-// Last update Sun Oct 25 05:14:43 2015 Antoine Plaskowski
+// Last update Sun Oct 25 05:40:44 2015 Antoine Plaskowski
 //
 
 #include	"Server.hpp"
@@ -22,7 +22,6 @@ Server::Server(Option const &option) :
   m_new_iprotocol(m_dll_iprotocol.get_symbole<decltype(m_new_iprotocol)>(NAME_FCT_NEW_IPROTOCOL)),
   m_iselect(m_dll_isocket.get_symbole<decltype(m_iselect)>(NAME_FCT_ISELECT)),
   m_new_iserver(m_dll_isocket.get_symbole<decltype(m_new_iserver)>(NAME_FCT_NEW_ISERVER)),
-  m_new_iclient(m_dll_isocket.get_symbole<decltype(m_new_iclient)>(NAME_FCT_NEW_ICLIENT)),
   m_new_istandard(m_dll_isocket.get_symbole<decltype(m_new_istandard)>(NAME_FCT_NEW_ISTANDARD)),
   m_database(m_new_idatabase()),
   m_server(m_new_iserver("::1", "4242")),
@@ -33,7 +32,7 @@ Server::Server(Option const &option) :
 
 Server::~Server(void)
 {
-  delete m_database;
+  delete &m_database;
   delete &m_server;
   delete &m_in;
   for (auto it = m_clients.begin(); it != m_clients.end(); it++)
@@ -47,8 +46,8 @@ bool	Server::run(void)
     (*it)->select();
   m_iselect(nullptr);
   if (m_server.can_read())
-    m_clients.push_back(m_new_iprotocol(m_server.accept(), m_new_itime()));
+    m_clients.push_back(&m_new_iprotocol(m_server.accept(), m_new_itime()));
   for (auto it = m_clients.begin(); it != m_clients.end(); it++)
-    (*it)->run(*m_database);
+    (*it)->run(m_database);
   return (false);
 }

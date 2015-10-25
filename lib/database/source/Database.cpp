@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 21:04:15 2015 Bertrand-Rapello Baptiste
-// Last update Sat Oct 24 19:10:16 2015 Antoine Plaskowski
+// Last update Sun Oct 25 05:40:10 2015 Antoine Plaskowski
 //
 
 #include	"Database.hpp"
@@ -157,7 +157,7 @@ bool Database::show(const std::string & mac_addresse)
   return false;
 }
 
-IDatabase	*new_idatabase(void)
+IDatabase	&new_idatabase(void)
 {
-  return (new Database());
+  return (*new Database());
 }

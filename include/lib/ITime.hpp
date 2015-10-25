@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 20:44:16 2015 Bertrand-Rapello Baptiste
-// Last update Sun Oct 25 05:13:28 2015 Antoine Plaskowski
+// Last update Sun Oct 25 05:36:07 2015 Antoine Plaskowski
 //
 
 #ifndef ITIME_HPP_

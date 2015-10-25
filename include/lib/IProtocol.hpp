@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Wed Oct 21 23:48:57 2015 Antoine Plaskowski
-// Last update Sun Oct 25 04:04:11 2015 Antoine Plaskowski
+// Last update Sun Oct 25 05:30:12 2015 Antoine Plaskowski
 //
 
 #ifndef		IPROTOCOL_HPP_
@@ -41,8 +41,8 @@ public:
 extern "C"
 {
 # define	NAME_FCT_NEW_IPROTOCOL	"new_iprotocol"
-  IProtocol	*new_iprotocol(ISocket &socket, ITime &time);
-  typedef	IProtocol	*(*fct_new_iprotocol)(ISocket &socket, ITime &time);
+  IProtocol	&new_iprotocol(ISocket &socket, ITime &time);
+  typedef	IProtocol	&(*fct_new_iprotocol)(ISocket &socket, ITime &time);
 }
   
 #endif		/* !IPROTOCOL_HPP_ */

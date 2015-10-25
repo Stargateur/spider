@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Mon Mar 30 22:26:06 2015 Antoine Plaskowski
-// Last update Sun Oct 25 03:37:25 2015 Antoine Plaskowski
+// Last update Sun Oct 25 05:35:39 2015 Antoine Plaskowski
 //
 
 #ifndef		DYNAMICLINKLIBRARY_HPP_

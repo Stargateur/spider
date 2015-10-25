@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Wed Oct 21 22:50:01 2015 Antoine Plaskowski
-// Last update Sun Oct 25 05:00:46 2015 Antoine Plaskowski
+// Last update Sun Oct 25 05:39:10 2015 Antoine Plaskowski
 //
 
 #ifndef		SERVER_HPP_
@@ -35,9 +35,8 @@ private:
   fct_new_iprotocol	m_new_iprotocol;
   fct_iselect	m_iselect;
   fct_new_iserver	m_new_iserver;
-  fct_new_iclient	m_new_iclient;
   fct_new_istandard	m_new_istandard;
-  IDatabase	*m_database;
+  IDatabase	&m_database;
   ISocket	&m_server;
   ISocket	&m_in;
   std::list<IProtocol *>	m_clients;

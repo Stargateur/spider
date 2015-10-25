@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Thu Oct 22 09:18:51 2015 Antoine Plaskowski
-// Last update Sun Oct 25 04:52:53 2015 Antoine Plaskowski
+// Last update Sun Oct 25 05:31:51 2015 Antoine Plaskowski
 //
 
 #include	<iostream>
@@ -14,8 +14,8 @@
 #include	"Protocolv1.hpp"
 
 Protocolv1::Protocolv1(ISocket &socket, ITime &time) :
-  m_socket(&socket),
-  m_last_read(&time),
+  m_socket(socket),
+  m_last_read(time),
   m_mac_address(),
   m_packets({}),
   m_write(0),
@@ -31,8 +31,8 @@ Protocolv1::Protocolv1(ISocket &socket, ITime &time) :
 
 Protocolv1::~Protocolv1(void)
 {
-  delete (m_socket);
-  delete (m_last_read);
+  delete (&m_socket);
+  delete (&m_last_read);
 }
 
 bool	Protocolv1::run(IDatabase const &database, ITime const *time)
@@ -40,47 +40,47 @@ bool	Protocolv1::run(IDatabase const &database, ITime const *time)
   if (time != nullptr)
     if (timeout(*time) == true)
       return (true);
-  if (m_socket->can_read() == true)
+  if (m_socket.can_read() == true)
     if (read(database) == true)
       return (true);
-  if (m_socket->can_write() == true)
+  if (m_socket.can_write() == true)
     return (write());
   return (false);
 }
 
 bool	Protocolv1::select(void) const
 {
-  m_socket->want_read();
+  m_socket.want_read();
   if (m_to_write != m_write)  
-    m_socket->want_write();
+    m_socket.want_write();
   return (false);
 }
 
 bool	Protocolv1::timeout(ITime const &time)
 {
-  uintmax_t	second = m_last_read->get_second();
-  uintmax_t	nano = m_last_read->get_nano();
+  uintmax_t	second = m_last_read.get_second();
+  uintmax_t	nano = m_last_read.get_nano();
 
-  m_last_read->now();
-  m_last_read->set_second(m_last_read->get_second() - second);
-  m_last_read->set_nano(m_last_read->get_nano() - nano);
-  if (m_last_read->get_second() > time.get_second())
+  m_last_read.now();
+  m_last_read.set_second(m_last_read.get_second() - second);
+  m_last_read.set_nano(m_last_read.get_nano() - nano);
+  if (m_last_read.get_second() > time.get_second())
     return (true);
-  if (m_last_read->get_second() == time.get_second())
-    if (m_last_read->get_nano() > time.get_nano())
+  if (m_last_read.get_second() == time.get_second())
+    if (m_last_read.get_nano() > time.get_nano())
       return (true);
-  if (m_last_read->get_second() > time.get_second() / 2)
+  if (m_last_read.get_second() > time.get_second() / 2)
     return (write_ping());
-  if (m_last_read->get_second() == time.get_second() / 2)
-    if (m_last_read->get_nano() > time.get_nano() / 2)
+  if (m_last_read.get_second() == time.get_second() / 2)
+    if (m_last_read.get_nano() > time.get_nano() / 2)
       return (write_ping());
   return (false);
 }
 
 bool	Protocolv1::read(IDatabase const &database)
 {
-  m_last_read->now();
-  uintmax_t	ret = m_socket->read(m_buffer.buffer[m_read], sizeof(m_buffer) - m_read);
+  m_last_read.now();
+  uintmax_t	ret = m_socket.read(m_buffer.buffer[m_read], sizeof(m_buffer) - m_read);
   if (ret == 0)
     return (true);
   m_read += ret;
@@ -125,7 +125,7 @@ bool	Protocolv1::write(void)
     {
       Packet	&packet = m_packets[m_to_write++];
 
-      uintmax_t	ret = m_socket->write(*packet.buffer, sizeof(packet.packet.header) + packet.packet.header.size);
+      uintmax_t	ret = m_socket.write(*packet.buffer, sizeof(packet.packet.header) + packet.packet.header.size);
       if (ret != sizeof(packet.packet.header) + packet.packet.header.size)
 	return (true);
     }
@@ -477,7 +477,7 @@ bool	Protocolv1::write_packet(Opcode code, uint16_t size)
   return (false);
 }
 
-IProtocol	*new_iprotocol(ISocket &socket, ITime &time)
+IProtocol	&new_iprotocol(ISocket &socket, ITime &time)
 {
-  return (new Protocolv1(socket, time));
+  return (*new Protocolv1(socket, time));
 }
