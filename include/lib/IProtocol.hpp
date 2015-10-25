@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Wed Oct 21 23:48:57 2015 Antoine Plaskowski
-// Last update Sun Oct 25 05:30:12 2015 Antoine Plaskowski
+// Last update Sun Oct 25 09:08:50 2015 Antoine Plaskowski
 //
 
 #ifndef		IPROTOCOL_HPP_
@@ -36,6 +36,7 @@ public:
   virtual bool	mac_address(std::string const &mac_address) = 0;
   virtual bool	keyboard(ITime const &time, std::string const &event, std::string const &key, std::string const &process) = 0;
   virtual bool	mouse(ITime const &time, uintmax_t x, uintmax_t y, uintmax_t amont, std::string const &event, std::string const &key, std::string const &process) = 0;
+  virtual ISocket const	&get_isocket(void) const = 0;
 };
 
 extern "C"

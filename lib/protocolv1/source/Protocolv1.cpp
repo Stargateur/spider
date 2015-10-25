@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Thu Oct 22 09:18:51 2015 Antoine Plaskowski
-// Last update Sun Oct 25 05:31:51 2015 Antoine Plaskowski
+// Last update Sun Oct 25 09:10:09 2015 Antoine Plaskowski
 //
 
 #include	<iostream>
@@ -475,6 +475,11 @@ bool	Protocolv1::write_packet(Opcode code, uint16_t size)
   if (++m_write == m_to_write)
     m_to_write++;
   return (false);
+}
+
+ISocket const	&Protocolv1::get_isocket(void) const
+{
+  return (m_socket);
 }
 
 IProtocol	&new_iprotocol(ISocket &socket, ITime &time)

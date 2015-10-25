@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sat Oct 24 17:20:22 2015 Antoine Plaskowski
-// Last update Sun Oct 25 06:03:12 2015 Antoine Plaskowski
+// Last update Sun Oct 25 09:11:04 2015 Antoine Plaskowski
 //
 
 #include	"Server.hpp"
@@ -43,7 +43,10 @@ bool	Server::run(void)
 {
   m_server.want_read();
   for (auto it = m_clients.begin(); it != m_clients.end(); it++)
-    (*it)->select();
+    {
+      std::cout << (*it)->get_isocket().get_ip() << std::endl;
+      (*it)->select();
+    }
   m_iselect(nullptr);
   if (m_server.can_read())
     m_clients.push_back(&m_new_iprotocol(m_server.accept(), m_new_itime()));

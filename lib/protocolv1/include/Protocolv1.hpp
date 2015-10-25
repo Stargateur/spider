@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 22:50:40 2015 Bertrand-Rapello Baptiste
-// Last update Sun Oct 25 05:26:25 2015 Antoine Plaskowski
+// Last update Sun Oct 25 09:09:31 2015 Antoine Plaskowski
 //
 
 #ifndef		PROTOCOLV1_HPP_
@@ -84,6 +84,7 @@ public:
   bool	log(std::string const &log);
   bool	keyboard(ITime const &time, std::string const &event, std::string const &key, std::string const &process);
   bool	mouse(ITime const &time, uintmax_t x, uintmax_t y, uintmax_t amout, std::string const &event, std::string const &button, std::string const &process);
+  ISocket const	&get_isocket(void) const;
 private:
   bool	read(IDatabase const &database);
   bool	write(void);

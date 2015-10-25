@@ -5,9 +5,10 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 18 06:52:57 2015 Antoine Plaskowski
-// Last update Sun Oct 25 06:03:54 2015 Antoine Plaskowski
+// Last update Sun Oct 25 08:27:48 2015 Antoine Plaskowski
 //
 
+#include	<sstream>
 #include	<unistd.h>
 #include	<openssl/ssl.h>
 #include	<openssl/err.h>
@@ -27,7 +28,9 @@ int		main(int argc, char **argv)
   option.getopt(argc, argv);
   DynamicLinkLibrary	dll_isocket(option.get_path_lib_isocket());
   fct_new_iclient	new_iclient = dll_isocket.get_symbole<fct_new_iclient>(NAME_FCT_NEW_ICLIENT);
+  fct_new_istandard	new_istandard = dll_isocket.get_symbole<fct_new_istandard>(NAME_FCT_NEW_ISTANDARD);
   ISocket	&client = new_iclient(option.get_host(), option.get_port());
+  ISocket	&in = new_istandard(ISocket::IN);
   DynamicLinkLibrary	dll_itime(option.get_path_lib_itime());
   fct_new_itime	new_itime = dll_itime.get_symbole<fct_new_itime>(NAME_FCT_NEW_ITIME);
   ITime	&time = new_itime();
@@ -39,11 +42,21 @@ int		main(int argc, char **argv)
   IDatabase	&database = new_idatabase();
   fct_iselect	iselect = dll_isocket.get_symbole<fct_iselect>(NAME_FCT_ISELECT);
 
-  protocol.log("bonjour");
   while (true)
     {
+      in.want_read();
       protocol.select();
       iselect(nullptr);
+      if (in.can_read())
+	{
+	  uint8_t	buf[4096 + 1];
+	  uintmax_t ret = in.read(*buf, 4096);
+	  buf[ret] = '\0';
+	  if (ret == 0)
+	    break;
+	  std::string str((char *)(buf));
+	  protocol.log(str);
+	}
       if (protocol.run(database) == true)
 	return (0);
     }
