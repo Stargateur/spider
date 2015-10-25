@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 22:50:40 2015 Bertrand-Rapello Baptiste
-// Last update Sat Oct 24 12:33:32 2015 Antoine Plaskowski
+// Last update Sun Oct 25 04:03:59 2015 Antoine Plaskowski
 //
 
 #ifndef		PROTOCOLV1_HPP_
@@ -61,7 +61,7 @@ private:
   {
     union
     {
-      struct
+      struct __attribute__((__packed__))
       {
 	Header	header;
 	uint8_t	data[UINT16_MAX];
@@ -70,14 +70,13 @@ private:
     };
   };
 public:
-  Protocolv1(ISocket *socket = nullptr, ITime *time = nullptr);
+  Protocolv1(ISocket &socket, ITime &time);
   ~Protocolv1(void);
 private:
   Protocolv1(Protocolv1 const &source);
   Protocolv1	&operator=(Protocolv1 const &source);
 public:
-  bool	set_socket(ISocket *socket);
-  bool	set_last_read(ITime *time);
+  bool	select(void) const;
   bool	run(IDatabase const &database, ITime const *timeout = nullptr);
   bool	server_command(Commandcode command);
   std::string const	&get_mac_address(void) const;

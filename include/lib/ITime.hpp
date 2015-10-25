@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 20:44:16 2015 Bertrand-Rapello Baptiste
-// Last update Fri Oct 23 14:33:55 2015 Antoine Plaskowski
+// Last update Sun Oct 25 05:13:28 2015 Antoine Plaskowski
 //
 
 #ifndef ITIME_HPP_
@@ -21,15 +21,14 @@ public:
   virtual intmax_t	get_nano(void) const = 0;
   virtual bool	set_nano(intmax_t) = 0;
   virtual bool	now(void) = 0;
-  virtual ITime	*clone(void) const = 0;
   virtual	~ITime(void);
 };
 
 extern "C"
 {
 # define	NAME_FCT_NEW_ITIME	"new_itime"
-  ITime	*new_itime(void);
-  typedef	ITime *(*fct_new_itime)(void);
+  ITime	&new_itime(void);
+  typedef	ITime &(*fct_new_itime)(void);
 }
 
 #endif 

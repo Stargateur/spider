@@ -5,42 +5,35 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Mon Mar 30 22:28:36 2015 Antoine Plaskowski
-// Last update Thu Oct 22 02:36:04 2015 Antoine Plaskowski
+// Last update Sun Oct 25 03:38:04 2015 Antoine Plaskowski
 //
 
 #include	<dlfcn.h>
 #include	<iostream>
 #include	<string>
+#include	<exception>
 #include	"DynamicLinkLibrary.hpp"
 
-DynamicLinkLibrary::DynamicLinkLibrary(void) :
-  m_handle(NULL)
+DynamicLinkLibrary::DynamicLinkLibrary(std::string const &name) :
+  m_handle(dlopen(name.c_str(), RTLD_LAZY))
 {
-}
-
-DynamicLinkLibrary::~DynamicLinkLibrary(void)
-{
-  if (m_handle != NULL)
-    {
-      if (dlclose(m_handle) != 0)
-	{
-	  char *str = dlerror();
-
-	  if (str != NULL)
-	    std::cerr << str << std::endl;
-	}
-    }
-}
-
-bool	DynamicLinkLibrary::load_dll(std::string const &name)
-{
-  if ((m_handle = dlopen(name.c_str(), RTLD_LAZY)) == NULL)
+  if (m_handle == NULL)
     {
       char *str = dlerror();
 
       if (str != NULL)
 	std::cerr << str << std::endl;
-      return (true);
+      throw std::exception();
     }
-  return (false);
+}
+
+DynamicLinkLibrary::~DynamicLinkLibrary(void)
+{
+  if (dlclose(m_handle) != 0)
+    {
+      char *str = dlerror();
+
+      if (str != NULL)
+	std::cerr << str << std::endl;
+    }
 }

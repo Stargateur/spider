@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 21:04:15 2015 Bertrand-Rapello Baptiste
-// Last update Fri Oct 23 22:28:49 2015 Antoine Plaskowski
+// Last update Sun Oct 25 05:13:50 2015 Antoine Plaskowski
 //
 
 #include	<stdio.h>
@@ -49,12 +49,7 @@ bool	Time::now(void)
   return false;
 }
 
-ITime	*Time::clone(void) const
+ITime	&new_itime(void)
 {
-  return (new Time());
-}
-
-ITime	*new_itime(void)
-{
-  return (new Time());
+  return (*new Time());
 }

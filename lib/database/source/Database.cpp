@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 21:04:15 2015 Bertrand-Rapello Baptiste
-// Last update Fri Oct 23 17:17:26 2015 Bertrand-Rapello Baptiste
+// Last update Sat Oct 24 19:10:16 2015 Antoine Plaskowski
 //
 
 #include	"Database.hpp"
@@ -17,6 +17,7 @@ Database::Database(void) :
 
 Database::~Database(void)
 {
+  mysql_close(m_db);
 }
 
 bool  Database::connect(std::string const &host, std::string const &port, std::string const &user, std::string const &passwd, std::string const &db)

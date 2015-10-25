@@ -5,16 +5,17 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Thu Oct 22 09:18:51 2015 Antoine Plaskowski
-// Last update Sat Oct 24 15:20:49 2015 Antoine Plaskowski
+// Last update Sun Oct 25 04:52:53 2015 Antoine Plaskowski
 //
 
 #include	<iostream>
 #include	<cassert>
+#include	<exception>
 #include	"Protocolv1.hpp"
 
-Protocolv1::Protocolv1(ISocket *socket, ITime *time) :
-  m_socket(socket),
-  m_last_read(time),
+Protocolv1::Protocolv1(ISocket &socket, ITime &time) :
+  m_socket(&socket),
+  m_last_read(&time),
   m_mac_address(),
   m_packets({}),
   m_write(0),
@@ -25,7 +26,7 @@ Protocolv1::Protocolv1(ISocket *socket, ITime *time) :
   m_is_stop(false),
   m_is_mute(false)
 {
-  assert(sizeof(m_buffer) != sizeof(m_buffer.buffer));
+  assert(sizeof(m_buffer.packet) == sizeof(m_buffer.buffer));
 }
 
 Protocolv1::~Protocolv1(void)
@@ -36,21 +37,27 @@ Protocolv1::~Protocolv1(void)
 
 bool	Protocolv1::run(IDatabase const &database, ITime const *time)
 {
-  if (m_socket->can_read() == true)
-    return (read(database));
   if (time != nullptr)
     if (timeout(*time) == true)
+      return (true);
+  if (m_socket->can_read() == true)
+    if (read(database) == true)
       return (true);
   if (m_socket->can_write() == true)
     return (write());
   return (false);
 }
 
+bool	Protocolv1::select(void) const
+{
+  m_socket->want_read();
+  if (m_to_write != m_write)  
+    m_socket->want_write();
+  return (false);
+}
+
 bool	Protocolv1::timeout(ITime const &time)
 {
-  if (m_last_read == nullptr)
-    return (true);
-
   uintmax_t	second = m_last_read->get_second();
   uintmax_t	nano = m_last_read->get_nano();
 
@@ -72,14 +79,12 @@ bool	Protocolv1::timeout(ITime const &time)
 
 bool	Protocolv1::read(IDatabase const &database)
 {
-  if (m_last_read != nullptr)
-    m_last_read->now();
-
-  uintmax_t	ret = m_socket->read(m_buffer.buffer + m_read, sizeof(m_buffer) - m_read);
+  m_last_read->now();
+  uintmax_t	ret = m_socket->read(m_buffer.buffer[m_read], sizeof(m_buffer) - m_read);
   if (ret == 0)
     return (true);
-
   m_read += ret;
+
   if (m_read < sizeof(m_buffer.packet.header))
     return (false);
   if (m_read < sizeof(m_buffer.packet.header) + m_buffer.packet.header.size)
@@ -110,7 +115,6 @@ bool	Protocolv1::read(IDatabase const &database)
       return (read_keyboard(database));
     case (MOUSE):
       return (read_mouse(database));
-      ;
     };
   return (true);
 }
@@ -121,29 +125,10 @@ bool	Protocolv1::write(void)
     {
       Packet	&packet = m_packets[m_to_write++];
 
-      uintmax_t	ret = m_socket->write(packet.buffer, sizeof(packet.packet.header) + packet.packet.header.size);
+      uintmax_t	ret = m_socket->write(*packet.buffer, sizeof(packet.packet.header) + packet.packet.header.size);
       if (ret != sizeof(packet.packet.header) + packet.packet.header.size)
 	return (true);
     }
-  return (false);
-}
-
-bool	Protocolv1::set_socket(ISocket *socket)
-{
-  delete (m_socket);
-  m_socket = socket;
-  m_read = 0;
-  m_mac_address.erase();
-  m_is_connect = false;
-  m_is_stop = false;
-  m_is_mute = false;
-  return (false);
-}
-
-bool	Protocolv1::set_last_read(ITime *time)
-{
-  delete (m_last_read);
-  m_last_read = time;
   return (false);
 }
 
@@ -321,7 +306,7 @@ bool	Protocolv1::write_servercmd(Commandcode command)
 bool	Protocolv1::read_clientlog(IDatabase const &database)
 {
   std::string	log;
-  uintmax_t	i = 0;
+  uintmax_t	i = 1;
 
   for (uintmax_t j = 0; j < m_buffer.packet.data[0]; j++)
     log.push_back(m_buffer.packet.data[i++]);
@@ -492,7 +477,7 @@ bool	Protocolv1::write_packet(Opcode code, uint16_t size)
   return (false);
 }
 
-IProtocol	*new_iprotocol(ISocket *socket, ITime *time)
+IProtocol	*new_iprotocol(ISocket &socket, ITime &time)
 {
   return (new Protocolv1(socket, time));
 }

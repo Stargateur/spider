@@ -5,26 +5,42 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Wed Oct 21 22:50:01 2015 Antoine Plaskowski
-// Last update Wed Oct 21 23:42:17 2015 Antoine Plaskowski
+// Last update Sun Oct 25 05:00:46 2015 Antoine Plaskowski
 //
 
 #ifndef		SERVER_HPP_
 # define	SERVER_HPP_
 
 #include	<list>
-#include	"IBatabase.hpp"
+#include	"Option.hpp"
+#include	"DynamicLinkLibrary.hpp"
+#include	"IDatabase.hpp"
 #include	"IProtocol.hpp"
+#include	"ISocket.hpp"
+#include	"ITime.hpp"
 
 class	Server
 {
 public:
-  Server(void);
+  Server(Option const &option);
   ~Server(void);
   bool	run(void);
 private:
-  std::list<Client *>	clients;
-  IBatabase	m_database;
-  IProtocol	m_protocol;
+  DynamicLinkLibrary	m_dll_idatabase;
+  DynamicLinkLibrary	m_dll_itime;
+  DynamicLinkLibrary	m_dll_iprotocol;
+  DynamicLinkLibrary	m_dll_isocket;
+  fct_new_idatabase	m_new_idatabase;
+  fct_new_itime	m_new_itime;
+  fct_new_iprotocol	m_new_iprotocol;
+  fct_iselect	m_iselect;
+  fct_new_iserver	m_new_iserver;
+  fct_new_iclient	m_new_iclient;
+  fct_new_istandard	m_new_istandard;
+  IDatabase	*m_database;
+  ISocket	&m_server;
+  ISocket	&m_in;
+  std::list<IProtocol *>	m_clients;
 };
 
 #endif		/* !SERVER_HPP_ */
