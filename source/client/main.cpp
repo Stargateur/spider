@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 18 06:52:57 2015 Antoine Plaskowski
-// Last update Sun Oct 25 05:41:08 2015 Antoine Plaskowski
+// Last update Sun Oct 25 06:03:54 2015 Antoine Plaskowski
 //
 
 #include	<unistd.h>
@@ -27,7 +27,7 @@ int		main(int argc, char **argv)
   option.getopt(argc, argv);
   DynamicLinkLibrary	dll_isocket(option.get_path_lib_isocket());
   fct_new_iclient	new_iclient = dll_isocket.get_symbole<fct_new_iclient>(NAME_FCT_NEW_ICLIENT);
-  ISocket	&client = new_iclient("::1", "4242");
+  ISocket	&client = new_iclient(option.get_host(), option.get_port());
   DynamicLinkLibrary	dll_itime(option.get_path_lib_itime());
   fct_new_itime	new_itime = dll_itime.get_symbole<fct_new_itime>(NAME_FCT_NEW_ITIME);
   ITime	&time = new_itime();

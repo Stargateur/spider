@@ -5,7 +5,7 @@
 ## Login   <plasko_a@epitech.eu>
 ## 
 ## Started on  Sun Oct 18 06:48:22 2015 Antoine Plaskowski
-## Last update Sat Oct 24 18:12:02 2015 Antoine Plaskowski
+## Last update Sun Oct 25 06:01:51 2015 Antoine Plaskowski
 ##
 
 SERVER		=	spider_server
@@ -32,7 +32,7 @@ LEVEL		?=	3
 
 COLOR		?=	no
 
-LIB		=	-ldl
+LIB		=	-l dl
 
 INCLUDE		=	-I include -I include/server -I include/client -I include/lib
 

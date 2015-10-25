@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sat Oct 24 17:20:22 2015 Antoine Plaskowski
-// Last update Sun Oct 25 05:40:44 2015 Antoine Plaskowski
+// Last update Sun Oct 25 06:03:12 2015 Antoine Plaskowski
 //
 
 #include	"Server.hpp"
@@ -24,7 +24,7 @@ Server::Server(Option const &option) :
   m_new_iserver(m_dll_isocket.get_symbole<decltype(m_new_iserver)>(NAME_FCT_NEW_ISERVER)),
   m_new_istandard(m_dll_isocket.get_symbole<decltype(m_new_istandard)>(NAME_FCT_NEW_ISTANDARD)),
   m_database(m_new_idatabase()),
-  m_server(m_new_iserver("::1", "4242")),
+  m_server(m_new_iserver(option.get_host(), option.get_port())),
   m_in(m_new_istandard(ISocket::IN)),
   m_clients()
 {
