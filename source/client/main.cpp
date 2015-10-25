@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 18 06:52:57 2015 Antoine Plaskowski
-// Last update Sun Oct 25 08:27:48 2015 Antoine Plaskowski
+// Last update Sun Oct 25 09:54:10 2015 Antoine Plaskowski
 //
 
 #include	<sstream>
@@ -50,7 +50,7 @@ int		main(int argc, char **argv)
       if (in.can_read())
 	{
 	  uint8_t	buf[4096 + 1];
-	  uintmax_t ret = in.read(*buf, 4096);
+	  uintmax_t ret = in.read(buf, 4096);
 	  buf[ret] = '\0';
 	  if (ret == 0)
 	    break;

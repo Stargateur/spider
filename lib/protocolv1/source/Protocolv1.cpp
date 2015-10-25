@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Thu Oct 22 09:18:51 2015 Antoine Plaskowski
-// Last update Sun Oct 25 09:10:09 2015 Antoine Plaskowski
+// Last update Sun Oct 25 09:53:46 2015 Antoine Plaskowski
 //
 
 #include	<iostream>
@@ -80,7 +80,7 @@ bool	Protocolv1::timeout(ITime const &time)
 bool	Protocolv1::read(IDatabase const &database)
 {
   m_last_read.now();
-  uintmax_t	ret = m_socket.read(m_buffer.buffer[m_read], sizeof(m_buffer) - m_read);
+  uintmax_t	ret = m_socket.read(m_buffer.buffer + m_read, sizeof(m_buffer) - m_read);
   if (ret == 0)
     return (true);
   m_read += ret;
@@ -125,7 +125,7 @@ bool	Protocolv1::write(void)
     {
       Packet	&packet = m_packets[m_to_write++];
 
-      uintmax_t	ret = m_socket.write(*packet.buffer, sizeof(packet.packet.header) + packet.packet.header.size);
+      uintmax_t	ret = m_socket.write(packet.buffer, sizeof(packet.packet.header) + packet.packet.header.size);
       if (ret != sizeof(packet.packet.header) + packet.packet.header.size)
 	return (true);
     }
