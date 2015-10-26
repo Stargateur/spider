@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Wed Oct 21 22:50:01 2015 Antoine Plaskowski
-// Last update Mon Oct 26 03:58:27 2015 Antoine Plaskowski
+// Last update Mon Oct 26 06:02:38 2015 Antoine Plaskowski
 //
 
 #ifndef		SERVER_HPP_
@@ -40,6 +40,7 @@ private:
   ISocket	&m_server;
   ISocket	&m_in;
   std::list<IProtocol *>	m_clients;
+  ITime	&m_timeout;
 };
 
 #endif		/* !SERVER_HPP_ */

@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sat Oct 24 17:20:22 2015 Antoine Plaskowski
-// Last update Mon Oct 26 04:51:48 2015 Antoine Plaskowski
+// Last update Mon Oct 26 06:10:55 2015 Antoine Plaskowski
 //
 
 #include	"Server.hpp"
@@ -26,8 +26,11 @@ Server::Server(Option const &option) :
   m_database(m_new_idatabase()),
   m_server(m_new_iserver(option.get_host(), option.get_port())),
   m_in(m_new_istandard(ISocket::IN)),
-  m_clients()
+  m_clients(),
+  m_timeout(m_new_itime())
 {
+  m_timeout.set_second(10);
+  m_timeout.set_nano(0);
 }
 
 Server::~Server(void)
@@ -38,7 +41,6 @@ Server::~Server(void)
   for (auto it = m_clients.begin(); it != m_clients.end(); it++)
     delete *it;
 }
-
 
 bool	Server::run(void)
 {
@@ -52,8 +54,9 @@ bool	Server::run(void)
   for (auto it = m_clients.begin(); it != m_clients.end(); it++)
     {
       if (*it != nullptr)
-	if ((*it)->run(m_database) == true)
+	if ((*it)->run(m_database, &m_timeout) == true)
 	  {
+	    delete *it;
 	    remove = true;
 	    *it = nullptr;
 	  }

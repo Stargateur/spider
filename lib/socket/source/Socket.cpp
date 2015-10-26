@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 22:51:48 2015 Bertrand-Rapello Baptiste
-// Last update Mon Oct 26 04:53:23 2015 Antoine Plaskowski
+// Last update Mon Oct 26 07:40:53 2015 Antoine Plaskowski
 //
 
 #include	<sys/socket.h>
@@ -33,6 +33,10 @@ Socket::Socket(std::string const &ip, int fd) :
 
 Socket::~Socket(void)
 {
+  if (m_fd > 2)
+    close(m_fd);
+  FD_CLR(m_fd, &m_writefds);
+  FD_CLR(m_fd, &m_readfds);
 }
 
 bool	Socket::select(ITime const *timeout)

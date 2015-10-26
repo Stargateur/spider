@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 25 10:24:10 2015 Antoine Plaskowski
-// Last update Mon Oct 26 05:26:22 2015 Antoine Plaskowski
+// Last update Mon Oct 26 07:27:28 2015 Antoine Plaskowski
 //
 
 #include	<iostream>
@@ -22,9 +22,11 @@ bool	Packetread::read(ISocket const &socket)
 {
   if (m_read >= sizeof(m_buffer))
     return (true);
-  uintmax_t	ret = socket.read(m_buffer[m_read], sizeof(m_buffer) - m_read);
-
-  std::cout << ret << " " << sizeof(m_buffer) << " " << m_read << std::endl;
+  uintmax_t	ret;
+  if (m_read < m_size_header)
+    ret = socket.read(m_buffer[m_read], m_size_header - m_read);
+  else
+    ret = socket.read(m_buffer[m_read], m_size_header + get_size() - m_read);
   if (ret == 0)
     return (true);
   m_read += ret;
@@ -43,7 +45,6 @@ bool	Packetread::get_string(std::string &string)
   string.erase();
   if (get_int<uint8_t>(size) == true)
     return (true);
-  std::cout << (int)size << std::endl;
   for (uintmax_t i = 0; i < size; i++)
     {
       uint8_t   c;

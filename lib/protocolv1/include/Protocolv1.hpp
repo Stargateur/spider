@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 22:50:40 2015 Bertrand-Rapello Baptiste
-// Last update Mon Oct 26 01:37:10 2015 Antoine Plaskowski
+// Last update Mon Oct 26 07:11:04 2015 Antoine Plaskowski
 //
 
 #ifndef		PROTOCOLV1_HPP_
@@ -111,6 +111,7 @@ private:
   bool	m_is_connect;
   bool	m_is_stop;
   bool	m_is_mute;
+  bool	m_wait_pong;
 };
 
 #endif	/* !IPROTOCOLV1_HPP_ */

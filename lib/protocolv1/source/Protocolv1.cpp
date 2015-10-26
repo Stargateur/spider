@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Thu Oct 22 09:18:51 2015 Antoine Plaskowski
-// Last update Mon Oct 26 05:20:59 2015 Antoine Plaskowski
+// Last update Mon Oct 26 07:51:32 2015 Antoine Plaskowski
 //
 
 #include	<iostream>
@@ -23,8 +23,10 @@ Protocolv1::Protocolv1(ISocket &socket, ITime &time) :
   m_read(),
   m_is_connect(false),
   m_is_stop(false),
-  m_is_mute(false)
+  m_is_mute(false),
+  m_wait_pong(false)
 {
+  m_last_read.now();
 }
 
 Protocolv1::~Protocolv1(void)
@@ -35,11 +37,11 @@ Protocolv1::~Protocolv1(void)
 
 bool	Protocolv1::run(IDatabase const &database, ITime const *time)
 {
-  if (time != nullptr)
-    if (timeout(*time) == true)
-      return (true);
   if (m_socket.can_read() == true)
     if (read(database) == true)
+      return (true);
+  if (time != nullptr)
+    if (timeout(*time) == true)
       return (true);
   if (m_socket.can_write() == true)
     return (write());
@@ -56,33 +58,35 @@ bool	Protocolv1::select(void) const
 
 bool	Protocolv1::timeout(ITime const &time)
 {
-  uintmax_t	second = m_last_read.get_second();
-  uintmax_t	nano = m_last_read.get_nano();
+  intmax_t	second = m_last_read.get_second();
+  intmax_t	nano = m_last_read.get_nano();
 
   m_last_read.now();
-  m_last_read.set_second(m_last_read.get_second() - second);
-  m_last_read.set_nano(m_last_read.get_nano() - nano);
-  if (m_last_read.get_second() > time.get_second())
-    return (true);
-  if (m_last_read.get_second() == time.get_second())
-    if (m_last_read.get_nano() > time.get_nano())
-      return (true);
-  if (m_last_read.get_second() > time.get_second() / 2)
-    return (write_ping());
-  if (m_last_read.get_second() == time.get_second() / 2)
-    if (m_last_read.get_nano() > time.get_nano() / 2)
+  if (m_last_read.get_second() - second > time.get_second())
+    {
+      if (m_wait_pong == true)
+	return (true);
       return (write_ping());
+    }
+  else if (m_last_read.get_second() - second == time.get_second() && m_last_read.get_nano() - nano > time.get_nano())
+    {
+      if (m_wait_pong == true)
+	return (true);
+      return (write_ping());
+    }
+  m_last_read.set_second(second);
+  m_last_read.set_nano(nano);
   return (false);
 }
 
 bool	Protocolv1::read(IDatabase const &database)
 {
   m_last_read.now();
+  m_wait_pong = false;
   if (m_read.read(m_socket) == true)
     return (true);
   if (m_read.is_read() == false)
     return (false);
-
   bool	ret;
   switch (m_read.get_opcode())
     {
@@ -357,17 +361,21 @@ bool	Protocolv1::write_clientlog(std::string const &log)
 
 bool	Protocolv1::read_ping(void)
 {
+  std::cout << "ping" << std::endl;
   return (write_pong());
 }
 
 bool	Protocolv1::write_ping(void)
 {
+  m_wait_pong = true;
   return (write_packet(APacket::PING));
 }
 
 bool	Protocolv1::read_pong(void)
 {
-  return (write_ping());
+  m_wait_pong = false;
+  std::cout << "pong" << std::endl;
+  return (false);
 }
 
 bool	Protocolv1::write_pong(void)

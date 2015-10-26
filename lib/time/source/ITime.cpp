@@ -5,12 +5,11 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 22:05:31 2015 Bertrand-Rapello Baptiste
-// Last update Wed Oct 21 22:05:55 2015 Bertrand-Rapello Baptiste
+// Last update Mon Oct 26 06:48:10 2015 Antoine Plaskowski
 //
 
 #include "ITime.hpp"
 
 ITime::~ITime()
 {
-
 }
