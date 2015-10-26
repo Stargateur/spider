@@ -5,10 +5,11 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sat Oct 24 15:42:58 2015 Antoine Plaskowski
-// Last update Sun Oct 25 05:59:08 2015 Antoine Plaskowski
+// Last update Mon Oct 26 04:29:45 2015 Antoine Plaskowski
 //
 
 #include	<unistd.h>
+#include	<string>
 #include	"Option.hpp"
 
 Option::Option(void) :

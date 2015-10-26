@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 22:51:48 2015 Bertrand-Rapello Baptiste
-// Last update Sun Oct 25 09:54:55 2015 Antoine Plaskowski
+// Last update Mon Oct 26 04:53:23 2015 Antoine Plaskowski
 //
 
 #include	<sys/socket.h>
@@ -121,20 +121,16 @@ bool	 Socket::can_write(void) const
   return (ret);
 }
 
-uintmax_t	Socket::read(void *buffer, uintmax_t size) const
+uintmax_t	Socket::read(uint8_t &buffer, uintmax_t size) const
 {
-  if (buffer == nullptr)
-    throw std::exception();
-  ssize_t	ret = ::read(m_fd, buffer, size);
+  ssize_t	ret = ::read(m_fd, &buffer, size);
   if (ret < 0)
     throw std::exception();
   return (ret);
 }
 
-uintmax_t	Socket::write(void const *buffer, uintmax_t size) const
+uintmax_t	Socket::write(uint8_t const &buffer, uintmax_t size) const
 {
-  if (buffer == nullptr)
-    throw std::exception();
   ssize_t	ret = ::write(m_fd, &buffer, size);
   if (ret < 0)
     throw std::exception();

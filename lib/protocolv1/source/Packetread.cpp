@@ -5,10 +5,10 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 25 10:24:10 2015 Antoine Plaskowski
-// Last update Mon Oct 26 03:05:14 2015 Antoine Plaskowski
+// Last update Mon Oct 26 04:52:06 2015 Antoine Plaskowski
 //
 
-#include	<exception>
+#include	<iostream>
 #include	"Packetread.hpp"
 
 Packetread::Packetread(void) :
@@ -20,7 +20,9 @@ Packetread::Packetread(void) :
 
 bool	Packetread::read(ISocket const &socket)
 {
-  uintmax_t	ret = socket.read(&m_buffer + m_read, sizeof(m_buffer) - m_read);
+  if (m_read >= sizeof(m_buffer))
+    return (true);
+  uintmax_t	ret = socket.read(m_buffer[m_read], sizeof(m_buffer) - m_read);
 
   if (ret == 0)
     return (true);

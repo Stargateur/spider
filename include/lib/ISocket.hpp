@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 20:47:26 2015 Bertrand-Rapello Baptiste
-// Last update Sun Oct 25 09:48:47 2015 Antoine Plaskowski
+// Last update Mon Oct 26 04:45:42 2015 Antoine Plaskowski
 //
 
 #ifndef		ISOCKET_HPP_
@@ -32,8 +32,8 @@ public:
   virtual bool	want_read(void) const = 0;
   virtual bool	can_write(void) const = 0;
   virtual bool	want_write(void) const = 0;
-  virtual uintmax_t	read(void *buffer, uintmax_t size) const = 0;
-  virtual uintmax_t	write(void const *buffer, uintmax_t size) const = 0;
+  virtual uintmax_t	read(uint8_t &buffer, uintmax_t size) const = 0;
+  virtual uintmax_t	write(uint8_t const &buffer, uintmax_t size) const = 0;
 };
 
 extern "C"

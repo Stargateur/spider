@@ -5,9 +5,10 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 25 10:24:10 2015 Antoine Plaskowski
-// Last update Mon Oct 26 02:50:49 2015 Antoine Plaskowski
+// Last update Mon Oct 26 04:48:30 2015 Antoine Plaskowski
 //
 
+#include	<iostream>
 #include	"Packetwrite.hpp"
 
 Packetwrite::Packetwrite(void) :
@@ -19,13 +20,18 @@ Packetwrite::Packetwrite(void) :
 
 bool	Packetwrite::write(ISocket const &socket)
 {
-  uintmax_t	ret = socket.write(m_buffer + m_write, m_size_header + get_size() - m_write);
+  if (m_write >= sizeof(m_buffer))
+    return (true);
+  if (m_size_header + get_size() - m_write >= sizeof(m_buffer) - m_write)
+    return (true);
+  uintmax_t	ret = socket.write(m_buffer[m_write], m_size_header + get_size() - m_write);
 
   if (ret == 0)
-    return (false);
+    return (true);
   m_write += ret;
   if (m_write < m_size_header + get_size())
     return (false);
+  m_is_write = true;
   return (m_write != m_size_header + get_size());
 }
 

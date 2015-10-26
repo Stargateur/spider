@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 25 10:10:39 2015 Antoine Plaskowski
-// Last update Mon Oct 26 03:22:21 2015 Antoine Plaskowski
+// Last update Mon Oct 26 04:35:24 2015 Antoine Plaskowski
 //
 
 #ifndef		PACKETREAD_HPP_
@@ -25,7 +25,7 @@ public:
     value = 0;
     for (uintmax_t i = 0; i < sizeof(T); i++)
       {
-	value |= (m_packet.data[m_read_data] << i * std::numeric_limits<uint8_t>::digits);
+	value |= (m_packet.data[m_read_data] << (i * std::numeric_limits<uint8_t>::digits));
 	if (m_read_data++ == UINT16_MAX)
 	  return (true);
       }

@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 22:50:40 2015 Bertrand-Rapello Baptiste
-// Last update Sun Oct 25 09:49:40 2015 Antoine Plaskowski
+// Last update Mon Oct 26 04:46:11 2015 Antoine Plaskowski
 //
 
 #ifndef		SOCKET_HPP_
@@ -36,8 +36,8 @@ public:
   bool	want_read(void) const;
   bool	can_write(void) const;
   bool	want_write(void) const;
-  uintmax_t	read(void *buffer, uintmax_t size) const;
-  uintmax_t	write(void const *buffer, uintmax_t size) const;
+  uintmax_t	read(uint8_t &buffer, uintmax_t size) const;
+  uintmax_t	write(uint8_t const &buffer, uintmax_t size) const;
 private:
   static fd_set	m_readfds;
   static fd_set	m_writefds;

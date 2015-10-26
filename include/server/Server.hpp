@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Wed Oct 21 22:50:01 2015 Antoine Plaskowski
-// Last update Sun Oct 25 05:39:10 2015 Antoine Plaskowski
+// Last update Mon Oct 26 03:58:27 2015 Antoine Plaskowski
 //
 
 #ifndef		SERVER_HPP_

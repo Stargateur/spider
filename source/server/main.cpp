@@ -5,15 +5,16 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 18 06:53:16 2015 Antoine Plaskowski
-// Last update Sat Oct 24 23:42:59 2015 Antoine Plaskowski
+// Last update Mon Oct 26 04:29:32 2015 Antoine Plaskowski
 //
 
 #include	"Server.hpp"
 #include	"Option.hpp"
 
-int		main(void)
+int		main(int argc, char **argv)
 {
   Option	option;
+  option.getopt(argc, argv);
   Server	server(option);
 
   while (server.run() == false)
