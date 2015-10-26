@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 22:50:40 2015 Bertrand-Rapello Baptiste
-// Last update Mon Oct 26 07:11:04 2015 Antoine Plaskowski
+// Last update Mon Oct 26 11:14:59 2015 Antoine Plaskowski
 //
 
 #ifndef		PROTOCOLV1_HPP_
@@ -47,25 +47,22 @@ private:
   Protocolv1	&operator=(Protocolv1 const &source);
 public:
   bool	select(void) const;
-  bool	run(IDatabase const &database, ITime const *timeout = nullptr);
+  bool	run(ITime const *timeout = nullptr);
   bool	server_command(Commandcode command);
   std::string const	&get_mac_address(void) const;
   bool	mac_address(std::string const &mac_address);
-  bool	log(std::string const &log);
-  bool	keyboard(ITime const &time,
-		 std::string const &event,
-		 std::string const &key,
-		 std::string const &process);
-  bool	mouse(ITime const &time,
-	      uintmax_t x,
-	      uintmax_t y,
-	      uintmax_t amout,
-	      std::string const &event,
-	      std::string const &button,
-	      std::string const &process);
+  bool	log(IProtocol::Log const &log);
+  bool	keyboard(std::vector<IProtocol::Keyboard> const &keyboard);
+  bool	mouse(std::vector<IProtocol::Mouse> const &mouse);
   ISocket const	&get_isocket(void) const;
+  IProtocol::Log const	&get_log(void) const;
+  bool	is_log(void) const;
+  IProtocol::Keyboard const	&get_keyboard(void) const;
+  bool	is_keyboard(void) const;
+  IProtocol::Mouse const	&get_mouse(void) const;
+  bool	is_mouse(void) const;
 private:
-  bool	read(IDatabase const &database);
+  bool	read(void);
   bool	write(void);
   bool	timeout(ITime const &timeout);
   bool	read_result(void);
@@ -80,25 +77,16 @@ private:
   bool	write_disconnect(void);
   bool	read_servercmd(void);
   bool	write_servercmd(Commandcode command);
-  bool	read_clientlog(IDatabase const &database);
-  bool	write_clientlog(std::string const &log);
+  bool	read_clientlog(void);
+  bool	write_clientlog(IProtocol::Log const &log);
   bool	read_ping(void);
   bool	write_ping(void);
   bool	read_pong(void);
   bool	write_pong(void);
-  bool	read_keyboard(IDatabase const &database);
-  bool	write_keyboard(ITime const &time,
-		       std::string const &event,
-		       std::string const &key,
-		       std::string const &process);
-  bool	read_mouse(IDatabase const &database);
-  bool	write_mouse(ITime const &time,
-		    uintmax_t x,
-		    uintmax_t y,
-		    uintmax_t amout,
-		    std::string const &event,
-		    std::string const &button,
-		    std::string const &process);
+  bool	read_keyboard(void);
+  bool	write_keyboard(std::vector<Keyboard> const &keyboard);
+  bool	read_mouse(void);
+  bool	write_mouse(std::vector<Mouse> const &mouse);
   bool	write_packet(APacket::Opcode code);
 private:
   ISocket	&m_socket;
@@ -112,6 +100,12 @@ private:
   bool	m_is_stop;
   bool	m_is_mute;
   bool	m_wait_pong;
+  IProtocol::Log	m_log;
+  bool	m_is_log;
+  IProtocol::Keyboard	m_keyboard;
+  bool	m_is_keyboard;
+  IProtocol::Mouse	m_mouse;
+  bool	m_is_mouse;
 };
 
 #endif	/* !IPROTOCOLV1_HPP_ */

@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 18 06:52:57 2015 Antoine Plaskowski
-// Last update Mon Oct 26 05:16:38 2015 Antoine Plaskowski
+// Last update Mon Oct 26 11:13:36 2015 Antoine Plaskowski
 //
 
 #include	<sstream>
@@ -41,9 +41,11 @@ int		main(int argc, char **argv)
   fct_new_idatabase	new_idatabase = dll_idatabase.get_symbole<fct_new_idatabase>(NAME_FCT_NEW_IDATABASE);
   IDatabase	&database = new_idatabase();
   fct_iselect	iselect = dll_isocket.get_symbole<fct_iselect>(NAME_FCT_ISELECT);
+  IProtocol::Keyboard	keyboard = {time, "press", "ff", "rio.exe"};
+  std::vector<IProtocol::Keyboard>	lol;
 
-  time.now();
-  protocol.keyboard(time, "press", "ff", "riot.exe");
+  lol.push_back(keyboard);
+  protocol.keyboard(lol);
   while (true)
     {
       in.want_read();
@@ -56,10 +58,10 @@ int		main(int argc, char **argv)
 	  buf[ret] = '\0';
 	  if (ret == 0)
 	    break;
-	  std::string str((char *)(buf));
-	  protocol.log(str);
+	  IProtocol::Log	log = {(char *)buf};
+	  protocol.log(log);
 	}
-      if (protocol.run(database) == true)
+      if (protocol.run() == true)
 	return (0);
     }
   // int		cfd;

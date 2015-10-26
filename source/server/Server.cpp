@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sat Oct 24 17:20:22 2015 Antoine Plaskowski
-// Last update Mon Oct 26 06:10:55 2015 Antoine Plaskowski
+// Last update Mon Oct 26 11:03:54 2015 Antoine Plaskowski
 //
 
 #include	"Server.hpp"
@@ -54,7 +54,7 @@ bool	Server::run(void)
   for (auto it = m_clients.begin(); it != m_clients.end(); it++)
     {
       if (*it != nullptr)
-	if ((*it)->run(m_database, &m_timeout) == true)
+	if ((*it)->run(&m_timeout) == true)
 	  {
 	    delete *it;
 	    remove = true;

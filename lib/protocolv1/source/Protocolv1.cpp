@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Thu Oct 22 09:18:51 2015 Antoine Plaskowski
-// Last update Mon Oct 26 07:51:32 2015 Antoine Plaskowski
+// Last update Mon Oct 26 11:29:37 2015 Antoine Plaskowski
 //
 
 #include	<iostream>
@@ -24,9 +24,14 @@ Protocolv1::Protocolv1(ISocket &socket, ITime &time) :
   m_is_connect(false),
   m_is_stop(false),
   m_is_mute(false),
-  m_wait_pong(false)
+  m_wait_pong(false),
+  m_log(),
+  m_is_log(false),
+  m_keyboard({time.clone(), "", "", ""}),
+  m_is_keyboard(false),
+  m_mouse({time.clone(), 0, 0, 0, "", "", ""}),
+  m_is_mouse(false)
 {
-  m_last_read.now();
 }
 
 Protocolv1::~Protocolv1(void)
@@ -35,10 +40,10 @@ Protocolv1::~Protocolv1(void)
   delete (&m_last_read);
 }
 
-bool	Protocolv1::run(IDatabase const &database, ITime const *time)
+bool	Protocolv1::run(ITime const *time)
 {
   if (m_socket.can_read() == true)
-    if (read(database) == true)
+    if (read() == true)
       return (true);
   if (time != nullptr)
     if (timeout(*time) == true)
@@ -79,7 +84,7 @@ bool	Protocolv1::timeout(ITime const &time)
   return (false);
 }
 
-bool	Protocolv1::read(IDatabase const &database)
+bool	Protocolv1::read(void)
 {
   m_last_read.now();
   m_wait_pong = false;
@@ -109,7 +114,7 @@ bool	Protocolv1::read(IDatabase const &database)
       ret = read_servercmd();
       break;
     case (APacket::CLIENTLOG):
-      ret = read_clientlog(database);
+      ret = read_clientlog();
       break;
     case (APacket::PING):
       ret = read_ping();
@@ -118,10 +123,10 @@ bool	Protocolv1::read(IDatabase const &database)
       ret = read_pong(); 
       break;
     case (APacket::KEYBOARD):
-      ret = read_keyboard(database);
+      ret = read_keyboard();
       break;
     case (APacket::MOUSE):
-      ret = read_mouse(database);
+      ret = read_mouse();
       break;
     default:
       ret = true;
@@ -158,19 +163,19 @@ bool	Protocolv1::mac_address(std::string const &mac_address)
   return (write_mac_address(mac_address));
 }
 
-bool	Protocolv1::log(std::string const &log)
+bool	Protocolv1::log(IProtocol::Log const &log)
 {
   return (write_clientlog(log));
 }
 
-bool	Protocolv1::keyboard(ITime const &time, std::string const &event, std::string const &key, std::string const &process)
+bool	Protocolv1::keyboard(std::vector<Keyboard> const &keyboard)
 {
-  return (write_keyboard(time, event, key, process));
+  return (write_keyboard(keyboard));
 }
 
-bool	Protocolv1::mouse(ITime const &time, uintmax_t x, uintmax_t y, uintmax_t amout, std::string const &event, std::string const &button, std::string const &process)
+bool	Protocolv1::mouse(std::vector<Mouse> const &mouse)
 {
-  return (write_mouse(time, x, y, amout, event, button, process));
+  return (write_mouse(mouse));
 }
 
 bool	Protocolv1::read_result(void)
@@ -340,7 +345,7 @@ bool	Protocolv1::write_servercmd(Commandcode command)
   return (write_packet(APacket::SERVERCMD));
 }
 
-bool	Protocolv1::read_clientlog(IDatabase const &database)
+bool	Protocolv1::read_clientlog(void)
 {
   std::string	log;
 
@@ -350,11 +355,11 @@ bool	Protocolv1::read_clientlog(IDatabase const &database)
   return (false);
 }
 
-bool	Protocolv1::write_clientlog(std::string const &log)
+bool	Protocolv1::write_clientlog(IProtocol::Log const &log)
 {
   Packetwrite	&packet = m_packets[m_write];
 
-  if (packet.put_string(log) == true)
+  if (packet.put_string(log.log) == true)
     return (true);
   return (write_packet(APacket::CLIENTLOG));
 }
@@ -383,7 +388,7 @@ bool	Protocolv1::write_pong(void)
   return (write_packet(APacket::PONG));
 }
 
-bool	Protocolv1::read_keyboard(IDatabase const &database)
+bool	Protocolv1::read_keyboard(void)
 {
   uint8_t	size_array;
 
@@ -415,26 +420,29 @@ bool	Protocolv1::read_keyboard(IDatabase const &database)
   return (false);
 }
 
-bool	Protocolv1::write_keyboard(ITime const &time, std::string const &event, std::string const &key, std::string const &process)
+bool	Protocolv1::write_keyboard(std::vector<Keyboard> const &keyboard)
 {
   Packetwrite	&packet = m_packets[m_write];
 
-  if (packet.put_int<uint8_t>(1) == true)
+  if (packet.put_int<uint8_t>(keyboard.size()) == true)
     return (true);
-  if (packet.put_int<uint64_t>(time.get_second()) == true)
-    return (true);
-  if (packet.put_int<uint64_t>(time.get_nano()) == true)
-    return (true);
-  if (packet.put_string(event) == true)
-    return (true);
-  if (packet.put_string(key) == true)
-    return (true);
-  if (packet.put_string(process) == true)
-    return (true);
+  for (uint64_t i = 0; i < keyboard.size(); i++)
+    {
+      if (packet.put_int<uint64_t>(keyboard[i].time.get_second()) == true)
+	return (true);
+      if (packet.put_int<uint64_t>(keyboard[i].time.get_nano()) == true)
+	return (true);
+      if (packet.put_string(keyboard[i].event) == true)
+	return (true);
+      if (packet.put_string(keyboard[i].key) == true)
+	return (true);
+      if (packet.put_string(keyboard[i].process) == true)
+	return (true);
+    }
   return (write_packet(APacket::KEYBOARD));
 }
 
-bool	Protocolv1::read_mouse(IDatabase const &database)
+bool	Protocolv1::read_mouse(void)
 {
   uint8_t	size_array;
 
@@ -471,28 +479,31 @@ bool	Protocolv1::read_mouse(IDatabase const &database)
   return (false);
 }
 
-bool	Protocolv1::write_mouse(ITime const &time, uintmax_t x, uintmax_t y, uintmax_t amount, std::string const &event, std::string const &button, std::string const &process)
+bool	Protocolv1::write_mouse(std::vector<Mouse> const &mouse)
 {
   Packetwrite	&packet = m_packets[m_write];
 
-  if (packet.put_int<uint8_t>(1) == true)
+  if (packet.put_int<uint8_t>(mouse.size()) == true)
     return (true);
-  if (packet.put_int<uint64_t>(time.get_second()) == true)
-    return (true);
-  if (packet.put_int<uint64_t>(time.get_nano()) == true)
-    return (true);
-  if (packet.put_int<uint32_t>(x) == true)
-    return (true);
-  if (packet.put_int<uint32_t>(y) == true)
-    return (true);
-  if (packet.put_int<uint64_t>(amount) == true)
-    return (true);
-  if (packet.put_string(event) == true)
-    return (true);
-  if (packet.put_string(button) == true)
-    return (true);
-  if (packet.put_string(process) == true)
-    return (true);
+  for (uintmax_t i = 0; i < mouse.size(); i++)
+    {
+      if (packet.put_int<uint64_t>(mouse[i].time.get_second()) == true)
+	return (true);
+      if (packet.put_int<uint64_t>(mouse[i].time.get_nano()) == true)
+	return (true);
+      if (packet.put_int<uint32_t>(mouse[i].x) == true)
+	return (true);
+      if (packet.put_int<uint32_t>(mouse[i].y) == true)
+	return (true);
+      if (packet.put_int<uint64_t>(mouse[i].amount) == true)
+	return (true);
+      if (packet.put_string(mouse[i].event) == true)
+	return (true);
+      if (packet.put_string(mouse[i].button) == true)
+	return (true);
+      if (packet.put_string(mouse[i].process) == true)
+	return (true);
+    }
   return (write_packet(APacket::MOUSE));
 }
 
@@ -512,6 +523,36 @@ bool	Protocolv1::write_packet(APacket::Opcode code)
 ISocket const	&Protocolv1::get_isocket(void) const
 {
   return (m_socket);
+}
+
+IProtocol::Log const	&Protocolv1::get_log(void) const
+{
+  return (m_log);
+}
+
+bool	Protocolv1::is_log(void) const
+{
+  return (m_is_log);
+}
+
+IProtocol::Keyboard const	&Protocolv1::get_keyboard(void) const
+{
+  return (m_keyboard);
+}
+
+bool	Protocolv1::is_keyboard(void) const
+{
+  return (m_is_keyboard);
+}
+
+IProtocol::Mouse const	&Protocolv1::get_mouse(void) const
+{
+  return (m_mouse);
+}
+
+bool	Protocolv1::is_mouse(void) const
+{
+  return (m_is_mouse);
 }
 
 IProtocol	&new_iprotocol(ISocket &socket, ITime &time)
