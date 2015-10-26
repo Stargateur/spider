@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 21:04:15 2015 Bertrand-Rapello Baptiste
-// Last update Mon Oct 26 14:14:49 2015 Bertrand-Rapello Baptiste
+// Last update Mon Oct 26 15:43:17 2015 Bertrand-Rapello Baptiste
 //
 
 #include	"Database.hpp"
@@ -27,7 +27,15 @@ bool  Database::connect(std::string const &host, std::string const &port, std::s
   portInt = std::stoul(port, nullptr, 10);
   std::cout << "le port est " << portInt << std::endl;
   if (mysql_real_connect(m_db, host.c_str(), user.c_str(), passwd.c_str(), db.c_str(), portInt, NULL, 0) == NULL)
-    return true;
+    {
+      std::cout << "je ne me suis pas co" << std::endl;
+      if (mysql_real_connect(m_db, host.c_str(), user.c_str(), passwd.c_str(), NULL, portInt, NULL, 0) == NULL)
+	{
+	  std::cout << "il y a un pb" << std::endl;
+	  return true;
+	}
+      select_db(db);
+    }
   return false;
 }
 
@@ -55,17 +63,28 @@ bool Database::select_db(std::string const & db)
       else
 	{
 	  rtr = mysql_select_db(m_db, db.c_str());
-	  cmd = "CREATE TABLE (id int, mac_address VARCHAR(18));";
+	  cmd = "CREATE TABLE client (id int, mac_address VARCHAR(18));";
 	  rtr = mysql_query(m_db, cmd.c_str());
+	  cmd = "CREATE TABLE keyboard_input (id_client INT, day DATE, hours TIME, id_key INT , state TEXT, id_process int);";
+	  rtr = mysql_query(m_db, cmd.c_str());
+	  cmd = "CREATE TABLE keyboard_mouse (id_client INT, day DATE, hours TIME, id_button INT, state TEXT, id_process int);";
+	  rtr = mysql_query(m_db, cmd.c_str());
+	  cmd = "CREATE TABLE log_input (id INT, log TEXT);";
+	  rtr = mysql_query(m_db, cmd.c_str());
+	  cmd = "CREATE TABLE key_string (id INT, id_key TEXT);";
+	  rtr = mysql_query(m_db, cmd.c_str());
+	  cmd = "CREATE TABLE mouse_string (id INT, button TEXT);";
+	  rtr = mysql_query(m_db, cmd.c_str());
+	  cmd = "CREATE TABLE software_used (id INT, soft_name TEXT);";
+	  rtr = mysql_query(m_db, cmd.c_str());	  
 	}
     }
-
   return false;
 }
 
 bool Database::insert_keyboard(const std::string  & mac_address, const ITime  & tme, std::string event, const std::string & key, const std::string & process)
 {
-  std::string cmd = "INSERT INTO keyboard_inputbis (id_client, day, hours, id_key, state, id_process) VALUES (";
+  std::string cmd = "INSERT INTO keyboard_input (id_client, day, hours, id_key, state, id_process) VALUES (";
   std::string clientName;
   std::string keyb_name;
   std::string soft_name;
