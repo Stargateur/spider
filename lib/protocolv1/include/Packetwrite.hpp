@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 25 10:10:39 2015 Antoine Plaskowski
-// Last update Mon Oct 26 04:38:24 2015 Antoine Plaskowski
+// Last update Mon Oct 26 05:44:49 2015 Antoine Plaskowski
 //
 
 #ifndef		PACKETWRITE_HPP_
@@ -26,7 +26,6 @@ public:
 	m_packet.data[m_write_data] = (value >> (i * std::numeric_limits<uint8_t>::digits));
 	if (m_write_data++ == UINT16_MAX)
 	  return (true);
-	return (false);
       }
     return (false);
   }

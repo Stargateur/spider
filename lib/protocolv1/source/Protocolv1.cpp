@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Thu Oct 22 09:18:51 2015 Antoine Plaskowski
-// Last update Mon Oct 26 04:52:28 2015 Antoine Plaskowski
+// Last update Mon Oct 26 05:20:59 2015 Antoine Plaskowski
 //
 
 #include	<iostream>
@@ -398,6 +398,11 @@ bool	Protocolv1::read_keyboard(IDatabase const &database)
       std::string	process;
       if (m_read.get_string(process) == true)
 	return (true);
+      std::cout << second << std::endl;
+      std::cout << nano << std::endl;
+      std::cout << event << std::endl;
+      std::cout << key << std::endl;
+      std::cout << process << std::endl;
     }
   return (false);
 }
@@ -406,6 +411,8 @@ bool	Protocolv1::write_keyboard(ITime const &time, std::string const &event, std
 {
   Packetwrite	&packet = m_packets[m_write];
 
+  if (packet.put_int<uint8_t>(1) == true)
+    return (true);
   if (packet.put_int<uint64_t>(time.get_second()) == true)
     return (true);
   if (packet.put_int<uint64_t>(time.get_nano()) == true)
@@ -451,6 +458,7 @@ bool	Protocolv1::read_mouse(IDatabase const &database)
       std::string	process;
       if (m_read.get_string(process) == true)
 	return (true);
+      std::cout << second << "s " << nano << "n " << x << "x " << y << "y " << amount << "amount " << event << " " << key << " " << process << std::endl;
     }
   return (false);
 }
@@ -459,6 +467,8 @@ bool	Protocolv1::write_mouse(ITime const &time, uintmax_t x, uintmax_t y, uintma
 {
   Packetwrite	&packet = m_packets[m_write];
 
+  if (packet.put_int<uint8_t>(1) == true)
+    return (true);
   if (packet.put_int<uint64_t>(time.get_second()) == true)
     return (true);
   if (packet.put_int<uint64_t>(time.get_nano()) == true)

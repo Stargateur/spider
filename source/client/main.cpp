@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 18 06:52:57 2015 Antoine Plaskowski
-// Last update Mon Oct 26 04:47:07 2015 Antoine Plaskowski
+// Last update Mon Oct 26 05:16:38 2015 Antoine Plaskowski
 //
 
 #include	<sstream>
@@ -42,6 +42,8 @@ int		main(int argc, char **argv)
   IDatabase	&database = new_idatabase();
   fct_iselect	iselect = dll_isocket.get_symbole<fct_iselect>(NAME_FCT_ISELECT);
 
+  time.now();
+  protocol.keyboard(time, "press", "ff", "riot.exe");
   while (true)
     {
       in.want_read();

@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 25 10:24:10 2015 Antoine Plaskowski
-// Last update Mon Oct 26 04:48:30 2015 Antoine Plaskowski
+// Last update Mon Oct 26 05:23:53 2015 Antoine Plaskowski
 //
 
 #include	<iostream>
@@ -26,6 +26,7 @@ bool	Packetwrite::write(ISocket const &socket)
     return (true);
   uintmax_t	ret = socket.write(m_buffer[m_write], m_size_header + get_size() - m_write);
 
+  std::cout << ret << " " << m_size_header + get_size() << " " << m_write << std::endl;
   if (ret == 0)
     return (true);
   m_write += ret;
@@ -41,6 +42,7 @@ bool	Packetwrite::put_string(std::string const &string)
     return (true);
   if (put_int<uint8_t>(string.size()))
     return (true);
+  std::cout << (int)(uint8_t)string.size() << std::endl;
   for (uintmax_t i = 0; i < string.size(); i++)
     if (put_int<uint8_t>(string[i]) == true)
       return (true);
