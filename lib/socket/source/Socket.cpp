@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 22:51:48 2015 Bertrand-Rapello Baptiste
-// Last update Mon Oct 26 07:40:53 2015 Antoine Plaskowski
+// Last update Mon Oct 26 11:41:18 2015 Antoine Plaskowski
 //
 
 #include	<sys/socket.h>
@@ -174,7 +174,7 @@ ISocket	&new_iserver(std::string const &host, std::string const &port)
   struct addrinfo	*result;
   struct addrinfo	hints =
     {
-      AI_PASSIVE | AI_CANONNAME,
+      AI_PASSIVE,
       AF_UNSPEC,
       SOCK_STREAM,
       IPPROTO_TCP,
@@ -183,7 +183,7 @@ ISocket	&new_iserver(std::string const &host, std::string const &port)
       NULL,
       NULL
     };
-  int	status = getaddrinfo(host.c_str(), port.c_str(), &hints, &result);
+  int	status = getaddrinfo(NULL, port.c_str(), &hints, &result);
   if (status != 0)
     {
       std::cerr << "getaddrinfo: " << gai_strerror(status) <<  std::endl;
@@ -223,7 +223,7 @@ ISocket	&new_iclient(std::string const &host, std::string const &port)
   struct addrinfo	*result;
   struct addrinfo	hints =
     {
-      AI_CANONNAME,
+      0,
       AF_UNSPEC,
       SOCK_STREAM,
       IPPROTO_TCP,
@@ -242,7 +242,7 @@ ISocket	&new_iclient(std::string const &host, std::string const &port)
   int fd = aux_client(result);
   freeaddrinfo(result);
   if (fd == -1)
-      throw std::exception();
+    throw std::exception();
   return (*new Socket(host, fd));
 }
 
