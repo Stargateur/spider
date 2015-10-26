@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 18 06:52:57 2015 Antoine Plaskowski
-// Last update Mon Oct 26 11:13:36 2015 Antoine Plaskowski
+// Last update Mon Oct 26 12:20:34 2015 Antoine Plaskowski
 //
 
 #include	<sstream>
@@ -42,9 +42,9 @@ int		main(int argc, char **argv)
   IDatabase	&database = new_idatabase();
   fct_iselect	iselect = dll_isocket.get_symbole<fct_iselect>(NAME_FCT_ISELECT);
   IProtocol::Keyboard	keyboard = {time, "press", "ff", "rio.exe"};
-  std::vector<IProtocol::Keyboard>	lol;
+  std::list<IProtocol::Keyboard *>	lol;
 
-  lol.push_back(keyboard);
+  lol.push_back(&keyboard);
   protocol.keyboard(lol);
   while (true)
     {
@@ -59,7 +59,9 @@ int		main(int argc, char **argv)
 	  if (ret == 0)
 	    break;
 	  IProtocol::Log	log = {(char *)buf};
-	  protocol.log(log);
+	  std::list<IProtocol::Log *> xd;
+	  xd.push_back(&log);
+	  protocol.log(xd);
 	}
       if (protocol.run() == true)
 	return (0);
