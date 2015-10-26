@@ -5,7 +5,7 @@
 ## Login   <plasko_a@epitech.eu>
 ## 
 ## Started on  Thu Oct 22 01:26:02 2015 Antoine Plaskowski
-## Last update Thu Oct 22 02:19:21 2015 Antoine Plaskowski
+## Last update Mon Oct 26 14:02:59 2015 Antoine Plaskowski
 ##
 
 NAME		=	lib_time_linux.so
@@ -30,7 +30,7 @@ CXXFLAGS	+=	-fPIC
 CXXFLAGS	+=	$(INCLUDE)
 
 ifeq ($(CXX), clang)
-CXXFLAGS	+=	-Weverything -Wno-padded -Wno-disabled-macro-expansion
+CXXFLAGS	+=	-Weverything -Wno-padded -Wno-disabled-macro-expansion -Wno-return-type-c-linkage
 endif
 
 ifneq ($(DEBUG), no)

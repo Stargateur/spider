@@ -5,7 +5,7 @@
 ## Login   <plasko_a@epitech.eu>
 ## 
 ## Started on  Thu Oct 22 01:26:02 2015 Antoine Plaskowski
-## Last update Thu Oct 22 09:47:25 2015 Antoine Plaskowski
+## Last update Mon Oct 26 14:01:55 2015 Antoine Plaskowski
 ##
 
 NAME		=	lib_protocolv1_linux.so
@@ -30,7 +30,7 @@ CXXFLAGS	+=	-fPIC
 CXXFLAGS	+=	$(INCLUDE)
 
 ifeq ($(CXX), clang)
-CXXFLAGS	+=	-Weverything -Wno-padded -Wno-disabled-macro-expansion
+CXXFLAGS	+=	-Weverything -Wno-padded -Wno-disabled-macro-expansion -Wno-return-type-c-linkage
 endif
 
 ifneq ($(DEBUG), no)

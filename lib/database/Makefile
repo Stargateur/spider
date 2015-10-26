@@ -5,7 +5,7 @@
 ## Login   <plasko_a@epitech.eu>
 ## 
 ## Started on  Thu Oct 22 01:26:02 2015 Antoine Plaskowski
-## Last update Fri Oct 23 22:31:57 2015 Antoine Plaskowski
+## Last update Mon Oct 26 14:01:40 2015 Antoine Plaskowski
 ##
 
 NAME		=	lib_database_linux.so
@@ -31,7 +31,7 @@ CXXFLAGS	+=	-fPIC
 CXXFLAGS	+=	$(INCLUDE)
 
 ifeq ($(CXX), clang)
-CXXFLAGS	+=	-Weverything -Wno-padded -Wno-disabled-macro-expansion
+CXXFLAGS	+=	-Weverything -Wno-padded -Wno-disabled-macro-expansion -Wno-return-type-c-linkage
 endif
 
 ifneq ($(DEBUG), no)

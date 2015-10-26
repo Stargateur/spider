@@ -82,7 +82,7 @@ Table of Contents
 
 3.1.2.  Array field
 
-    The maximum size of an array MUST be "2^8-1"
+    The maximum size of an array MUST be "2^8-1".
 
     The type of the array items MUST be unique and defined when using the
     array field.
@@ -137,34 +137,36 @@ Table of Contents
 
       Table 4: Result packet header structure
 
-    +-------+---------+--------------+
-    | Name  | type    | Description  |
-    +-------+---------+--------------+
-    | error | uint8_t | Error code   |
-    | id    | uint8_t | Id of packet |
-    +-------+---------+--------------+
+    +-------+---------+---------------------+
+    | Name  | type    | Description         |
+    +-------+---------+---------------------+
+    | error | uint8_t | Error code          |
+    | id    | uint8_t | coresponding packet |
+    +-------+---------+---------------------+
+
+    * error : It's the error code
+    * id : It's the id from the packet corresponding packet
 
       Table 5: Result packet data structure
 
-    +------------+---------------------------------------+
-    | Error code | Description                           |
-    +------------+---------------------------------------+
-    | 0          | No error                              |
-    | 1          | Ignored                               |
-    | 2          | Unknown error                         |
-    | 3          | Client already started                |
-    | 4          | Client already stopped                |
-    | 5          | Client already muted                  |
-    | 6          | Client already unmuted                |
-    | 7          | Invalid command                       |
-    | 8          | Invalid keyboard input                |
-    | 9          | Invalid mouse input                   |
-    | 10         | Unknown ID                            |
-    | 11         | Wrong protocol version                |
-    | 12         | Wrong Mac address                     |
-    | 13         | Connect fail                          |
-    | 14         | Disconnect fail                       |
-    +------------+---------------------------------------+
+    +------------+-------------------------+
+    | Error code | Description             |
+    +------------+-------------------------+
+    | 0          | No error                |
+    | 1          | Ignored                 |
+    | 2          | Unknown error           |
+    | 3          | Client already started  |
+    | 4          | Client already stopped  |
+    | 5          | Client already muted    |
+    | 6          | Client already unmuted  |
+    | 7          | Invalid command         |
+    | 8          | Invalid keyboard input  |
+    | 9          | Invalid mouse input     |
+    | 10         | Wrong protocol version  |
+    | 11         | Wrong Mac address       |
+    | 12         | Connect fail            |
+    | 13         | Disconnect fail         |
+    +------------+-------------------------+
   
       Table 6: error code definition
 
@@ -297,11 +299,11 @@ Table of Contents
 
      Table 16: ClientLog packet header structure
 
-   +-------+--------+---------------------+
-   | Name  | type   | Description         |
-   +-------+--------+---------------------+
-   | msg   | string | The message to send |
-   +-------+--------+---------------------+
+   +------+---------------+---------------------+
+   | Name | type          | Description         |
+   +------+---------------+---------------------+
+   | msg  | array[string] | The message to send |
+   +------+---------------+---------------------+
 
      Table 17: ClientLog packet data structure
 

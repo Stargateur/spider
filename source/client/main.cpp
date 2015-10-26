@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 18 06:52:57 2015 Antoine Plaskowski
-// Last update Mon Oct 26 12:20:34 2015 Antoine Plaskowski
+// Last update Mon Oct 26 14:19:52 2015 Antoine Plaskowski
 //
 
 #include	<sstream>
@@ -37,9 +37,6 @@ int		main(int argc, char **argv)
   DynamicLinkLibrary	dll_iprotocol(option.get_path_lib_iprotocol());
   fct_new_iprotocol	new_iprotocol = dll_iprotocol.get_symbole<fct_new_iprotocol>(NAME_FCT_NEW_IPROTOCOL);
   IProtocol	&protocol = new_iprotocol(client, time);
-  DynamicLinkLibrary	dll_idatabase(option.get_path_lib_idatabase());
-  fct_new_idatabase	new_idatabase = dll_idatabase.get_symbole<fct_new_idatabase>(NAME_FCT_NEW_IDATABASE);
-  IDatabase	&database = new_idatabase();
   fct_iselect	iselect = dll_isocket.get_symbole<fct_iselect>(NAME_FCT_ISELECT);
   IProtocol::Keyboard	keyboard = {time, "press", "ff", "rio.exe"};
   std::list<IProtocol::Keyboard *>	lol;
