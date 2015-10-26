@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 21:04:15 2015 Bertrand-Rapello Baptiste
-// Last update Sun Oct 25 05:40:10 2015 Antoine Plaskowski
+// Last update Mon Oct 26 14:14:49 2015 Bertrand-Rapello Baptiste
 //
 
 #include	"Database.hpp"
@@ -26,7 +26,8 @@ bool  Database::connect(std::string const &host, std::string const &port, std::s
 
   portInt = std::stoul(port, nullptr, 10);
   std::cout << "le port est " << portInt << std::endl;
-  mysql_real_connect(m_db, host.c_str(), user.c_str(), passwd.c_str(), db.c_str(), portInt, NULL, 0);
+  if (mysql_real_connect(m_db, host.c_str(), user.c_str(), passwd.c_str(), db.c_str(), portInt, NULL, 0) == NULL)
+    return true;
   return false;
 }
 
@@ -58,24 +59,7 @@ bool Database::select_db(std::string const & db)
 	  rtr = mysql_query(m_db, cmd.c_str());
 	}
     }
-  /*
-  mysql_query(m_db, "SELECT * FROM client");
-  res = mysql_store_result(m_db);
-  nbFields = mysql_num_fields(res);
-  nbRows = mysql_num_rows(res);
-  field = mysql_fetch_field(res);
-  std::cout << "nombre de champ " << nbFields << " nombre de row " <<  nbRows << "nom du champ " << field->name << std::endl;;
-  unsigned long *lengths;
-  unsigned int i = 0;
-  while ((row = mysql_fetch_row(res)) != NULL)
-    {
-      //lengths = mysql_fetch_lengths(res);
-      for (i = 0; i < nbFields; i++)
-	{
-	  std::cout << "row[" << i << "]  " << row[i] << std::endl;
-	}
-    }
-  */
+
   return false;
 }
 
@@ -83,6 +67,8 @@ bool Database::insert_keyboard(const std::string  & mac_address, const ITime  & 
 {
   std::string cmd = "INSERT INTO keyboard_inputbis (id_client, day, hours, id_key, state, id_process) VALUES (";
   std::string clientName;
+  std::string keyb_name;
+  std::string soft_name;
   MYSQL_RES *res;
   MYSQL_FIELD *field;
   MYSQL_ROW row;
@@ -93,7 +79,8 @@ bool Database::insert_keyboard(const std::string  & mac_address, const ITime  & 
   int stop = 0;
   unsigned int i = 0;
   int	lastid = 0;
-  
+
+  /* d abord je parcour les clients */
   mysql_query(m_db, "SELECT * FROM client"); 
   res = mysql_store_result(m_db);
   nbFields = mysql_num_fields(res);
@@ -119,22 +106,100 @@ bool Database::insert_keyboard(const std::string  & mac_address, const ITime  & 
   std::cout << stop << std::endl;
   if (stop != 1)
     {
+      /* le client n'existe pas je le rajoute */
       std::string toAdd = "INSERT INTO client (id, mac_addr) VALUES (";
       toAdd += std::to_string(lastid+1);
-      toAdd += ", \"";
-      toAdd += mac_address;
-      toAdd += "\");";
-      //mysql_query(m_db, toAdd);
+      toAdd += ", \"" + mac_address + "\");";
+      //toAdd += mac_address;
+      //toAdd += "\");";
       std::cout << "jai ajoute un client et ma ligne de cmd " << toAdd << std::endl;
       mysql_query(m_db, toAdd.c_str());
       cmd += std::to_string(lastid+1);
       cmd += ", ";
     }
 
+  /* ici on va s occuper de la date */
+
+  /* pour le moment c'est a Null */
   std::cout << cmd << std::endl;
-  cmd += "NULL, NULL, NULL, \"";
+  cmd += "NULL, NULL, ";
+
+  stop = 0;
+  /* ici on va parcourir les id des touches */
+  mysql_query(m_db, "SELECT * FROM key_string_bis");
+  res = mysql_store_result(m_db);
+  nbFields = mysql_num_fields(res);
+  nbRows = mysql_num_rows(res);
+  field = mysql_fetch_field(res);
+  lastid = 0;
+  while ((row = mysql_fetch_row(res)) != NULL && stop != 1)
+    {
+      for (i = 0; i < nbFields; i+=2)
+	{
+	  lastid = std::stoi(row[i]);
+	  std::cout << "row[" << i << "]  " << row[i] << " et " << row[i+1]  << std::endl;
+	  keyb_name = row[i+1];
+	  if (keyb_name == key)
+	    {
+	      cmd += row[i];
+	      cmd += ", ";
+	      stop = 1;
+	    }
+	}
+    }
+  if (stop != 1)
+    {
+      /* la touche n'existe pas je le rajoute */
+      std::string toAdd = "INSERT INTO key_string_bis (id, id_key) VALUES (";
+      toAdd += std::to_string(lastid+1);
+      toAdd += ", \"" + key + "\");";
+      //toAdd += key;
+      //toAdd += "\");";
+      std::cout << "jai ajoute une touche et ma ligne de cmd " << toAdd << std::endl;
+      mysql_query(m_db, toAdd.c_str());
+      cmd += std::to_string(lastid+1);
+      cmd += ", ";
+    }
+
+  cmd += "\"";
   cmd += event;
-  cmd += "\", 1);";
+  cmd += "\", ";
+
+  /* et maintenant de l'application */
+  mysql_query(m_db, "SELECT * FROM software_used");
+  res = mysql_store_result(m_db);
+  nbFields = mysql_num_fields(res);
+  nbRows = mysql_num_rows(res);
+  field = mysql_fetch_field(res);
+  lastid = 0;
+  stop = 0;
+  while ((row = mysql_fetch_row(res)) != NULL && stop != 1)
+    {
+      //lengths = mysql_fetch_lengths(res);
+      for (i = 0; i < nbFields; i+=2)
+	{
+	  lastid = std::stoi(row[i]);
+	  std::cout << "row[" << i << "]  " << row[i] << " et " << row[i+1]  << std::endl;
+	  soft_name = row[i+1];
+	  if (process == soft_name)
+	    {
+	      cmd += row[i];
+	      stop = 1;
+	    }
+	}
+    }
+  if (stop != 1)
+    {
+      /* l application n'existe pas je le rajoute */
+      std::string toAdd = "INSERT INTO software_used (id, soft_name) VALUES (";
+      toAdd += std::to_string(lastid+1);
+      toAdd += ", \"" + process + "\");";
+      std::cout << "to add  " << toAdd << std::endl;
+      mysql_query(m_db, toAdd.c_str());
+      cmd += std::to_string(lastid+1);
+    }
+
+  cmd += ");";
   std::cout << cmd << std::endl;
   mysql_query(m_db, cmd.c_str());
   
