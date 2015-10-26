@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 22:50:40 2015 Bertrand-Rapello Baptiste
-// Last update Sun Oct 25 09:09:31 2015 Antoine Plaskowski
+// Last update Mon Oct 26 01:37:10 2015 Antoine Plaskowski
 //
 
 #ifndef		PROTOCOLV1_HPP_
@@ -15,6 +15,8 @@
 # include	<array>
 # include	"IProtocol.hpp"
 # include	"ITime.hpp"
+# include	"Packetread.hpp"
+# include	"Packetwrite.hpp"
 
 class Protocolv1 : public IProtocol
 {
@@ -37,38 +39,6 @@ private:
     CONNECT_FAIL = 13,
     DISCONNECT_FAIL = 14
   };
-  enum	Opcode : uint8_t
-  {
-    RESULT = 0,
-    MAC_ADDRESS = 1,
-    VERSION = 2,
-    CONNECT = 3,
-    DISCONNECT = 4,
-    SERVERCMD = 5,
-    CLIENTLOG = 6,
-    PING = 7,
-    PONG = 8,
-    KEYBOARD = 9,
-    MOUSE = 10
-  };
-  struct	Header
-  {
-    Opcode	opcode;
-    uint8_t	id;
-    uint16_t	size;
-  };
-  struct	Packet
-  {
-    union
-    {
-      struct __attribute__((__packed__))
-      {
-	Header	header;
-	uint8_t	data[UINT16_MAX];
-      }		packet;
-      uint8_t	buffer[sizeof(packet)];
-    };
-  };
 public:
   Protocolv1(ISocket &socket, ITime &time);
   ~Protocolv1(void);
@@ -82,8 +52,17 @@ public:
   std::string const	&get_mac_address(void) const;
   bool	mac_address(std::string const &mac_address);
   bool	log(std::string const &log);
-  bool	keyboard(ITime const &time, std::string const &event, std::string const &key, std::string const &process);
-  bool	mouse(ITime const &time, uintmax_t x, uintmax_t y, uintmax_t amout, std::string const &event, std::string const &button, std::string const &process);
+  bool	keyboard(ITime const &time,
+		 std::string const &event,
+		 std::string const &key,
+		 std::string const &process);
+  bool	mouse(ITime const &time,
+	      uintmax_t x,
+	      uintmax_t y,
+	      uintmax_t amout,
+	      std::string const &event,
+	      std::string const &button,
+	      std::string const &process);
   ISocket const	&get_isocket(void) const;
 private:
   bool	read(IDatabase const &database);
@@ -108,19 +87,27 @@ private:
   bool	read_pong(void);
   bool	write_pong(void);
   bool	read_keyboard(IDatabase const &database);
-  bool	write_keyboard(ITime const &time, std::string const &event, std::string const &key, std::string const &process);
+  bool	write_keyboard(ITime const &time,
+		       std::string const &event,
+		       std::string const &key,
+		       std::string const &process);
   bool	read_mouse(IDatabase const &database);
-  bool	write_mouse(ITime const &time, uintmax_t x, uintmax_t y, uintmax_t amout, std::string const &event, std::string const &button, std::string const &process);
-  bool	write_packet(Opcode code, uint16_t size);
+  bool	write_mouse(ITime const &time,
+		    uintmax_t x,
+		    uintmax_t y,
+		    uintmax_t amout,
+		    std::string const &event,
+		    std::string const &button,
+		    std::string const &process);
+  bool	write_packet(APacket::Opcode code);
 private:
   ISocket	&m_socket;
   ITime	&m_last_read;
   std::string	m_mac_address;
-  std::array<Packet, UINT8_MAX>	m_packets;
+  std::array<Packetwrite, UINT8_MAX>	m_packets;
   uint8_t	m_write;
   uint8_t	m_to_write;
-  Packet	m_buffer;
-  uintmax_t	m_read;
+  Packetread	m_read;
   bool	m_is_connect;
   bool	m_is_stop;
   bool	m_is_mute;

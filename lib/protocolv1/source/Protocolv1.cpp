@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Thu Oct 22 09:18:51 2015 Antoine Plaskowski
-// Last update Sun Oct 25 09:53:46 2015 Antoine Plaskowski
+// Last update Mon Oct 26 03:23:55 2015 Antoine Plaskowski
 //
 
 #include	<iostream>
@@ -17,16 +17,14 @@ Protocolv1::Protocolv1(ISocket &socket, ITime &time) :
   m_socket(socket),
   m_last_read(time),
   m_mac_address(),
-  m_packets({}),
+  m_packets(),
   m_write(0),
   m_to_write(0),
-  m_buffer({}),
-  m_read(0),
+  m_read(),
   m_is_connect(false),
   m_is_stop(false),
   m_is_mute(false)
 {
-  assert(sizeof(m_buffer.packet) == sizeof(m_buffer.buffer));
 }
 
 Protocolv1::~Protocolv1(void)
@@ -80,54 +78,63 @@ bool	Protocolv1::timeout(ITime const &time)
 bool	Protocolv1::read(IDatabase const &database)
 {
   m_last_read.now();
-  uintmax_t	ret = m_socket.read(m_buffer.buffer + m_read, sizeof(m_buffer) - m_read);
-  if (ret == 0)
+  if (m_read.read(m_socket) == true)
     return (true);
-  m_read += ret;
-
-  if (m_read < sizeof(m_buffer.packet.header))
+  if (m_read.is_read() == false)
     return (false);
-  if (m_read < sizeof(m_buffer.packet.header) + m_buffer.packet.header.size)
-    return (false);
-  m_read = 0;
 
-  switch (m_buffer.packet.header.opcode)
+  bool	ret;
+  switch (m_read.get_opcode())
     {
-    case (RESULT):
-      return (read_result());
-    case (MAC_ADDRESS):
-      return (read_mac_address());
-    case (VERSION):
-      return (read_version());
-    case (CONNECT):
-      return (read_connect());
-    case (DISCONNECT):
-      return (read_disconnect());
-    case (SERVERCMD):
-      return (read_servercmd());
-    case (CLIENTLOG):
-      return (read_clientlog(database));
-    case (PING):
-      return (read_ping());
-    case (PONG):
-      return (read_pong());
-    case (KEYBOARD):
-      return (read_keyboard(database));
-    case (MOUSE):
-      return (read_mouse(database));
+    case (APacket::RESULT):
+      ret = read_result();
+      break;
+    case (APacket::MAC_ADDRESS):
+      ret = read_mac_address();
+      break;
+    case (APacket::VERSION):
+      ret = read_version();
+      break;
+    case (APacket::CONNECT):
+      ret = read_connect();
+      break;
+    case (APacket::DISCONNECT):
+      ret = read_disconnect();
+      break;
+    case (APacket::SERVERCMD):
+      ret = read_servercmd();
+      break;
+    case (APacket::CLIENTLOG):
+      ret = read_clientlog(database);
+      break;
+    case (APacket::PING):
+      ret = read_ping();
+      break;
+    case (APacket::PONG):
+      ret = read_pong(); 
+      break;
+    case (APacket::KEYBOARD):
+      ret = read_keyboard(database);
+      break;
+    case (APacket::MOUSE):
+      ret = read_mouse(database);
+      break;
+    default:
+      ret = true;
+      break;
     };
-  return (true);
+  m_read.reset();
+  return (ret);
 }
 
 bool	Protocolv1::write(void)
 {   
   if (m_to_write != m_write)
     {
-      Packet	&packet = m_packets[m_to_write++];
-
-      uintmax_t	ret = m_socket.write(packet.buffer, sizeof(packet.packet.header) + packet.packet.header.size);
-      if (ret != sizeof(packet.packet.header) + packet.packet.header.size)
+      if (m_packets[m_to_write].write(m_socket) == true)
 	return (true);
+      if (m_packets[m_to_write].is_write() == true)
+	m_to_write++;
     }
   return (false);
 }
@@ -164,7 +171,11 @@ bool	Protocolv1::mouse(ITime const &time, uintmax_t x, uintmax_t y, uintmax_t am
 
 bool	Protocolv1::read_result(void)
 {
-  switch (m_buffer.packet.data[0])
+  uint8_t	code;
+
+  if (m_read.get_int<uint8_t>(code) == true)
+    return (true);
+  switch (static_cast<Errorcode>(code))
     {
     case (NO_ERROR):
       std::cout << "no_error" << std::endl;
@@ -212,49 +223,66 @@ bool	Protocolv1::read_result(void)
       std::cout << "disconnect_fail" << std::endl;
       break;
     }
-  std::cout << "id du proccesus " << m_buffer.packet.data[1] << std::endl;
+  uint8_t	id;
+  if (m_read.get_int<uint8_t>(id) == true)
+    return (true);
+  std::cout << "id du proccesus " << static_cast<uintmax_t>(id) << std::endl;
   return (true);
 }
 
 bool	Protocolv1::write_result(Errorcode code, uint8_t id)
 {
-  Packet	&packet = m_packets[m_write];
+  Packetwrite	&packet = m_packets[m_write];
 
-  packet.packet.data[0] = code;
-  packet.packet.data[1] = id;
-  return (write_packet(RESULT, 2));
+  if (packet.put_int<Errorcode>(code) == true)
+    return (true);
+  if (packet.put_int<uint8_t>(id))
+    return (true);
+  return (write_packet(APacket::RESULT));
 }
 
 bool	Protocolv1::read_mac_address(void)
 {
   m_mac_address.erase();
-  for (uintmax_t i = 0; i < 6 && i < sizeof(m_buffer.packet.data); i++)
-    m_mac_address += m_buffer.packet.data[i];
+  for (uintmax_t i = 0; i < 6; i++)
+    {
+      uint8_t	c;
+      if (m_read.get_int<uint8_t>(c) == true)
+	return (true);
+      m_mac_address += c;
+    }
+  std::cout << m_mac_address << std::endl;
   return (false);
 }
 
 bool	Protocolv1::write_mac_address(std::string const &mac_address)
 {
-  Packet	&packet = m_packets[m_write];
+  Packetwrite	&packet = m_packets[m_write];
 
   for (uintmax_t i = 0; i < 6 && i < mac_address.size(); i++)
-    packet.packet.data[i] = mac_address[i];
-  return (write_packet(MAC_ADDRESS, 6));
+    if (packet.put_int<uint8_t>(mac_address[i]))
+      return (true);
+  return (write_packet(APacket::MAC_ADDRESS));
 }
 
 bool	Protocolv1::read_version(void)
 {
-  if (m_buffer.packet.data[0] == 1)
-    return (write_result(NO_ERROR, m_buffer.packet.header.id));
-  return (write_result(WRONG_PROTOCOL_VERSION, m_buffer.packet.header.id));
+  uint8_t	version;
+
+  if (m_read.get_int<uint8_t>(version) == true)
+    return (true);
+  if (version == 1)
+    return (write_result(NO_ERROR, m_read.get_id()));
+  return (write_result(WRONG_PROTOCOL_VERSION, m_read.get_id()));
 }
 
 bool	Protocolv1::write_version(void)
 {
-  Packet	&packet = m_packets[m_write];
+  Packetwrite	&packet = m_packets[m_write];
 
-  packet.packet.data[0] = 1;  
-  return (write_packet(VERSION, 1));
+  if (packet.put_int<uint8_t>(1) == true)
+    return (true);  
+  return (write_packet(APacket::VERSION));
 }
 
 bool	Protocolv1::read_connect(void)
@@ -265,7 +293,7 @@ bool	Protocolv1::read_connect(void)
 
 bool	Protocolv1::write_connect(void)
 {
-  return (write_packet(CONNECT, 0));
+  return (write_packet(APacket::CONNECT));
 }
 
 bool	Protocolv1::read_disconnect(void)
@@ -276,12 +304,16 @@ bool	Protocolv1::read_disconnect(void)
 
 bool	Protocolv1::write_disconnect(void)
 {
-  return (write_packet(DISCONNECT, 0));
+  return (write_packet(APacket::DISCONNECT));
 }
 
 bool	Protocolv1::read_servercmd(void)
 {
-  switch (m_buffer.packet.data[0])
+  uint8_t	code;
+
+  if (m_read.get_int<uint8_t>(code) == true)
+    return (true);
+  switch (static_cast<Commandcode>(code))
     {
     case (START):
       m_is_stop = false;
@@ -297,32 +329,30 @@ bool	Protocolv1::read_servercmd(void)
 
 bool	Protocolv1::write_servercmd(Commandcode command)
 {
-  Packet	&packet = m_packets[m_write];
+  Packetwrite	&packet = m_packets[m_write];
 
-  packet.packet.data[0] = command;
-  return (write_packet(SERVERCMD, 1));
+  if (packet.put_int<Commandcode>(command) == true)
+    return (true);
+  return (write_packet(APacket::SERVERCMD));
 }
 
 bool	Protocolv1::read_clientlog(IDatabase const &database)
 {
   std::string	log;
-  uintmax_t	i = 1;
 
-  for (uintmax_t j = 0; j < m_buffer.packet.data[0]; j++)
-    log.push_back(m_buffer.packet.data[i++]);
+  if (m_read.get_string(log) == true)
+    return (true);
   std::cout << log << std::endl;
   return (false);
 }
 
 bool	Protocolv1::write_clientlog(std::string const &log)
 {
-  Packet	&packet = m_packets[m_write];
-  uintmax_t	size = 0;
+  Packetwrite	&packet = m_packets[m_write];
 
-  packet.packet.data[size++] = log.size();
-  for (uintmax_t i = 0; i < UINT8_MAX && i < log.size(); i++)
-    packet.packet.data[size++] = log[i];
-  return (write_packet(CLIENTLOG, size));
+  if (packet.put_string(log) == true)
+    return (true);
+  return (write_packet(APacket::CLIENTLOG));
 }
 
 bool	Protocolv1::read_ping(void)
@@ -332,7 +362,7 @@ bool	Protocolv1::read_ping(void)
 
 bool	Protocolv1::write_ping(void)
 {
-  return (write_packet(PING, 0));
+  return (write_packet(APacket::PING));
 }
 
 bool	Protocolv1::read_pong(void)
@@ -342,138 +372,122 @@ bool	Protocolv1::read_pong(void)
 
 bool	Protocolv1::write_pong(void)
 {
-  return (write_packet(PONG, 0));
+  return (write_packet(APacket::PONG));
 }
 
 bool	Protocolv1::read_keyboard(IDatabase const &database)
 {
-  uint64_t	second = 0;
-  uint64_t	nano = 0;
-  std::string	event;
-  std::string	key;
-  std::string	process;
-  uintmax_t	i = 0;
-  uintmax_t	size_array = m_buffer.packet.data[i++];
-  uintmax_t	size;
-  
-  for (uintmax_t k = 0; k < size_array; k++)
+  uint8_t	size_array;
+
+  if (m_read.get_int<uint8_t>(size_array) == true)
+    return (true);
+  for (uint8_t i = 0; i < size_array; i++)
     {
-      for (uintmax_t j = 0; j < sizeof(uint64_t); j++)
-	second += (m_buffer.packet.data[i++] << ((sizeof(uint64_t) - j - 1) * sizeof(uint8_t)));
-      for (uintmax_t j = 0; j < sizeof(uint64_t); j++)
-	nano += (m_buffer.packet.data[i++] << ((sizeof(uint64_t) - j - 1) * sizeof(uint8_t)));
-      size = i;
-      for (uintmax_t j = 0; j < m_buffer.packet.data[size]; j++)
-	event.push_back(m_buffer.packet.data[i++]);
-      std::cout << event << std::endl;
-      size = i;
-      for (uintmax_t j = 0; j < m_buffer.packet.data[size]; j++)
-	key.push_back(m_buffer.packet.data[i++]);
-      std::cout << key << std::endl;
-      size = i;
-      for (uintmax_t j = 0; j < m_buffer.packet.data[size]; j++)
-	process.push_back(m_buffer.packet.data[i++]);
-      std::cout << process << std::endl;
+      uint64_t	second;
+      if (m_read.get_int<uint64_t>(second) == true)
+	return (true);
+      uint64_t	nano;
+      if (m_read.get_int<uint64_t>(nano) == true)
+	return (true);
+      std::string	event;
+      if (m_read.get_string(event) == true)
+	return (true);
+      std::string	key;
+      if (m_read.get_string(key) == true)
+	return (true);
+      std::string	process;
+      if (m_read.get_string(process) == true)
+	return (true);
     }
   return (false);
 }
 
 bool	Protocolv1::write_keyboard(ITime const &time, std::string const &event, std::string const &key, std::string const &process)
 {
-  Packet	&packet = m_packets[m_write];
-  uint16_t	size = 0;
+  Packetwrite	&packet = m_packets[m_write];
 
-  for (uintmax_t i = 0; i < sizeof(uint64_t); i++)
-    packet.packet.data[size++] = (time.get_second() >> i * sizeof(uint8_t));
-  for (uintmax_t i = 0; i < sizeof(uint64_t); i++)
-    packet.packet.data[size++] = (time.get_nano() >> i * sizeof(uint8_t));
-  packet.packet.data[size++] = event.size();
-  for (uintmax_t i = 0; i < UINT8_MAX && i < event.size(); i++)
-    packet.packet.data[size++] = event[i];
-  packet.packet.data[size++] = key.size();
-  for (uintmax_t i = 0; i < UINT8_MAX && i < key.size(); i++)
-    packet.packet.data[size++] = key[i];
-  packet.packet.data[size++] = process.size();
-  for (uintmax_t i = 0; i < UINT8_MAX && i < process.size(); i++)
-    packet.packet.data[size++] = process[i];
-  return (write_packet(KEYBOARD, size));
+  if (packet.put_int<uint64_t>(time.get_second()) == true)
+    return (true);
+  if (packet.put_int<uint64_t>(time.get_nano()) == true)
+    return (true);
+  if (packet.put_string(event) == true)
+    return (true);
+  if (packet.put_string(key) == true)
+    return (true);
+  if (packet.put_string(process) == true)
+    return (true);
+  return (write_packet(APacket::KEYBOARD));
 }
 
 bool	Protocolv1::read_mouse(IDatabase const &database)
 {
-  uint64_t	second = 0;
-  uint64_t	nano = 0;
-  uint32_t	x = 0;
-  uint32_t	y = 0;
-  std::string	event;
-  std::string	button;
-  std::string	process;
-  uintmax_t	i = 0;
-  uintmax_t	size_array = m_buffer.packet.data[i++];
-  uintmax_t	size;
-  
+  uint8_t	size_array;
+
+  if (m_read.get_int<uint8_t>(size_array) == true)
+    return (true);
   for (uintmax_t k = 0; k < size_array; k++)
     {
-      for (uintmax_t j = 0; j < sizeof(uint64_t); j++)
-	second += (m_buffer.packet.data[i++] << ((sizeof(uint64_t) - j - 1) * sizeof(uint8_t)));
-      for (uintmax_t j = 0; j < sizeof(uint64_t); j++)
-	nano += (m_buffer.packet.data[i++] << ((sizeof(uint64_t) - j - 1) * sizeof(uint8_t)));
-      for (uintmax_t j = 0; j < sizeof(uint32_t); j++)
-	x += (m_buffer.packet.data[i++] << ((sizeof(uint32_t) - j - 1) * sizeof(uint8_t)));
-      for (uintmax_t j = 0; j < sizeof(uint32_t); j++)
-	y += (m_buffer.packet.data[i++] << ((sizeof(uint32_t) - j - 1) * sizeof(uint8_t)));
-      size = i;
-      for (uintmax_t j = 0; j < m_buffer.packet.data[size]; j++)
-	event.push_back(m_buffer.packet.data[i++]);
-      std::cout << event << std::endl;
-      size = i;
-      for (uintmax_t j = 0; j < m_buffer.packet.data[size]; j++)
-	button.push_back(m_buffer.packet.data[i++]);
-      std::cout << button << std::endl;
-      size = i;
-      for (uintmax_t j = 0; j < m_buffer.packet.data[size]; j++)
-	process.push_back(m_buffer.packet.data[i++]);
-      std::cout << process << std::endl;
+      uint64_t	second;
+      if (m_read.get_int<uint64_t>(second) == true)
+	return (true);
+      uint64_t	nano;
+      if (m_read.get_int<uint64_t>(nano) == true)
+	return (true);
+      uint32_t	x;
+      if (m_read.get_int<uint32_t>(x) == true)
+	return (true);
+      uint32_t	y;
+      if (m_read.get_int<uint32_t>(y) == true)
+	return (true);
+      uint64_t	amount;
+      if (m_read.get_int<uint64_t>(amount) == true)
+	return (true);
+      std::string	event;
+      if (m_read.get_string(event) == true)
+	return (true);
+      std::string	key;
+      if (m_read.get_string(key) == true)
+	return (true);
+      std::string	process;
+      if (m_read.get_string(process) == true)
+	return (true);
     }
   return (false);
 }
 
 bool	Protocolv1::write_mouse(ITime const &time, uintmax_t x, uintmax_t y, uintmax_t amount, std::string const &event, std::string const &button, std::string const &process)
 {
-  Packet	&packet = m_packets[m_write];
-  uint16_t	size = 0;
+  Packetwrite	&packet = m_packets[m_write];
 
-  for (uintmax_t i = 0; i < sizeof(uint64_t); i++)
-    packet.packet.data[size++] = (time.get_second() >> i * sizeof(uint8_t));
-  for (uintmax_t i = 0; i < sizeof(uint64_t); i++)
-    packet.packet.data[size++] = (time.get_nano() >> i * sizeof(uint8_t));
-  for (uintmax_t i = 0; i < sizeof(uint32_t); i++)
-    packet.packet.data[size++] = (x >> i * sizeof(uint8_t));
-  for (uintmax_t i = 0; i < sizeof(uint32_t); i++)
-    packet.packet.data[size++] = (y >> i * sizeof(uint8_t));
-  for (uintmax_t i = 0; i < sizeof(uint64_t); i++)
-    packet.packet.data[size++] = (amount >> i * sizeof(uint8_t));
-  packet.packet.data[size++] = event.size();
-  for (uintmax_t i = 0; i < UINT8_MAX && i < event.size(); i++)
-    packet.packet.data[size++] = event[i];
-  packet.packet.data[size++] = button.size();
-  for (uintmax_t i = 0; i < UINT8_MAX && i < button.size(); i++)
-    packet.packet.data[size++] = button[i];
-  packet.packet.data[size++] = process.size();
-  for (uintmax_t i = 0; i < UINT8_MAX && i < process.size(); i++)
-    packet.packet.data[size++] = process[i];
-  return (write_packet(KEYBOARD, size));
+  if (packet.put_int<uint64_t>(time.get_second()) == true)
+    return (true);
+  if (packet.put_int<uint64_t>(time.get_nano()) == true)
+    return (true);
+  if (packet.put_int<uint32_t>(x) == true)
+    return (true);
+  if (packet.put_int<uint32_t>(y) == true)
+    return (true);
+  if (packet.put_int<uint64_t>(amount) == true)
+    return (true);
+  if (packet.put_string(event) == true)
+    return (true);
+  if (packet.put_string(button) == true)
+    return (true);
+  if (packet.put_string(process) == true)
+    return (true);
+  return (write_packet(APacket::MOUSE));
 }
 
-bool	Protocolv1::write_packet(Opcode code, uint16_t size)
+bool	Protocolv1::write_packet(APacket::Opcode code)
 {
-  Packet	&packet = m_packets[m_write];
+  Packetwrite	&packet = m_packets[m_write];
 
-  packet.packet.header.opcode = code;
-  packet.packet.header.id = m_write;
-  packet.packet.header.size = size;
+  packet.set_opcode(code);
+  packet.set_id(m_write);
+  packet.set_size();
   if (++m_write == m_to_write)
     m_to_write++;
+  m_packets[m_write].reset();
   return (false);
 }
 
