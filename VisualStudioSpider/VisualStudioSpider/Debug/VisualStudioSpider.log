@@ -1,0 +1,8 @@
+﻿La génération a démarré 26/10/2015 12:51:34.
+     1>Projet "C:\Users\boisso_c\Documents\a\cpp_spider\VisualStudioSpider\VisualStudioSpider\VisualStudioSpider.vcxproj" sur le nœud 2 (Build cible(s)).
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Application Type\Windows Store\10.0\Platforms\Win32\PlatformToolsets\v140\Toolset.targets(41,5): error : The Windows SDK version (10.0.0.0) was not found. Install the required version of Windows SDK or change the SDK version in the project property pages or by right-clicking the solution and selecting 'Retarget solution'
+     1>Génération du projet "C:\Users\boisso_c\Documents\a\cpp_spider\VisualStudioSpider\VisualStudioSpider\VisualStudioSpider.vcxproj" terminée (Build cible(s)) -- ÉCHEC.
+
+ÉCHEC de la build.
+
+Temps écoulé 00:00:00.01
