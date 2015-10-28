@@ -18,4 +18,3 @@ private:
 	Key			m_keyData;
 	Modifier	m_mod;
 };
-

@@ -119,17 +119,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="Key.cpp" />
     <ClCompile Include="KeyboardEvent.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Modifier.cpp" />
+    <ClCompile Include="MouseEvent.cpp" />
+    <ClCompile Include="Position.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Button.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Key.h" />
     <ClInclude Include="KeyboardEvent.h" />
     <ClInclude Include="Modifier.h" />
+    <ClInclude Include="MouseEvent.h" />
+    <ClInclude Include="Position.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

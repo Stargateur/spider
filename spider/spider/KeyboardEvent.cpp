@@ -5,7 +5,7 @@ KeyboardEvent::KeyboardEvent()
 {
 }
 
-KeyboardEvent::KeyboardEvent(KeyboardEvent &old) : m_keyData(old.m_keyData), m_mod(old.m_mod)
+KeyboardEvent::KeyboardEvent(KeyboardEvent &old) : Event(old), m_keyData(old.m_keyData), m_mod(old.m_mod)
 {
 
 }

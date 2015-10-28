@@ -35,6 +35,12 @@ LRESULT CALLBACK KeyboardProc(_In_ int code, _In_ WPARAM wParam, _In_ LPARAM lPa
 	// GetWindowTextA(HWND window, char *name, sizeof(name))
 	// Windows limite le nom des fenêtres à 255 caractères donc "char name[256]"
 	//
+	// Nom de l'exécutable :
+	// DWORD ThreadId =	GetWindowsThreadProcessId(HWND window, NULL)
+	// HANDLE WINAPI hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, false, ThreadId)
+	// if (hProcess != NULL)
+	// len = GetModuleFileNameEx(hProcess, NULL, char *name, sizeof(name))
+	//
 	return (CallNextHookEx(NULL, code, wParam, lParam));
 }
 
