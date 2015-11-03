@@ -13,9 +13,6 @@
 
 # include	<limits>
 # include	<cstring>
-# ifdef	WINDOWS
-# include	"stdafx.h"
-# endif	/* !WINDOWS */
 # include	"APacket.hpp"
 
 class	Packetread : public APacket

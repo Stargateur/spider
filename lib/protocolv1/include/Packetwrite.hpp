@@ -12,9 +12,6 @@
 # define	PACKETWRITE_HPP_
 
 # include	<limits>
-# ifdef	WINDOWS
-# include	"stdafx.h"
-# endif	/* !WINDOWS */
 # include	"APacket.hpp"
 
 class	Packetwrite : public APacket

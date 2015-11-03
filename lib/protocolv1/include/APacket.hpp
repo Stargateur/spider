@@ -12,9 +12,6 @@
 # define	PACKET_HPP_
 
 # include	<cstdint>
-# ifdef	WINDOWS
-# include	"stdafx.h"
-# endif	/* !WINDOWS */
 # include	"ISocket.hpp"
 
 class	APacket

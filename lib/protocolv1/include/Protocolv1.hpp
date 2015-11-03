@@ -13,9 +13,6 @@
 
 # include	<string>
 # include	<array>
-# ifdef	WINDOWS
-# include	"stdafx.h"
-# endif	/* !WINDOWS */
 
 # include	"IProtocol.hpp"
 # include	"ITime.hpp"
