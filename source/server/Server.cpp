@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sat Oct 24 17:20:22 2015 Antoine Plaskowski
-// Last update Tue Nov  3 12:57:38 2015 Antoine Plaskowski
+// Last update Tue Nov  3 13:21:15 2015 Antoine Plaskowski
 //
 
 #include	"Server.hpp"
@@ -44,12 +44,21 @@ Server::~Server(void)
 
 bool	Server::run(void)
 {
+  m_in.want_read();
   m_server.want_read();
   for (auto it = m_clients.begin(); it != m_clients.end(); it++)
     (*it)->select();
   m_iselect(nullptr);
   if (m_server.can_read())
     m_clients.push_back(&m_new_iprotocol(m_server.accept(), m_new_itime()));
+  if (m_in.can_read())
+    {
+      uint8_t	buf[4096];
+      uintmax_t	ret = m_in.read(*buf, 4096);
+
+      if (ret == 0)
+	return (true);
+    }
   bool	remove = false;
   for (auto it = m_clients.begin(); it != m_clients.end(); it++)
     {
