@@ -1,9 +1,5 @@
 /lib_protocolv1_linux.so
-/protocolv1.sln
 /.vs
 /x64
 /protocolv1/.vs
 /protocolv1/x64
-/protocolv1/protocolv1.vcxproj
-/protocolv1/protocolv1.vcxproj.filters
-/protocolv1/protocolv1.vcxproj.user

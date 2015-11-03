@@ -1,12 +1,8 @@
 /lib_Socket_Windows_linux.so
-/Socket_Windows.sln
 /.vs
 /x64
 /Debug
 /Socket_Windows/Debug
 /Socket_Windows/.vs
 /Socket_Windows/x64
-/Socket_Windows/Socket_Windows.vcxproj
-/Socket_Windows/Socket_Windows.vcxproj.filters
-/Socket_Windows/Socket_Windows.vcxproj.user
 Socket_Windows.opensdf

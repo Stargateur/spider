@@ -1,11 +1,7 @@
 /lib_Time_Windows_linux.so
-/Time_Windows.sln
 /.vs
 /x64
 /Debug
 /Time_Windows/Debug
 /Time_Windows/.vs
 /Time_Windows/x64
-/Time_Windows/Time_Windows.vcxproj
-/Time_Windows/Time_Windows.vcxproj.filters
-/Time_Windows/Time_Windows.vcxproj.user
