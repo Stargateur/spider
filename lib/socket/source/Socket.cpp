@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 22:51:48 2015 Bertrand-Rapello Baptiste
-// Last update Mon Oct 26 11:41:18 2015 Antoine Plaskowski
+// Last update Tue Nov  3 12:58:14 2015 Antoine Plaskowski
 //
 
 #include	<sys/socket.h>
@@ -28,7 +28,10 @@ Socket::Socket(std::string const &ip, int fd) :
   m_ip(ip)
 {
   if (fcntl(fd, F_GETFD) == -1)
-    throw std::exception();
+    {
+      perror("fcntl()");
+      throw SocketException("fd invalid");
+    }
 }
 
 Socket::~Socket(void)
@@ -125,6 +128,15 @@ bool	 Socket::can_write(void) const
   return (ret);
 }
 
+bool	Socket::want_read_write(void) const
+{
+  FD_SET(m_fd, &m_readfds);
+  FD_SET(m_fd, &m_writefds);
+  m_nfds = std::max<int>(m_nfds, m_fd);
+  return (false);
+}
+
+
 uintmax_t	Socket::read(uint8_t &buffer, uintmax_t size) const
 {
   ssize_t	ret = ::read(m_fd, &buffer, size);
@@ -193,7 +205,7 @@ ISocket	&new_iserver(std::string const &host, std::string const &port)
   int fd = aux_server(result);
   freeaddrinfo(result);
   if (fd == -1)
-    throw std::exception();
+    throw SocketException("Impossible de se connecter à ");
   return (*new Socket(host, fd));
 }
 
@@ -242,7 +254,7 @@ ISocket	&new_iclient(std::string const &host, std::string const &port)
   int fd = aux_client(result);
   freeaddrinfo(result);
   if (fd == -1)
-    throw std::exception();
+    throw SocketException("lol");
   return (*new Socket(host, fd));
 }
 
@@ -250,11 +262,11 @@ ISocket	&new_istandard(ISocket::Standard standard)
 {
   switch (standard)
     {
-    case ISocket::IN:
+    case ISocket::In:
       return (*new Socket("Standard Input (stdin)", 0));
-    case ISocket::OUT:
+    case ISocket::Out:
       return (*new Socket("Standard Output (stdout)", 1));
-    case ISocket::ERR:
+    case ISocket::Err:
       return (*new Socket("Standard Input (stdin)", 2));
     }
   throw std::exception();
@@ -263,4 +275,14 @@ ISocket	&new_istandard(ISocket::Standard standard)
 bool	iselect(ITime const *time)
 {
   return (Socket::select(time));
+}
+
+SocketException::SocketException(std::string const &what) :
+  m_what(what)
+{
+}
+
+char const	*SocketException::what(void) const throw()
+{
+  return (m_what.c_str());
 }

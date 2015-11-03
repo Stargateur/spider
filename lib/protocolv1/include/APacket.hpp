@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 25 09:19:33 2015 Antoine Plaskowski
-// Last update Mon Oct 26 01:26:55 2015 Antoine Plaskowski
+// Last update Tue Nov  3 13:00:05 2015 Antoine Plaskowski
 //
 
 #ifndef		PACKET_HPP_
@@ -36,11 +36,11 @@ public:
   uint8_t	get_id(void) const;
   uint16_t	get_size(void) const;
   uint8_t	operator[](uint16_t idx) const;
-  virtual void	reset(void) = 0;
 protected:
+#pragma	pack(1)
   union
   {
-    struct __attribute__((__packed__))
+    struct
     {
       Opcode	opcode;
       uint8_t	id;
@@ -49,6 +49,7 @@ protected:
     }	m_packet;
     uint8_t	m_buffer[sizeof(m_packet)];
   };
+#pragma	pack()
   static const	uintmax_t	m_size_header = sizeof(m_packet.opcode) + sizeof(m_packet.id) + sizeof(m_packet.size);
 };
 

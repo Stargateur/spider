@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 18 06:52:57 2015 Antoine Plaskowski
-// Last update Mon Oct 26 14:19:52 2015 Antoine Plaskowski
+// Last update Tue Nov  3 12:57:49 2015 Antoine Plaskowski
 //
 
 #include	<sstream>
@@ -29,39 +29,47 @@ int		main(int argc, char **argv)
   DynamicLinkLibrary	dll_isocket(option.get_path_lib_isocket());
   fct_new_iclient	new_iclient = dll_isocket.get_symbole<fct_new_iclient>(NAME_FCT_NEW_ICLIENT);
   fct_new_istandard	new_istandard = dll_isocket.get_symbole<fct_new_istandard>(NAME_FCT_NEW_ISTANDARD);
-  ISocket	&client = new_iclient(option.get_host(), option.get_port());
-  ISocket	&in = new_istandard(ISocket::IN);
   DynamicLinkLibrary	dll_itime(option.get_path_lib_itime());
   fct_new_itime	new_itime = dll_itime.get_symbole<fct_new_itime>(NAME_FCT_NEW_ITIME);
-  ITime	&time = new_itime();
   DynamicLinkLibrary	dll_iprotocol(option.get_path_lib_iprotocol());
   fct_new_iprotocol	new_iprotocol = dll_iprotocol.get_symbole<fct_new_iprotocol>(NAME_FCT_NEW_IPROTOCOL);
-  IProtocol	&protocol = new_iprotocol(client, time);
   fct_iselect	iselect = dll_isocket.get_symbole<fct_iselect>(NAME_FCT_ISELECT);
-  IProtocol::Keyboard	keyboard = {time, "press", "ff", "rio.exe"};
-  std::list<IProtocol::Keyboard *>	lol;
 
-  lol.push_back(&keyboard);
-  protocol.keyboard(lol);
-  while (true)
+  try
     {
-      in.want_read();
-      protocol.select();
-      iselect(nullptr);
-      if (in.can_read())
+      ISocket	&client = new_iclient(option.get_host(), option.get_port());
+      ISocket	&in = new_istandard(ISocket::In);
+      ITime	&time = new_itime();
+      IProtocol	&protocol = new_iprotocol(client, time);
+      IProtocol::Keyboard	keyboard = {time, "press", "ff", "rio.exe"};
+      std::list<IProtocol::Keyboard *>	lol;
+
+      lol.push_back(&keyboard);
+      protocol.keyboard(lol);
+      while (true)
 	{
-	  uint8_t	buf[4096 + 1];
-	  uintmax_t ret = in.read(*buf, 4096);
-	  buf[ret] = '\0';
-	  if (ret == 0)
-	    break;
-	  IProtocol::Log	log = {(char *)buf};
-	  std::list<IProtocol::Log *> xd;
-	  xd.push_back(&log);
-	  protocol.log(xd);
+	  in.want_read();
+	  protocol.select();
+	  iselect(nullptr);
+	  if (in.can_read())
+	    {
+	      uint8_t	buf[4096 + 1];
+	      uintmax_t ret = in.read(*buf, 4096);
+	      buf[ret] = '\0';
+	      if (ret == 0)
+		break;
+	      IProtocol::Log	log = {(char *)buf};
+	      std::list<IProtocol::Log *> xd;
+	      xd.push_back(&log);
+	      protocol.log(xd);
+	    }
+	  if (protocol.run() == true)
+	    return (0);
 	}
-      if (protocol.run() == true)
-	return (0);
+    }
+  catch (std::exception &e)
+    {
+      std::cerr << "exception caught: " << e.what() << std::endl;
     }
   // int		cfd;
   // SSL_CTX	*ctx;
