@@ -5,13 +5,16 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 25 10:10:39 2015 Antoine Plaskowski
-// Last update Mon Oct 26 05:44:49 2015 Antoine Plaskowski
+// Last update Tue Nov  3 14:16:53 2015 Antoine Plaskowski
 //
 
 #ifndef		PACKETWRITE_HPP_
 # define	PACKETWRITE_HPP_
 
 # include	<limits>
+# ifdef	WINDOWS
+# include	"stdafx.h"
+# endif	/* !WINDOWS */
 # include	"APacket.hpp"
 
 class	Packetwrite : public APacket

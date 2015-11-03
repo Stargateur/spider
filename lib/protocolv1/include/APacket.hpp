@@ -5,13 +5,16 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 25 09:19:33 2015 Antoine Plaskowski
-// Last update Tue Nov  3 13:00:05 2015 Antoine Plaskowski
+// Last update Tue Nov  3 14:16:18 2015 Antoine Plaskowski
 //
 
 #ifndef		PACKET_HPP_
 # define	PACKET_HPP_
 
 # include	<cstdint>
+# ifdef	WINDOWS
+# include	"stdafx.h"
+# endif	/* !WINDOWS */
 # include	"ISocket.hpp"
 
 class	APacket
