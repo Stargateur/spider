@@ -7,13 +7,13 @@ class KeyboardEvent :	public Event
 {
 public:
 	KeyboardEvent();
-	KeyboardEvent(KeyboardEvent &old);
-	KeyboardEvent(Key keyData, Modifier mod, eEventType type, long time, std::string &winName);
+	KeyboardEvent(KeyboardEvent const &old);
+	KeyboardEvent(Key const &keyData, Modifier const &mod, eEventType type, long time, std::string const &winName);
 	~KeyboardEvent();
 	Key					getKeyData(void);
 	Modifier			getModifier(void);
-	void				setKeyData(Key keyData);
-	void				setMod(Modifier mod);
+	void				setKeyData(Key const &keyData);
+	void				setMod(Modifier const &mod);
 	virtual std::string toString(void);
 	virtual eInput		getInput(void);
 private:

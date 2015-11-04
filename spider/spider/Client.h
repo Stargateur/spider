@@ -1,6 +1,7 @@
 #pragma once
 #include <windows.h>
 #include <IPHlpApi.h>
+#include <Psapi.h>
 #include <list>
 #include <iostream>
 #include "Event.h"
@@ -24,10 +25,13 @@ public:
 	void					setCtrl(bool ctrl);
 	void					setAlt(bool alt);
 	void					setCapsLock(bool capsLock);
+	void					setAltGr(bool altGr);
 	bool					getShift(void);
 	bool					getCtrl(void); 
 	bool					getAlt(void);
 	bool					getCapsLock(void);
+	bool					getAltGr(void);
+	int						getMod(void);
 	void					addEvent(Event &e);
 private:
 	bool					isValidMac(PIP_ADAPTER_INFO adapterInfo);
@@ -39,8 +43,10 @@ private:
 	bool					m_Ctrl;
 	bool					m_Alt;
 	bool					m_CapsLock;
+	bool					m_AltGr;
 	std::string				m_MAC;
 };
 
+void						setModifier(int nCode, WPARAM wPAram, LPARAM lParam);
 LRESULT CALLBACK			KeyboardProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lParam);
 LRESULT CALLBACK			MouseProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lParam);

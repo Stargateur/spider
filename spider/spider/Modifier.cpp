@@ -6,7 +6,7 @@ Modifier::Modifier()
 {
 }
 
-Modifier::Modifier(Modifier &old) : m_Ctrl(old.m_Ctrl), m_Alt(old.m_Alt), m_CapsLock(old.m_CapsLock), m_Shift(old.m_Shift)
+Modifier::Modifier(Modifier const &old) : m_Ctrl(old.m_Ctrl), m_Alt(old.m_Alt), m_CapsLock(old.m_CapsLock), m_Shift(old.m_Shift)
 {
 }
 

