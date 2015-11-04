@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Wed Oct 21 23:43:13 2015 Antoine Plaskowski
-// Last update Sun Oct 25 05:39:21 2015 Antoine Plaskowski
+// Last update Wed Nov  4 16:41:05 2015 Antoine Plaskowski
 //
 
 #ifndef		IDATABASE_HPP_
@@ -29,7 +29,11 @@ public:
 extern "C"
 {
 # define	NAME_FCT_NEW_IDATABASE	"new_idatabase"
+#ifdef	__linux__
   IDatabase	&new_idatabase(void);
+#else
+  __declspec(dllexport) IDatabase	&new_idatabase(void);
+#endif
   typedef	IDatabase &(*fct_new_idatabase)(void);
 }
 

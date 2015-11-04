@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Wed Oct 21 23:48:57 2015 Antoine Plaskowski
-// Last update Mon Oct 26 12:19:07 2015 Antoine Plaskowski
+// Last update Wed Nov  4 16:40:57 2015 Antoine Plaskowski
 //
 
 #ifndef		IPROTOCOL_HPP_
@@ -67,7 +67,11 @@ public:
 extern "C"
 {
 # define	NAME_FCT_NEW_IPROTOCOL	"new_iprotocol"
+#ifdef	__linux__
   IProtocol	&new_iprotocol(ISocket &socket, ITime &time);
+#else
+  __declspec(dllexport) IProtocol	&new_iprotocol(ISocket &socket, ITime &time);
+#endif
   typedef	IProtocol	&(*fct_new_iprotocol)(ISocket &socket, ITime &time);
 }
   

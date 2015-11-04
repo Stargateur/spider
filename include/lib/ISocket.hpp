@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 20:47:26 2015 Bertrand-Rapello Baptiste
-// Last update Tue Nov  3 12:56:52 2015 Antoine Plaskowski
+// Last update Wed Nov  4 16:40:48 2015 Antoine Plaskowski
 //
 
 #ifndef		ISOCKET_HPP_
@@ -47,16 +47,23 @@ public:
 extern "C"
 {
 # define	NAME_FCT_ISELECT	"iselect"
-  bool	iselect(ITime const *timeout);
-  typedef	bool	(*fct_iselect)(ITime const *timeout);
 # define	NAME_FCT_NEW_ISERVER	"new_iserver"
-  ISocket	&new_iserver(std::string const &ip, std::string const &port);
-  typedef	ISocket	&(*fct_new_iserver)(std::string const &ip, std::string const &port);
 # define	NAME_FCT_NEW_ICLIENT	"new_iclient"
-  ISocket	&new_iclient(std::string const &ip, std::string const &port);
-  typedef	ISocket	&(*fct_new_iclient)(std::string const &ip, std::string const &port);
 # define	NAME_FCT_NEW_ISTANDARD	"new_istandard"
+#ifdef	__linux__
+  bool	iselect(ITime const *timeout);
+  ISocket	&new_iserver(std::string const &ip, std::string const &port);
+  ISocket	&new_iclient(std::string const &ip, std::string const &port);
   ISocket	&new_istandard(ISocket::Standard standard);
+#else
+  __declspec(dllexport) bool	iselect(ITime const *timeout);
+  __declspec(dllexport) ISocket	&new_iserver(std::string const &ip, std::string const &port);
+  __declspec(dllexport) ISocket	&new_iclient(std::string const &ip, std::string const &port);
+  __declspec(dllexport) ISocket	&new_istandard(ISocket::Standard standard);
+#endif
+  typedef	bool	(*fct_iselect)(ITime const *timeout);
+  typedef	ISocket	&(*fct_new_iserver)(std::string const &ip, std::string const &port);
+  typedef	ISocket	&(*fct_new_iclient)(std::string const &ip, std::string const &port);
   typedef	ISocket	&(*fct_new_istandard)(ISocket::Standard standard);
 }
 
