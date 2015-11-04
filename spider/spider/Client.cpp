@@ -178,12 +178,11 @@ LRESULT CALLBACK KeyboardProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lP
 		GetKeyNameText((MapVirtualKey(a->vkCode, 0) << 16), yolo, 256);
 		std::cout << yolo << std::endl;
 		wchar_t swag[256];
-		BYTE	kb[256];
+		BYTE    kb[256];
 
 		GetKeyboardState(kb);
-		std::cout << ToUnicode(a->vkCode, a->scanCode, kb, swag, sizeof(PWSTR) * 256, 0) << std::endl;
-		std::wcout << swag[0] << std::endl;
-
+		if (ToUnicodeEx(a->vkCode, a->scanCode, kb, swag, 256, 0, GetKeyboardLayout(0)) > 0)
+			std::wcout << "name = " << swag << std::endl;	
 		Key key(gVirtualKeyCode[a->vkCode], a->vkCode);
 		Modifier mod(clt.getCtrl(), clt.getAlt(), clt.getShift(), clt.getCapsLock());
 //		KeyboardEvent kbEv(key, mod, wParam, 0, "");

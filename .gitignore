@@ -11,6 +11,7 @@
 *.idb
 *.tlog
 *.dpd
+*.dll
 \#*#
 /spider_server
 /spider_client

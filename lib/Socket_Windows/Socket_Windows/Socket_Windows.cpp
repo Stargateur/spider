@@ -11,14 +11,13 @@
 
 DWORD	SocketWindows::m_idx_events = 0;
 WSAEVENT	SocketWindows::m_events[WSA_MAXIMUM_WAIT_EVENTS] = {};
-WSAData	SocketWindows::m_wsadata = {};
+static WSAData	m_wsadata;
 
 SocketWindows::SocketWindows(std::string const &ip, SOCKET sock) :
 	m_sock(sock),
 	m_event(WSACreateEvent()),
 	m_ip(ip)
 {
-	WSAStartup(MAKEWORD(2, 2), &m_wsadata);
 }
 
 SocketWindows::~SocketWindows(void)
@@ -41,8 +40,10 @@ bool	SocketWindows::select(ITime const *timeout)
 	}
 	return (false);
 }
+
 ISocket	&SocketWindows::accept(void) const
 {
+	WSAStartup(MAKEWORD(2, 2), &m_wsadata);
 	union
 	{	
 		struct sockaddr	base;
@@ -181,6 +182,7 @@ static SOCKET	aux_server(struct addrinfo const *rp)
 
 ISocket	&new_iserver(std::string const &host, std::string const &port)
 {
+	WSAStartup(MAKEWORD(2, 2), &m_wsadata);
 	struct addrinfo	*result;
 	struct addrinfo	hints =
 	{
@@ -197,13 +199,17 @@ ISocket	&new_iserver(std::string const &host, std::string const &port)
 	if (status != 0)
 	{
 		std::cerr << "getaddrinfo: " << gai_strerror(status) << std::endl;
+		WSACleanup();
 		throw std::exception();
 	}
 
 	SOCKET fd = aux_server(result);
 	freeaddrinfo(result);
 	if (fd == INVALID_SOCKET)
+	{
+		WSACleanup();
 		throw std::exception();
+	}
 	return (*new SocketWindows(host, fd));
 }
 
@@ -230,6 +236,7 @@ static SOCKET	aux_client(struct addrinfo const *rp)
 
 ISocket	&new_iclient(std::string const &host, std::string const &port)
 {
+	WSAStartup(MAKEWORD(2, 2), &m_wsadata);
 	struct addrinfo	*result;
 	struct addrinfo	hints =
 	{
@@ -245,19 +252,24 @@ ISocket	&new_iclient(std::string const &host, std::string const &port)
 	int	status = getaddrinfo(host.c_str(), port.c_str(), &hints, &result);
 	if (status != 0)
 	{
-		std::cerr << "getaddrinfo: " << gai_strerror(status) << std::endl;
+		std::cerr << "getaddrinfo: " << WSAGetLastError() << std::endl;
+		WSACleanup();
 		throw std::exception();
 	}
 
 	SOCKET fd = aux_client(result);
 	freeaddrinfo(result);
 	if (fd == INVALID_SOCKET)
+	{
+		WSACleanup();
 		throw std::exception();
+	}
 	return (*new SocketWindows(host, fd));
 }
 
 ISocket	&new_istandard(ISocket::Standard standard)
 {
+	WSAStartup(MAKEWORD(2, 2), &m_wsadata);
 	switch (standard)
 	{
 	case ISocket::In:
@@ -267,5 +279,11 @@ ISocket	&new_istandard(ISocket::Standard standard)
 	case ISocket::Err:
 		return (*new SocketWindows("Standard Input (stdin)", 2));
 	}
+	WSACleanup();
 	throw std::exception();
+}
+
+bool	iselect(ITime const *timeout)
+{
+	return (SocketWindows::select(timeout));
 }

@@ -25,7 +25,6 @@ private:
 	SOCKET m_sock;
 	WSAEVENT m_event;
 	std::string m_ip;
-	static WSAData	m_wsadata;
 	static WSAEVENT	m_events[WSA_MAXIMUM_WAIT_EVENTS];
 	static DWORD	m_idx_events;
 };

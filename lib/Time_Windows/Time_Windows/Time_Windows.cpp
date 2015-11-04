@@ -47,3 +47,9 @@ ITime	&TimeWindows::clone(void) const
 TimeWindows::~TimeWindows(void)
 {
 }
+
+extern "C" __declspec(dllexport)
+ITime	&new_itime(void)
+{
+	return (*new TimeWindows());
+}
