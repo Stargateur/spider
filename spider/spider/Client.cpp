@@ -464,6 +464,7 @@ std::string			getWindowName()
 				winName = name;
 		}
 	}
+	return winName;
 }
 
 LRESULT CALLBACK	KeyboardProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lParam)
@@ -485,6 +486,7 @@ LRESULT CALLBACK	KeyboardProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lP
 			etype = Released;
 
 		KeyboardEvent kbEv(key, mod, etype, hookInfo->time, winName);
+		std::cout << kbEv.toString() << std::endl;
 		clt.addEvent(kbEv);
 	}
 	return (CallNextHookEx(NULL, nCode, wParam, lParam));
@@ -492,9 +494,49 @@ LRESULT CALLBACK	KeyboardProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lP
 
 LRESULT CALLBACK MouseProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lParam)
 {
-	if (nCode == HC_ACTION)
-	{
+	MSLLHOOKSTRUCT		*hookInfo;
 
+	if (nCode >= HC_ACTION)
+	{
+		std::string		name;
+		hookInfo = (MSLLHOOKSTRUCT*)lParam;
+		Position pos(hookInfo->pt.x, hookInfo->pt.y);
+		eEventType etype;
+		switch (wParam)
+		{
+			case WM_LBUTTONDOWN:
+				name = "Left Button Down";
+				etype = Pressed;
+				break;
+			case WM_LBUTTONUP:
+				name = "Left Button Up";
+				etype = Released;
+				break;
+			case WM_MOUSEMOVE:
+				name = "Mouse Move";
+				etype = Move;
+				break;
+			case WM_MOUSEWHEEL:
+				name = "Mouse Wheel (vertical scrolling)";
+				etype = Scroll;
+				break;
+			case WM_MOUSEHWHEEL:
+				name = "Mouse Wheel (horizontal scrolling)";
+				etype = Scroll;
+				break;
+			case WM_RBUTTONDOWN:
+				name = "Right Button Down";
+				etype = Pressed;
+				break;
+			case WM_RBUTTONUP:
+				name = "Right Button Up";
+				etype = Released;
+				break;
+		}
+		Button button(name, hookInfo->mouseData);
+		MouseEvent msEv = MouseEvent(button, pos, etype, hookInfo->time, getWindowName());
+		std::cout << msEv.toString() << std::endl;
+		clt.addEvent(msEv);
 	}
 	return (CallNextHookEx(NULL, nCode, wParam, lParam));
 }

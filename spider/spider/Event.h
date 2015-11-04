@@ -5,7 +5,10 @@
 enum eEventType
 {
 	Pressed,
-	Released
+	Released,
+	Click,
+	Move,
+	Scroll
 };
 
 enum eInput

@@ -44,7 +44,6 @@ std::string	MouseEvent::toString(void)
 	ret << m_buttonData.getName() << " ";
 	ret << m_pos.getX() << " ";
 	ret << m_pos.getY() << " ";
-	ret << m_pos.getZ() << " ";
 	ret << Event::toString() << std::endl;
 	return (ret.str());
 }
