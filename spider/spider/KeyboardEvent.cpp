@@ -5,12 +5,12 @@ KeyboardEvent::KeyboardEvent()
 {
 }
 
-KeyboardEvent::KeyboardEvent(KeyboardEvent &old) : Event(old), m_keyData(old.m_keyData), m_mod(old.m_mod)
+KeyboardEvent::KeyboardEvent(KeyboardEvent const &old) : Event(old), m_keyData(old.m_keyData), m_mod(old.m_mod)
 {
 
 }
 
-KeyboardEvent::KeyboardEvent(Key keyData, Modifier mod, eEventType type, long time, std::string &winName) : Event(type, time, winName), m_keyData(keyData), m_mod(mod)
+KeyboardEvent::KeyboardEvent(Key const &keyData, Modifier const &mod, eEventType type, long time, std::string const &winName) : Event(type, time, winName), m_keyData(keyData), m_mod(mod)
 {
 
 }
@@ -29,12 +29,12 @@ Modifier	KeyboardEvent::getModifier(void)
 	return (m_mod);
 }
 
-void		KeyboardEvent::setKeyData(Key keyData)
+void		KeyboardEvent::setKeyData(Key const &keyData)
 {
 	m_keyData = keyData;
 }
 
-void		KeyboardEvent::setMod(Modifier mod)
+void		KeyboardEvent::setMod(Modifier const &mod)
 {
 	m_mod = mod;
 }

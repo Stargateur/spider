@@ -3,7 +3,7 @@ class Modifier
 {
 public:
 	Modifier();
-	Modifier(Modifier &old);
+	Modifier(Modifier const &old);
 	Modifier(bool Ctrl, bool Alt, bool CapsLock, bool Shift);
 	~Modifier();
 	bool		getCtrl(void);
