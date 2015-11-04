@@ -1,5 +1,15 @@
 *.o
 *~
+*.log
+*.obj
+*.ilk
+*.pdb
+*.exe
+*.sdf
+*.opensdf
+*.suo
+*.idb
+*.tlog
 *.dpd
 \#*#
 /spider_server
