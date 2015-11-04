@@ -1,7 +1,5 @@
 #include "Event.h"
 
-
-
 Event::Event()
 {
 }
@@ -48,4 +46,21 @@ void			Event::setTime(long time)
 void			Event::setWinName(std::string &winName)
 {
 	m_winName = winName;
+}
+
+std::string		Event::toString(void)
+{
+	std::stringstream ret;
+
+	if (m_type == Pressed)
+		ret << "Pressed ";
+	else if (m_type == Released)
+		ret << "Released ";
+	ret << m_time << " " << m_winName;
+	return (ret.str());
+}
+
+eInput			Event::getInput(void)
+{
+	return (None);
 }

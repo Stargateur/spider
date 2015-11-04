@@ -1,8 +1,6 @@
 #include <string>
 #include "Key.h"
 
-
-
 Key::Key()
 {
 }

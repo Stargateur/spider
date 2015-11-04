@@ -1,7 +1,5 @@
 #include "MouseEvent.h"
 
-
-
 MouseEvent::MouseEvent()
 {
 }
@@ -10,7 +8,7 @@ MouseEvent::MouseEvent(MouseEvent &old) : Event(old), m_buttonData(old.m_buttonD
 {
 }
 
-MouseEvent::MouseEvent(Button buttonData, Position pos, eEventType type, long time) : Event(type, time), m_buttonData(buttonData), m_pos(pos)
+MouseEvent::MouseEvent(Button buttonData, Position pos, eEventType type, long time, std::string &winName) : Event(type, time, winName), m_buttonData(buttonData), m_pos(pos)
 {
 }
 
@@ -36,4 +34,22 @@ void		MouseEvent::setButtonData(Button buttonData)
 void		MouseEvent::setPos(Position pos)
 {
 	m_pos = pos;
+}
+
+std::string	MouseEvent::toString(void)
+{
+	std::stringstream ret;
+
+	ret << m_buttonData.getId() << " ";
+	ret << m_buttonData.getName() << " ";
+	ret << m_pos.getX() << " ";
+	ret << m_pos.getY() << " ";
+	ret << m_pos.getZ() << " ";
+	ret << Event::toString() << std::endl;
+	return (ret.str());
+}
+
+eInput		MouseEvent::getInput(void)
+{
+	return (Mouse);
 }

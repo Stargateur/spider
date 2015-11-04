@@ -1,10 +1,18 @@
 #pragma once
 #include <string>
+#include <sstream>
 
 enum eEventType
 {
 	Pressed,
 	Released
+};
+
+enum eInput
+{
+	None,
+	Keyboard,
+	Mouse
 };
 
 class Event
@@ -14,15 +22,16 @@ public:
 	Event(Event &old);
 	Event(eEventType type, long time, std::string &winName);
 	~Event();
-	eEventType		getType(void);
-	long			getTime(void);
-	std::string		&getWinName(void);
-	void			setType(eEventType type);
-	void			setTime(long time);
-	void			setWinName(std::string &winName);
+	eEventType			getType(void);
+	long				getTime(void);
+	std::string			&getWinName(void);
+	void				setType(eEventType type);
+	void				setTime(long time);
+	void				setWinName(std::string &winName);
+	virtual std::string toString(void);
+	virtual eInput		getInput(void);
 protected:
-	eEventType		m_type;
-	long			m_time;
-	std::string		m_winName;
+	eEventType			m_type;
+	long				m_time;
+	std::string			m_winName;
 };
-

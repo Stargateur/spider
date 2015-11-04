@@ -16,4 +16,3 @@ private:
 	int		m_y;
 	int		m_z;
 };
-
