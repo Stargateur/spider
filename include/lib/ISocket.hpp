@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 20:47:26 2015 Bertrand-Rapello Baptiste
-// Last update Mon Oct 26 04:45:42 2015 Antoine Plaskowski
+// Last update Tue Nov  3 12:56:52 2015 Antoine Plaskowski
 //
 
 #ifndef		ISOCKET_HPP_
@@ -20,9 +20,9 @@ class ISocket
 public:
   enum	Standard
     {
-      IN,
-      OUT,
-      ERR
+      In,
+      Out,
+      Err
     };  
 public:
   virtual ~ISocket(void);
@@ -32,8 +32,16 @@ public:
   virtual bool	want_read(void) const = 0;
   virtual bool	can_write(void) const = 0;
   virtual bool	want_write(void) const = 0;
+  virtual bool	want_read_write(void) const = 0;
   virtual uintmax_t	read(uint8_t &buffer, uintmax_t size) const = 0;
   virtual uintmax_t	write(uint8_t const &buffer, uintmax_t size) const = 0;
+};
+
+class	ISocketException : public std::exception
+{
+public:
+  virtual char const *what(void) const throw() = 0;
+  virtual ~ISocketException(void);
 };
 
 extern "C"

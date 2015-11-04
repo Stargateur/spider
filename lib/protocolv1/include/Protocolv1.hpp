@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 22:50:40 2015 Bertrand-Rapello Baptiste
-// Last update Mon Oct 26 12:11:13 2015 Antoine Plaskowski
+// Last update Tue Nov  3 14:15:50 2015 Antoine Plaskowski
 //
 
 #ifndef		PROTOCOLV1_HPP_
@@ -13,6 +13,7 @@
 
 # include	<string>
 # include	<array>
+
 # include	"IProtocol.hpp"
 # include	"ITime.hpp"
 # include	"Packetread.hpp"

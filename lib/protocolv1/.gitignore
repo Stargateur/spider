@@ -1,1 +1,5 @@
 /lib_protocolv1_linux.so
+/.vs
+/x64
+/protocolv1/.vs
+/protocolv1/x64

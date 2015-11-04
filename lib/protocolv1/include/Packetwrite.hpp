@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 25 10:10:39 2015 Antoine Plaskowski
-// Last update Mon Oct 26 05:44:49 2015 Antoine Plaskowski
+// Last update Tue Nov  3 14:16:53 2015 Antoine Plaskowski
 //
 
 #ifndef		PACKETWRITE_HPP_

@@ -47,8 +47,8 @@ std::string KeyboardEvent::toString(void)
 	ret << m_keyData.getName() << " ";
 	if (m_mod.getAlt())
 		ret << "Alt ";
-	if (m_mod.getAltGr())
-		ret << "AltGr ";
+	if (m_mod.getCapsLock())
+		ret << "CapsLock ";
 	if (m_mod.getCtrl())
 		ret << "Ctrl ";
 	if (m_mod.getShift())

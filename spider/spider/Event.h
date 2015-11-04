@@ -19,15 +19,15 @@ class Event
 {
 public:
 	Event();
-	Event(Event &old);
-	Event(eEventType type, long time, std::string &winName);
+	Event(Event const &old);
+	Event(eEventType type, long time, std::string const &winName);
 	~Event();
 	eEventType			getType(void);
 	long				getTime(void);
 	std::string			&getWinName(void);
 	void				setType(eEventType type);
 	void				setTime(long time);
-	void				setWinName(std::string &winName);
+	void				setWinName(std::string const &winName);
 	virtual std::string toString(void);
 	virtual eInput		getInput(void);
 protected:

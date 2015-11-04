@@ -1,0 +1,8 @@
+/lib_Socket_Windows_linux.so
+/.vs
+/x64
+/Debug
+/Socket_Windows/Debug
+/Socket_Windows/.vs
+/Socket_Windows/x64
+Socket_Windows.opensdf

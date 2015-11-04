@@ -4,20 +4,20 @@ class Modifier
 public:
 	Modifier();
 	Modifier(Modifier &old);
-	Modifier(bool Ctrl, bool Alt, bool AltGr, bool Shift);
+	Modifier(bool Ctrl, bool Alt, bool CapsLock, bool Shift);
 	~Modifier();
 	bool		getCtrl(void);
 	bool		getAlt(void);
-	bool		getAltGr(void);
 	bool		getShift(void);
+	bool		getCapsLock(void);
 	void		setCtrl(bool Ctrl);
 	void		setAlt(bool Alt);
-	void		setAltGr(bool AltGr);
 	void		setShift(bool Shift);
+	void		setCapsLock(bool CapsLock);
 private:
 	bool		m_Ctrl;
 	bool		m_Alt;
-	bool		m_AltGr;
 	bool		m_Shift;
+	bool		m_CapsLock;
 };
 
