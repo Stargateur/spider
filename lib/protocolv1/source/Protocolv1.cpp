@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Thu Oct 22 09:18:51 2015 Antoine Plaskowski
-// Last update Mon Oct 26 12:15:15 2015 Antoine Plaskowski
+// Last update Thu Nov  5 14:13:19 2015 Antoine Plaskowski
 //
 
 #include	<iostream>
@@ -52,9 +52,10 @@ bool	Protocolv1::run(ITime const *time)
 
 bool	Protocolv1::select(void) const
 {
-  m_socket.want_read();
   if (m_to_write != m_write)  
-    m_socket.want_write();
+    m_socket.want_read_write();
+  else
+    m_socket.want_read();
   return (false);
 }
 
