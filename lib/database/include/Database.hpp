@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 20:57:19 2015 Bertrand-Rapello Baptiste
-// Last update Fri Oct 23 16:21:59 2015 Bertrand-Rapello Baptiste
+// Last update Thu Nov  5 09:01:15 2015 Roussel Rodolphe
 //
 
 #ifndef DATABASE_HPP_
@@ -33,6 +33,8 @@ public:
   bool insert_log(const std::string & mac_addresse, const std::string & log);
   bool show(const std::string & mac_addresse);
 private:
+  void		check_into_database(MYSQL_RES *res, std::string &cmd, const std::string &data);
+    
   MYSQL  *m_db;
 };
 
