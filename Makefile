@@ -5,7 +5,7 @@
 ## Login   <plasko_a@epitech.eu>
 ## 
 ## Started on  Sun Oct 18 06:48:22 2015 Antoine Plaskowski
-## Last update Thu Nov  5 17:03:07 2015 Antoine Plaskowski
+## Last update Fri Nov  6 00:22:03 2015 Antoine Plaskowski
 ##
 
 SERVER		=	spider_server
@@ -39,7 +39,7 @@ CXXFLAGS	+=	-ansi -pedantic -std=c++11
 CXXFLAGS	+=	$(INCLUDE)
 
 ifeq ($(CXX), clang++)
-CXXFLAGS	+=	-Weverything -Wno-padded -Wno-disabled-macro-expansion -Wno-c++98-compat -Wno-return-type-c-linkage
+CXXFLAGS	+=	-Weverything -Wno-padded -Wno-disabled-macro-expansion -Wno-c++98-compat -Wno-return-type-c-linkage -Wno-c++98-compat-pedantic
 endif
 
 ifneq ($(DEBUG), no)

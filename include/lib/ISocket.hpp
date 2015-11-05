@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 20:47:26 2015 Bertrand-Rapello Baptiste
-// Last update Thu Nov  5 18:17:03 2015 Antoine Plaskowski
+// Last update Fri Nov  6 00:28:14 2015 Antoine Plaskowski
 //
 
 #ifndef		ISOCKET_HPP_
@@ -39,7 +39,7 @@ public:
 class	ISocketException : public std::exception
 {
 public:
-  virtual char const *what(void) const throw() = 0;
+  virtual char const *what(void) const noexcept = 0;
   virtual ~ISocketException(void);
 };
 

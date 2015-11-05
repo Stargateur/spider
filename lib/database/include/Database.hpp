@@ -5,10 +5,10 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 20:57:19 2015 Bertrand-Rapello Baptiste
-// Last update Fri Nov  6 00:15:27 2015 Antoine Plaskowski
+// Last update Fri Nov  6 00:19:45 2015 Antoine Plaskowski
 //
 
-#ifndef	DATABASE_HPP_
+#ifndef		DATABASE_HPP_
 # define	DATABASE_HPP_
 
 #include	<iostream>
@@ -36,4 +36,4 @@ private:
   MYSQL	*m_sql;
 };
 
-#endif
+#endif		/* !DATABASE_HPP_ */
