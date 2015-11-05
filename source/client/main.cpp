@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sun Oct 18 06:52:57 2015 Antoine Plaskowski
-// Last update Tue Nov  3 12:57:49 2015 Antoine Plaskowski
+// Last update Thu Nov  5 17:05:33 2015 Antoine Plaskowski
 //
 
 #include	<sstream>
@@ -23,91 +23,43 @@
 
 int		main(int argc, char **argv)
 {
-  Option	option;
+  int		cfd;
+  SSL_CTX	*ctx;
+  SSL		*ssl;
+  char		buf[4096];
+  int		ret;
 
-  option.getopt(argc, argv);
-  DynamicLinkLibrary	dll_isocket(option.get_path_lib_isocket());
-  fct_new_iclient	new_iclient = dll_isocket.get_symbole<fct_new_iclient>(NAME_FCT_NEW_ICLIENT);
-  fct_new_istandard	new_istandard = dll_isocket.get_symbole<fct_new_istandard>(NAME_FCT_NEW_ISTANDARD);
-  DynamicLinkLibrary	dll_itime(option.get_path_lib_itime());
-  fct_new_itime	new_itime = dll_itime.get_symbole<fct_new_itime>(NAME_FCT_NEW_ITIME);
-  DynamicLinkLibrary	dll_iprotocol(option.get_path_lib_iprotocol());
-  fct_new_iprotocol	new_iprotocol = dll_iprotocol.get_symbole<fct_new_iprotocol>(NAME_FCT_NEW_IPROTOCOL);
-  fct_iselect	iselect = dll_isocket.get_symbole<fct_iselect>(NAME_FCT_ISELECT);
-
-  try
+  SSL_library_init();
+  SSL_load_error_strings();
+  OPENSSL_no_config();
+  //  cfd = create_connected_socket("localhost", "4242");
+  cfd = create_connected_socket("::1", "4242");
+  std::cout << cfd << std::endl;
+  ctx = SSL_CTX_new(SSLv3_client_method());
+  // if (SSL_CTX_use_certificate_file(ctx, "cert.pem", SSL_FILETYPE_PEM) != 1) {
+  //   ERR_print_errors_fp(stderr);
+  //   exit(EXIT_FAILURE);
+  // }
+  // if (SSL_CTX_use_PrivateKey_file(ctx, "localhost.key", SSL_FILETYPE_PEM) != 1 ) {
+  //   ERR_print_errors_fp(stderr);
+  //   exit(EXIT_FAILURE);
+  // }
+  ssl = SSL_new(ctx);
+  if (ssl == NULL)
+    exit(1);
+  ret = SSL_set_fd(ssl, cfd);
+  if (ret != 1)
     {
-      ISocket	&client = new_iclient(option.get_host(), option.get_port());
-      ISocket	&in = new_istandard(ISocket::In);
-      ITime	&time = new_itime();
-      IProtocol	&protocol = new_iprotocol(client, time);
-      IProtocol::Keyboard	keyboard = {time, "press", "ff", "rio.exe"};
-      std::list<IProtocol::Keyboard *>	lol;
-
-      lol.push_back(&keyboard);
-      protocol.keyboard(lol);
-      while (true)
-	{
-	  in.want_read();
-	  protocol.select();
-	  iselect(nullptr);
-	  if (in.can_read())
-	    {
-	      uint8_t	buf[4096 + 1];
-	      uintmax_t ret = in.read(*buf, 4096);
-	      buf[ret] = '\0';
-	      if (ret == 0)
-		break;
-	      IProtocol::Log	log = {(char *)buf};
-	      std::list<IProtocol::Log *> xd;
-	      xd.push_back(&log);
-	      protocol.log(xd);
-	    }
-	  if (protocol.run() == true)
-	    return (0);
-	}
+      ERR_print_errors_fp(stderr);
+      std::cout << "SSL_sed_fd : " << SSL_get_error(ssl, ret) << std::endl;
     }
-  catch (std::exception &e)
+  ret = SSL_connect(ssl);
+  if (ret != 1)
     {
-      std::cerr << "exception caught: " << e.what() << std::endl;
+      ERR_print_errors_fp(stderr);
+      std::cout << "SSL_connect : " << SSL_get_error(ssl, ret) << std::endl;
     }
-  // int		cfd;
-  // SSL_CTX	*ctx;
-  // SSL		*ssl;
-  // char		buf[4096];
-  // int		ret;
-
-  // SSL_library_init();
-  // SSL_load_error_strings();
-  // OPENSSL_no_config();
-  // //  cfd = create_connected_socket("localhost", "4242");
-  // cfd = create_connected_socket("::1", "4242");
-  // std::cout << cfd << std::endl;
-  // ctx = SSL_CTX_new(SSLv3_client_method());
-  // // if (SSL_CTX_use_certificate_file(ctx, "cert.pem", SSL_FILETYPE_PEM) != 1) {
-  // //   ERR_print_errors_fp(stderr);
-  // //   exit(EXIT_FAILURE);
-  // // }
-  // // if (SSL_CTX_use_PrivateKey_file(ctx, "localhost.key", SSL_FILETYPE_PEM) != 1 ) {
-  // //   ERR_print_errors_fp(stderr);
-  // //   exit(EXIT_FAILURE);
-  // // }
-  // ssl = SSL_new(ctx);
-  // if (ssl == NULL)
-  //   exit(1);
-  // ret = SSL_set_fd(ssl, cfd);
-  // if (ret != 1)
-  //   {
-  //     ERR_print_errors_fp(stderr);
-  //     std::cout << "SSL_sed_fd : " << SSL_get_error(ssl, ret) << std::endl;
-  //   }
-  // ret = SSL_connect(ssl);
-  // if (ret != 1)
-  //   {
-  //     ERR_print_errors_fp(stderr);
-  //     std::cout << "SSL_connect : " << SSL_get_error(ssl, ret) << std::endl;
-  //   }
-  // SSL_write(ssl, "coucou", 6);
-  // ret = SSL_read(ssl, buf, 4096);
-  // write(1, buf, ret);
+  SSL_write(ssl, "coucou", 6);
+  ret = SSL_read(ssl, buf, 4096);
+  write(1, buf, ret);
 }

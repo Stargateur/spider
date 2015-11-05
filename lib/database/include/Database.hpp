@@ -5,37 +5,35 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 20:57:19 2015 Bertrand-Rapello Baptiste
-// Last update Thu Nov  5 09:01:15 2015 Roussel Rodolphe
+// Last update Fri Nov  6 00:15:27 2015 Antoine Plaskowski
 //
 
-#ifndef DATABASE_HPP_
-# define DATABASE_HPP_
+#ifndef	DATABASE_HPP_
+# define	DATABASE_HPP_
 
-#include <iostream>
-#include <string>
-#include <ctime>
-#include <cstdint>
-#include <mysql.h>
-#include "ITime.hpp"
-#include "IDatabase.hpp"
+#include	<iostream>
+#include	<string>
+#include	<ctime>
+#include	<cstdint>
+#include	<mysql.h>
+#include	"IDatabase.hpp"
 
 class Database : public IDatabase
 {
 public:
-  Database(void);
+  Database(std::string const &host = "localhost",
+	   std::string const &port = "0",
+	   std::string const &user = "root",
+	   std::string const &passwd = "");
   ~Database(void);
-  
-public:
-  bool	connect(std::string const &host="localhost", std::string const &port="0", std::string const &user = "", std::string const &passwd="", std::string const  &db="");
-  bool select_db(std::string const & db);
-  bool insert_keyboard(const std::string  & mac_address, const ITime  & tme, std::string event, const std::string & key, const std::string & process);
-  bool insert_mouse(const std::string & mac_addresse, const ITime & tme, std::string event, const std::string & button, const std::string & process);
-  bool insert_log(const std::string & mac_addresse, const std::string & log);
-  bool show(const std::string & mac_addresse);
+  bool	select_db(std::string const &db);
+  bool	insert_keyboard(std::string const &mac_address, IProtocol::Keyboard const &keyboard);
+  bool	insert_mouse(std::string const &mac_addresse, IProtocol::Mouse const &mouse);
+  bool	insert_log(std::string const &mac_addresse, IProtocol::Log const &log);
+  bool	show(std::string const &mac_addresse);
 private:
-  void		check_into_database(MYSQL_RES *res, std::string &cmd, const std::string &data);
-    
-  MYSQL  *m_db;
+  void	check_into_database(MYSQL_RES *res, std::string &cmd, const std::string &data);    
+  MYSQL	*m_sql;
 };
 
 #endif

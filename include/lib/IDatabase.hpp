@@ -5,36 +5,43 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Wed Oct 21 23:43:13 2015 Antoine Plaskowski
-// Last update Wed Nov  4 16:41:05 2015 Antoine Plaskowski
+// Last update Thu Nov  5 21:43:57 2015 Antoine Plaskowski
 //
 
 #ifndef		IDATABASE_HPP_
 # define	IDATABASE_HPP_
 
 #include	<string>
+#include	"IProtocol.hpp"
 #include	"ITime.hpp"
 
 class	IDatabase
 {
 public:
   virtual ~IDatabase(void);
-  virtual bool  connect(std::string const & host="localhost", std::string const  &port="0", std::string const &user="", std::string const &passwd="", std::string const &db="") = 0;
-  virtual bool select_db(std::string const & db) = 0;
-  virtual bool insert_keyboard(const std::string  & mac_address, const ITime  & tme, std::string event, const std::string & key, const std::string & process) = 0;
-  virtual bool insert_mouse(const std::string & mac_addresse, const ITime & tme, std::string event, const std::string & button, const std::string & process) = 0;
-  virtual bool insert_log(const std::string & mac_addresse, const std::string & log) = 0;
-  virtual bool show(const std::string & mac_addresse) = 0;
+  virtual bool select_db(std::string const &db) = 0;
+  virtual bool insert_keyboard(std::string const &mac_addresse, IProtocol::Keyboard const &keyboard) = 0;
+  virtual bool insert_mouse(std::string const &mac_addresse, IProtocol::Mouse const &mouse) = 0;
+  virtual bool insert_log(std::string const &mac_addresse, IProtocol::Log const &log) = 0;
+  virtual bool show(std::string const &mac_addresse) = 0;
 };
 
 extern "C"
 {
 # define	NAME_FCT_NEW_IDATABASE	"new_idatabase"
 #ifdef	__linux__
-  IDatabase	&new_idatabase(void);
+  IDatabase	&new_idatabase(std::string const &host = "localhost",
+			       std::string const &port = "0",
+			       std::string const &user = "",
+			       std::string const &passwd = "");
 #else
-  __declspec(dllexport) IDatabase	&new_idatabase(void);
+  __declspec(dllexport) IDatabase	&new_idatabase(std::string const &host = "localhost",
+						       std::string const &port = "0",
+						       std::string const &user = "",
+						       std::string const &passwd = "");
 #endif
   typedef	IDatabase &(*fct_new_idatabase)(void);
+  typedef	IDatabase &(&ref_new_idatabase)(void);
 }
 
 

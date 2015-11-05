@@ -5,12 +5,10 @@
 ## Login   <plasko_a@epitech.eu>
 ## 
 ## Started on  Sun Oct 18 06:48:22 2015 Antoine Plaskowski
-## Last update Mon Oct 26 14:00:57 2015 Antoine Plaskowski
+## Last update Thu Nov  5 17:03:07 2015 Antoine Plaskowski
 ##
 
 SERVER		=	spider_server
-
-CLIENT		=	spider_client
 
 PATH_TIME	=	lib/time/
 
@@ -58,18 +56,13 @@ ifeq ($(DEBUG), no)
 LDFLAGS		+=	-s
 endif
 
-include			source_server.mk
-include			source_client.mk
+include			server.mk
 
 DPD_SERVER	=	$(SRC_SERVER:.cpp=.dpd)
 
 OBJ_SERVER	=	$(SRC_SERVER:.cpp=.o)
 
-DPD_CLIENT	=	$(SRC_CLIENT:.cpp=.dpd)
-
-OBJ_CLIENT	=	$(SRC_CLIENT:.cpp=.o)
-
-all		:	$(SERVER) $(CLIENT) $(TIME) $(SOCKET)
+all		:	$(SERVER) $(TIME) $(SOCKET)
 			$(MAKE) -C $(PATH_TIME)
 			$(MAKE) -C $(PATH_SOCKET)
 			$(MAKE) -C $(PATH_PROTOCOLV1)
@@ -78,14 +71,9 @@ all		:	$(SERVER) $(CLIENT) $(TIME) $(SOCKET)
 $(SERVER)	:	$(OBJ_SERVER)
 			$(CXX) $(OBJ_SERVER) -o $(SERVER) $(LDFLAGS)
 
-$(CLIENT)	:	$(OBJ_CLIENT)
-			$(CXX) $(OBJ_CLIENT) -o $(CLIENT) $(LDFLAGS)
-
 clean		:
 			$(RM) -f $(OBJ_SERVER)
-			$(RM) -f $(OBJ_CLIENT)
 			$(RM) -f $(DPD_SERVER)
-			$(RM) -f $(DPD_CLIENT)
 			$(MAKE) -C $(PATH_TIME) clean
 			$(MAKE) -C $(PATH_SOCKET) clean
 			$(MAKE) -C $(PATH_PROTOCOLV1) clean
@@ -93,7 +81,6 @@ clean		:
 
 fclean		:	clean
 			$(RM) -f $(SERVER)
-			$(RM) -f $(CLIENT)
 			$(MAKE) -C $(PATH_TIME) fclean
 			$(MAKE) -C $(PATH_SOCKET) fclean
 			$(MAKE) -C $(PATH_PROTOCOLV1) fclean
@@ -118,4 +105,4 @@ re		:	fclean
 
 .SUFFIXES	:	.o.c .dpd.c .o.cpp .dpd.cpp
 
-include			$(DPD_SERVER) $(DPD_CLIENT)
+include			$(DPD_SERVER)

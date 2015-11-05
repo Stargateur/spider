@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 20:44:16 2015 Bertrand-Rapello Baptiste
-// Last update Wed Nov  4 16:41:43 2015 Antoine Plaskowski
+// Last update Thu Nov  5 18:17:17 2015 Antoine Plaskowski
 //
 
 #ifndef ITIME_HPP_
@@ -34,6 +34,7 @@ extern "C"
   __declspec(dllexport) ITime	&new_itime(void);
 #endif
   typedef	ITime &(*fct_new_itime)(void);
+  typedef	ITime &(&ref_new_itime)(void);
 }
 
 #endif 

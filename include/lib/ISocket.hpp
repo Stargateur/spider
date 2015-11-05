@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 20:47:26 2015 Bertrand-Rapello Baptiste
-// Last update Wed Nov  4 16:40:48 2015 Antoine Plaskowski
+// Last update Thu Nov  5 18:17:03 2015 Antoine Plaskowski
 //
 
 #ifndef		ISOCKET_HPP_
@@ -64,6 +64,10 @@ extern "C"
   typedef	ISocket	&(*fct_new_iserver)(std::string const &ip, std::string const &port);
   typedef	ISocket	&(*fct_new_iclient)(std::string const &ip, std::string const &port);
   typedef	ISocket	&(*fct_new_istandard)(ISocket::Standard standard);
+  typedef	bool	(&ref_iselect)(ITime const *timeout);
+  typedef	ISocket	&(&ref_new_iserver)(std::string const &ip, std::string const &port);
+  typedef	ISocket	&(&ref_new_iclient)(std::string const &ip, std::string const &port);
+  typedef	ISocket	&(&ref_new_istandard)(ISocket::Standard standard);
 }
 
 #endif	/* !ISOCKET_HPP_ */

