@@ -1,4 +1,4 @@
-//
+	//
 // ISocket.hh for  in /home/bbr2394/renduTek3/cpp_spider/include
 // 
 // Made by Bertrand-Rapello Baptiste
@@ -32,7 +32,6 @@ public:
   virtual bool	want_read(void) const = 0;
   virtual bool	can_write(void) const = 0;
   virtual bool	want_write(void) const = 0;
-  virtual bool	want_read_write(void) const = 0;
   virtual uintmax_t	read(uint8_t &buffer, uintmax_t size) const = 0;
   virtual uintmax_t	write(uint8_t const &buffer, uintmax_t size) const = 0;
 };

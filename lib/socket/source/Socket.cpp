@@ -128,15 +128,6 @@ bool	 Socket::can_write(void) const
   return (ret);
 }
 
-bool	Socket::want_read_write(void) const
-{
-  FD_SET(m_fd, &m_readfds);
-  FD_SET(m_fd, &m_writefds);
-  m_nfds = std::max<int>(m_nfds, m_fd);
-  return (false);
-}
-
-
 uintmax_t	Socket::read(uint8_t &buffer, uintmax_t size) const
 {
   ssize_t	ret = ::read(m_fd, &buffer, size);

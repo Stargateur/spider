@@ -18,13 +18,12 @@ public:
 	bool	want_read(void) const;
 	bool	can_write(void) const;
 	bool	want_write(void) const;
-	bool	want_read_write(void) const;
 	uintmax_t	read(uint8_t &buffer, uintmax_t size) const;
 	uintmax_t	write(uint8_t const &buffer, uintmax_t size) const;
 private:
-	SOCKET m_sock;
-	WSAEVENT m_event;
+	static fd_set	m_readfds;
+	static fd_set	m_writefds;
+	static int	m_nfds;
+	int m_sock;
 	std::string m_ip;
-	static WSAEVENT	m_events[WSA_MAXIMUM_WAIT_EVENTS];
-	static DWORD	m_idx_events;
 };

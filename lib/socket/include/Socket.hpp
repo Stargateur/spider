@@ -29,7 +29,6 @@ public:
   bool	want_read(void) const;
   bool	can_write(void) const;
   bool	want_write(void) const;
-  bool	want_read_write(void) const;
   uintmax_t	read(uint8_t &buffer, uintmax_t size) const;
   uintmax_t	write(uint8_t const &buffer, uintmax_t size) const;
 private:

@@ -11,7 +11,7 @@
 #include	"DynamicLinkLibrary.hpp"
 
 DynamicLinkLibrary::DynamicLinkLibrary(std::string const &name) :
-  m_handle(LoadLibrary(name.c_str(), RTLD_LAZY))
+  m_handle(LoadLibrary(name.c_str()))
 {
   if (m_handle == NULL)
     {
@@ -22,7 +22,7 @@ DynamicLinkLibrary::DynamicLinkLibrary(std::string const &name) :
 
 DynamicLinkLibrary::~DynamicLinkLibrary(void)
 {
-  if (FreeLibray(m_handle) != 0)
+  if (FreeLibrary(m_handle) != 0)
     {
       std::cerr << "FreeLibrary :" << GetLastError() << std::endl;
     }

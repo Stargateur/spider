@@ -9,33 +9,39 @@
 #include <fcntl.h>
 #include "Socket_Windows.hpp"
 
-DWORD	SocketWindows::m_idx_events = 0;
-WSAEVENT	SocketWindows::m_events[WSA_MAXIMUM_WAIT_EVENTS] = {};
 static WSAData	m_wsadata;
+int	SocketWindows::m_nfds = -1;
+fd_set	SocketWindows::m_readfds = {};
+fd_set	SocketWindows::m_writefds = {};
 
 SocketWindows::SocketWindows(std::string const &ip, SOCKET sock) :
 	m_sock(sock),
-	m_event(WSACreateEvent()),
 	m_ip(ip)
 {
 }
 
 SocketWindows::~SocketWindows(void)
 {
-	WSACloseEvent(m_event);
+	FD_CLR(m_sock, &m_writefds);
+	FD_CLR(m_sock, &m_readfds);
 	WSACleanup();
 }
 
 bool	SocketWindows::select(ITime const *timeout)
 {
-	DWORD	ret;
+	int	ret;
+
 	if (timeout == nullptr)
-		ret = WSAWaitForMultipleEvents(m_idx_events, m_events, false, WSA_INFINITE, false);
+		ret = ::select(m_nfds + 1, &m_readfds, &m_writefds, NULL, NULL);
 	else
-		ret = WSAWaitForMultipleEvents(m_idx_events, m_events, false, timeout->get_second() * 1000 + timeout->get_nano() / 1000000, false);
-	m_idx_events = 0;
-	if (ret == WSA_WAIT_FAILED)
 	{
+		struct timeval	time = {timeout->get_second(), timeout->get_nano() * 1000};
+		ret = ::select(m_nfds + 1, &m_readfds, &m_writefds, NULL, &time);
+	}
+	m_nfds = -1;
+	if (ret == -1)
+	{
+		perror("select()");
 		return (true);
 	}
 	return (false);
@@ -53,7 +59,7 @@ ISocket	&SocketWindows::accept(void) const
 	SOCKET fd;
 	socklen_t len = sizeof(sockaddr);
 	std::memset(&sockaddr.base, 0, len);
-	fd = WSAAccept(m_sock, &sockaddr.base, &len, NULL, NULL);
+	fd = ::accept(m_sock, &sockaddr.base, &len);
 	if (fd == INVALID_SOCKET)
 	{
 		perror("accept()");
@@ -82,60 +88,35 @@ std::string const	&SocketWindows::get_ip(void) const
 
 bool	SocketWindows::can_read(void) const
 {
-	WSANETWORKEVENTS	networkevents;
-	if (WSAEnumNetworkEvents(m_sock, m_event, &networkevents) == SOCKET_ERROR)
-		return (false);
-	if (networkevents.lNetworkEvents != FD_READ)
-		return (false);
-	return (networkevents.iErrorCode[FD_READ_BIT] == ERROR_SUCCESS);
+	bool	ret = FD_ISSET(m_sock, &m_readfds);
+	FD_CLR(m_sock, &m_readfds);
+	return (ret);
 }
 
 bool	SocketWindows::want_read(void) const
 {
-	if (WSAEventSelect(m_sock, m_event, FD_READ) == SOCKET_ERROR)
-		return (true);
-	if (m_idx_events >= WSA_MAXIMUM_WAIT_EVENTS)
-		return (true);
-	m_events[m_idx_events++] = m_event;
+	FD_SET(m_sock, &m_readfds);
+	m_nfds = std::max<int>(m_nfds, m_sock);
 	return (false);
 }
 
 bool	SocketWindows::can_write(void) const
 {
-	WSANETWORKEVENTS	networkevents;
-	if (WSAEnumNetworkEvents(m_sock, m_event, &networkevents) == SOCKET_ERROR)
-		return (false);
-	if (networkevents.lNetworkEvents != FD_WRITE)
-		return (false);
-	return (networkevents.iErrorCode[FD_WRITE_BIT] == ERROR_SUCCESS);
+	bool	ret = FD_ISSET(m_sock, &m_writefds);
+	FD_CLR(m_sock, &m_writefds);
+	return (ret);
 }
 
 bool	SocketWindows::want_write(void) const
 {
-	if (WSAEventSelect(m_sock, m_event, FD_WRITE) == SOCKET_ERROR)
-		return (true);
-	if (m_idx_events >= WSA_MAXIMUM_WAIT_EVENTS)
-		return (true);
-	m_events[m_idx_events++] = m_event;
-	return (false);
-}
-
-bool	SocketWindows::want_read_write(void) const
-{
-	if (WSAEventSelect(m_sock, m_event, FD_READ | FD_WRITE) == SOCKET_ERROR)
-		return (true);
-	if (m_idx_events >= WSA_MAXIMUM_WAIT_EVENTS)
-		return (true);
-	m_events[m_idx_events++] = m_event;
+	FD_SET(m_sock, &m_writefds);
+	m_nfds = std::max<int>(m_nfds, m_sock);
 	return (false);
 }
 
 uintmax_t	SocketWindows::read(uint8_t &buffer, uintmax_t size) const
 {
-	WSABUF buff;
-	buff.len = size;
-	buff.buf = reinterpret_cast<char *>(&buffer);
-	uintmax_t	ret = WSARecv(m_sock, &buff, size, NULL, NULL, NULL, NULL);
+	int	ret = ::recv(m_sock, reinterpret_cast<char *>(&buffer), size, 0);
 	if (ret < 0)
 		throw std::exception();
 	return (ret);
@@ -143,10 +124,7 @@ uintmax_t	SocketWindows::read(uint8_t &buffer, uintmax_t size) const
 
 uintmax_t	SocketWindows::write(uint8_t const &buffer, uintmax_t size) const
 {
-	WSABUF buff;
-	buff.len = size;
-	buff.buf = reinterpret_cast<char *>(const_cast<uint8_t *>(&buffer));
-	uintmax_t	ret = WSASend(m_sock, &buff, size, NULL, NULL, NULL, NULL);
+	int	ret = ::send(m_sock, reinterpret_cast<char const*>(&buffer), size, 0);
 	if (ret < 0)
 		throw std::exception();
 	return (ret);
@@ -158,7 +136,7 @@ static SOCKET	aux_server(struct addrinfo const *rp)
 
 	if (rp == NULL)
 		return (INVALID_SOCKET);
-	if ((fd = WSASocket(rp->ai_family, rp->ai_socktype, rp->ai_protocol, NULL, 0, 0)) == INVALID_SOCKET)
+	if ((fd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol)) == INVALID_SOCKET)
 	{
 		perror("socket()");
 		return (aux_server(rp->ai_next));
@@ -219,12 +197,12 @@ static SOCKET	aux_client(struct addrinfo const *rp)
 
 	if (rp == NULL)
 		return (INVALID_SOCKET);
-	if ((fd = WSASocket(rp->ai_family, rp->ai_socktype, rp->ai_protocol, NULL, 0, 0)) == INVALID_SOCKET)
+	if ((fd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol)) == INVALID_SOCKET)
 	{
 		perror("socket()");
 		return (aux_client(rp->ai_next));
 	}
-	if (WSAConnect(fd, rp->ai_addr, rp->ai_addrlen, NULL, NULL, NULL, NULL) != 0)
+	if (::connect(fd, rp->ai_addr, rp->ai_addrlen) != 0)
 	{
 		perror("connect()");
 		if (closesocket(fd) == -1)

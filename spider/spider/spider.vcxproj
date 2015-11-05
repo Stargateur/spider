@@ -121,6 +121,7 @@
   <ItemGroup>
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="DynamicLinkLibrary.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="ILog.cpp" />
     <ClCompile Include="Key.cpp" />
@@ -134,6 +135,7 @@
   <ItemGroup>
     <ClInclude Include="Button.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="DynamicLinkLibrary.hpp" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="ILog.h" />
     <ClInclude Include="Key.h" />
