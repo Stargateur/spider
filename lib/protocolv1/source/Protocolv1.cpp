@@ -83,7 +83,6 @@ bool	Protocolv1::timeout(ITime const &time)
 
 bool	Protocolv1::read(void)
 {
-  std::cout << "read proto" << std::endl;
   m_last_read.now();
   m_wait_pong = false;
   if (m_read.read(m_socket) == true)
@@ -136,7 +135,6 @@ bool	Protocolv1::read(void)
 
 bool	Protocolv1::write(void)
 { 
-  std::cout << "write proto" << std::endl;
   if (m_to_write != m_write)
     {
       if (m_packets[m_to_write].write(m_socket) == true)
@@ -372,7 +370,6 @@ bool	Protocolv1::write_clientlog(std::list<IProtocol::Log *> const &log)
 
 bool	Protocolv1::read_ping(void)
 {
-  std::cout << "ping" << std::endl;
   return (write_pong());
 }
 
@@ -385,7 +382,6 @@ bool	Protocolv1::write_ping(void)
 bool	Protocolv1::read_pong(void)
 {
   m_wait_pong = false;
-  std::cout << "pong" << std::endl;
   return (false);
 }
 

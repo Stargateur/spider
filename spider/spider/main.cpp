@@ -27,10 +27,8 @@ int main(int ac, char **av)
 	mdr.keyboard(ptdr);
 	while (true)
 	{
-		std::cout << "je suis la" << std::endl;
 		mdr.select();
 		iselect(nullptr);
-		std::cout << "finis select" << std::endl;
 		if (mdr.run() == true)
 			return (0);
 	}
