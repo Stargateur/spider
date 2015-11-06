@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 21:04:15 2015 Bertrand-Rapello Baptiste
-// Last update Fri Nov  6 17:55:26 2015 Antoine Plaskowski
+// Last update Fri Nov  6 18:14:26 2015 Antoine Plaskowski
 //
 
 #include	<ncurses.h>
@@ -36,7 +36,7 @@ Database::~Database(void)
 
 bool	Database::select_db(std::string const &db)
 {
-  static char const * const table[] =
+  static std::string const table[] =
     {
       "CREATE TABLE IF NOT EXISTS client"
       "(id_client BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT, mac_address CHARACTER(6) NOT NULL)",
@@ -62,12 +62,12 @@ bool	Database::select_db(std::string const &db)
   // if (mysql_real_escape_string(m_sql, buf, db.c_str(), db.size()) == -1)
   //   throw std::exception();
   std::string	cmd = "CREATE DATABASE IF NOT EXISTS " + db;
-  if (mysql_query(m_sql, cmd.c_str()) != 0)
+  if (mysql_real_query(m_sql, cmd.c_str(), cmd.size()) != 0)
     throw std::exception();
   if (mysql_select_db(m_sql, db.c_str()) != 0)
     throw std::exception();
   for (uint64_t i = 0; i < sizeof(table) / sizeof(*table); i++)
-    if (mysql_query(m_sql, table[i]) != 0)
+    if (mysql_real_query(m_sql, table[i].c_str(), table[i].size()) != 0)
       throw std::exception();
   return (false);
 }
@@ -75,7 +75,7 @@ bool	Database::select_db(std::string const &db)
 uint64_t	Database::get_id(std::string const &table, std::string const &column, std::string const &id_name, std::string const &search)
 {
   std::string	cmd = "SELECT " + id_name + " FROM " + table + " WHERE " + column + " = \"" + search + "\"";
-  if (mysql_query(m_sql, cmd.c_str()) != 0)
+  if (mysql_real_query(m_sql, cmd.c_str(), cmd.size()) != 0)
     throw std::exception();
   
   MYSQL_RES	*res = mysql_store_result(m_sql);
@@ -90,7 +90,7 @@ uint64_t	Database::get_id(std::string const &table, std::string const &column, s
   else if (num_rows == 0)
     {
       cmd = "INSERT INTO " + table + " (" + column + ") VALUES (\"" + search + "\")";
-      if (mysql_query(m_sql, cmd.c_str()) != 0)
+      if (mysql_real_query(m_sql, cmd.c_str(), cmd.size()) != 0)
 	throw std::exception();
       return (get_id(table, column, id_name, search));
     }
@@ -111,7 +111,7 @@ bool	Database::insert_keyboard(std::string const &mac_address, IProtocol::Keyboa
   cmd += "\"" + std::to_string(id_key) + "\", ";
   cmd += "\"" + std::to_string(id_event) + "\", ";
   cmd += "\"" + std::to_string(id_process) + "\")";
-  if (mysql_query(m_sql, cmd.c_str()) != 0)
+  if (mysql_real_query(m_sql, cmd.c_str(), cmd.size()) != 0)
     throw std::exception();
   return (false);
 }
@@ -130,7 +130,7 @@ bool	Database::insert_mouse(std::string const &mac_address, IProtocol::Mouse con
   cmd += "\"" + std::to_string(id_button) + "\", ";
   cmd += "\"" + std::to_string(id_event) + "\", ";
   cmd += "\"" + std::to_string(id_process) + "\")";
-  if (mysql_query(m_sql, cmd.c_str()) != 0)
+  if (mysql_real_query(m_sql, cmd.c_str(), cmd.size()) != 0)
     throw std::exception();
   return (false);
 }
@@ -143,7 +143,7 @@ bool	Database::insert_log(std::string const &mac_address, IProtocol::Log const &
   std::string cmd = "INSERT INTO log_input (id_client, second, nano, id_log, id_event, id_process) VALUES (";
   cmd += "\"" + std::to_string(id_client) + "\", ";
   cmd += "\"" + std::to_string(id_log) + "\", ";
-  if (mysql_query(m_sql, cmd.c_str()) != 0)
+  if (mysql_real_query(m_sql, cmd.c_str(), cmd.size()) != 0)
     throw std::exception();
   return (false);
 }
@@ -151,7 +151,7 @@ bool	Database::insert_log(std::string const &mac_address, IProtocol::Log const &
 bool	Database::show(const std::string &mac_address)
 {
   std::string cmd = "SELECT second, nano, mac_address, key_string.string, event_string.string, process_string.string FROM keyboard_input NATUREL JOIN client, key_string, event_string, process_string WHERE mac_address = \"" + mac_address + "\"";
-  if (mysql_query(m_sql, cmd.c_str()) != 0)
+  if (mysql_real_query(m_sql, cmd.c_str(), cmd.size()) != 0)
     throw std::exception();
   MYSQL_RES	*res = mysql_store_result(m_sql);
   for (MYSQL_ROW rows = mysql_fetch_row(res); rows != NULL; rows = mysql_fetch_row(res))
