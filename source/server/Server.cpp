@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sat Oct 24 17:20:22 2015 Antoine Plaskowski
-// Last update Fri Nov  6 13:11:59 2015 Antoine Plaskowski
+// Last update Fri Nov  6 17:08:19 2015 Antoine Plaskowski
 //
 
 #include	"Server.hpp"
@@ -47,7 +47,7 @@ bool	Server::run(void)
 {
   m_clients.remove(nullptr);
   select();
-  if (m_server.can_read())
+  if (m_server.can_read() == true)
     m_clients.push_back(&m_new_iprotocol(m_server.accept(), m_new_itime()));
   if (m_in.can_read() == true && command() == true)
     return (true);
@@ -61,6 +61,7 @@ bool	Server::run(void)
 	    {
 	      auto ret = (*it)->get_keyboard();
 
+	      std::cout << "je check" << std::endl;
 	      for (auto lol = ret.begin(); lol != ret.end(); lol++)
 		m_database.insert_keyboard((*it)->get_mac_address(), **lol);
 	    }
@@ -72,6 +73,8 @@ bool	Server::run(void)
 	  *it = nullptr;	      
 	}
     }
+  IProtocol::Keyboard *key = new IProtocol::Keyboard{55, 56, "press", "a", "rito"};
+  m_database.insert_keyboard("123123", *key);
   return (false);
 }
 

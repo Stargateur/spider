@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 21:04:15 2015 Bertrand-Rapello Baptiste
-// Last update Fri Nov  6 16:36:20 2015 Antoine Plaskowski
+// Last update Fri Nov  6 17:14:33 2015 Antoine Plaskowski
 //
 
 #include	<ncurses.h>
@@ -57,12 +57,11 @@ bool	Database::select_db(std::string const &db)
       "CREATE TABLE IF NOT EXISTS log_string"
       "(id_log BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT, string VARCHAR(255) NOT NULL)"
     };
-  std::string	cmd;
   // char	*buf = new char[db.size() * 2 + 1];
 
   // if (mysql_real_escape_string(m_sql, buf, db.c_str(), db.size()) == -1)
   //   throw std::exception();
-  cmd = "CREATE DATABASE IF NOT EXISTS " + db;
+  std::string	cmd = "CREATE DATABASE IF NOT EXISTS " + db;
   if (mysql_query(m_sql, cmd.c_str()) != 0)
     throw std::exception();
   if (mysql_select_db(m_sql, db.c_str()) != 0)
@@ -75,7 +74,8 @@ bool	Database::select_db(std::string const &db)
 
 uint64_t	Database::get_id(std::string const &table, std::string const &column, std::string const &id_name, std::string const &search)
 {
-  std::string	cmd = "SELECT " + id_name + " FROM " + table + " WHERE " + column + " = " + search;
+  std::string	cmd = "SELECT " + id_name + " FROM " + table + " WHERE " + column + " = \"" + search + "\"";
+  std::cout << cmd << std::endl;
   if (mysql_query(m_sql, cmd.c_str()) != 0)
     throw std::exception();
   
@@ -90,16 +90,24 @@ uint64_t	Database::get_id(std::string const &table, std::string const &column, s
     }
   else if (num_rows == 0)
     {
-      cmd = "INSERT INTO " + table + " (" + column + ") VALUES (" + search + ")";
+      cmd = "INSERT INTO " + table + " (" + column + ") VALUES (\"" + search + "\")";
+      std::cout << cmd << std::endl;
       if (mysql_query(m_sql, cmd.c_str()) != 0)
 	throw std::exception();
       return (get_id(table, column, id_name, search));
     }
+  std::cout << "lol" << std::endl;
   throw std::exception();
 }
 
 bool	Database::insert_keyboard(std::string const &mac_address, IProtocol::Keyboard const &keyboard)
 {
+  uint64_t	id_client = get_id("client", "mac_address", "id_client", mac_address);
+  uint64_t	id_key = get_id("key_string", "string", "id_key", keyboard.key);
+  uint64_t	id_event = get_id("event_string", "string", "id_event", keyboard.event);
+  uint64_t	id_process = get_id("process_string", "string", "id_process", keyboard.process);
+
+  std::cout << id_client << id_key << id_event << id_process << std::endl;
 }
 
 bool	Database::insert_mouse(std::string const &mac_address, IProtocol::Mouse const &mouse)
@@ -112,9 +120,10 @@ bool	Database::insert_log(std::string const &mac_address, IProtocol::Log const &
   return (false);
 }
 
-bool	Database::show(const std::string & mac_address)
+bool	Database::show(const std::string &mac_address)
 {
-  return false;
+  "SELECT second, nano, mac_address, key_string.string, event_string.string, process_string.string FROM client NATUREL JOIN keyboard_input, key_string, event_string, process_string";
+  return (false);
 }
 
 IDatabase	&new_idatabase(std::string const &host,

@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Thu Oct 22 09:18:51 2015 Antoine Plaskowski
-// Last update Thu Nov  5 14:13:19 2015 Antoine Plaskowski
+// Last update Fri Nov  6 17:06:08 2015 Antoine Plaskowski
 //
 
 #include	<iostream>
@@ -398,26 +398,18 @@ bool	Protocolv1::read_keyboard(void)
     return (true);
   for (uint8_t i = 0; i < size_array; i++)
     {
-      uint64_t	second;
-      if (m_read.get_int<uint64_t>(second) == true)
+      IProtocol::Keyboard *key = new IProtocol::Keyboard;
+      if (m_read.get_int<uint64_t>(key->second) == true)
 	return (true);
-      uint64_t	nano;
-      if (m_read.get_int<uint64_t>(nano) == true)
+      if (m_read.get_int<uint64_t>(key->nano) == true)
 	return (true);
-      std::string	event;
-      if (m_read.get_string(event) == true)
+      if (m_read.get_string(key->event) == true)
 	return (true);
-      std::string	key;
-      if (m_read.get_string(key) == true)
+      if (m_read.get_string(key->key) == true)
 	return (true);
-      std::string	process;
-      if (m_read.get_string(process) == true)
+      if (m_read.get_string(key->process) == true)
 	return (true);
-      std::cout << second << std::endl;
-      std::cout << nano << std::endl;
-      std::cout << event << std::endl;
-      std::cout << key << std::endl;
-      std::cout << process << std::endl;
+      m_keyboard.push_back(key);
     }
   return (false);
 }
@@ -430,9 +422,9 @@ bool	Protocolv1::write_keyboard(std::list<Keyboard *> const &keyboard)
     return (true);
   for (auto it = keyboard.begin(); it != keyboard.end(); it++)
     {
-      if (packet.put_int<uint64_t>((*it)->time.get_second()) == true)
+      if (packet.put_int<uint64_t>((*it)->second) == true)
 	return (true);
-      if (packet.put_int<uint64_t>((*it)->time.get_nano()) == true)
+      if (packet.put_int<uint64_t>((*it)->nano) == true)
 	return (true);
       if (packet.put_string((*it)->event) == true)
 	return (true);
@@ -489,9 +481,9 @@ bool	Protocolv1::write_mouse(std::list<IProtocol::Mouse *> const &mouse)
     return (true);
   for (auto it = mouse.begin(); it != mouse.end(); it++)
     {
-      if (packet.put_int<uint64_t>((*it)->time.get_second()) == true)
+      if (packet.put_int<uint64_t>((*it)->second) == true)
 	return (true);
-      if (packet.put_int<uint64_t>((*it)->time.get_nano()) == true)
+      if (packet.put_int<uint64_t>((*it)->nano) == true)
 	return (true);
       if (packet.put_int<uint32_t>((*it)->x) == true)
 	return (true);

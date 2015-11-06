@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Wed Oct 21 23:48:57 2015 Antoine Plaskowski
-// Last update Fri Nov  6 09:35:12 2015 Antoine Plaskowski
+// Last update Fri Nov  6 16:57:17 2015 Antoine Plaskowski
 //
 
 #ifndef		IPROTOCOL_HPP_
@@ -32,14 +32,16 @@ public:
   };
   struct	Keyboard
   {
-    ITime	&time;
+    uintmax_t	second;
+    uintmax_t	nano;
     std::string	event;
     std::string	key;
     std::string	process;
   };
   struct	Mouse
   {
-    ITime	&time;
+    uintmax_t	second;
+    uintmax_t	nano;
     uintmax_t	x;
     uintmax_t	y;
     uintmax_t	amount;
