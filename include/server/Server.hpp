@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Wed Oct 21 22:50:01 2015 Antoine Plaskowski
-// Last update Thu Nov  5 18:17:34 2015 Antoine Plaskowski
+// Last update Fri Nov  6 08:57:17 2015 Antoine Plaskowski
 //
 
 #ifndef		SERVER_HPP_
@@ -25,6 +25,9 @@ public:
   Server(Option const &option);
   ~Server(void);
   bool	run(void);
+private:
+  bool	command(void);
+  void	select(void);
 private:
   DynamicLinkLibrary	m_dll_idatabase;
   DynamicLinkLibrary	m_dll_itime;

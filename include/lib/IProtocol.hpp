@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Wed Oct 21 23:48:57 2015 Antoine Plaskowski
-// Last update Thu Nov  5 21:31:19 2015 Antoine Plaskowski
+// Last update Fri Nov  6 09:35:12 2015 Antoine Plaskowski
 //
 
 #ifndef		IPROTOCOL_HPP_
@@ -61,6 +61,13 @@ public:
   virtual std::list<Log *>	&get_log(void) = 0;
   virtual std::list<Keyboard *>	&get_keyboard(void) = 0;
   virtual std::list<Mouse *>	&get_mouse(void) = 0;
+};
+
+class	IProtocolException
+{
+public:
+  virtual char const *what(void) const noexcept = 0;
+  virtual ~IProtocolException(void);
 };
 
 extern "C"

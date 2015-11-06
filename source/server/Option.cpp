@@ -5,11 +5,12 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sat Oct 24 15:42:58 2015 Antoine Plaskowski
-// Last update Mon Oct 26 04:29:45 2015 Antoine Plaskowski
+// Last update Fri Nov  6 09:25:06 2015 Antoine Plaskowski
 //
 
 #include	<unistd.h>
 #include	<string>
+#include	<iostream>
 #include	"Option.hpp"
 
 Option::Option(void) :
@@ -18,7 +19,11 @@ Option::Option(void) :
   m_path_lib_itime("lib/time/lib_time_linux.so"),
   m_path_lib_isocket("lib/socket/lib_socket_linux.so"),
   m_host("::1"),
-  m_port("4242")
+  m_port("4242"),
+  m_host_database("localhost"),
+  m_port_database("0"),
+  m_user_database("root"),
+  m_password_database("")
 {
 }
 
@@ -30,7 +35,7 @@ bool	Option::getopt(int argc, char **argv)
 {
   bool	ret = false;
   int	c;
-  while ((c = ::getopt(argc, argv, "h:p:")) != -1)
+  while ((c = ::getopt(argc, argv, "h:p:d:c:u:j:")) != -1)
     switch (c)
       {
       case 'h':
@@ -38,6 +43,18 @@ bool	Option::getopt(int argc, char **argv)
 	break;
       case 'p':
 	m_port = optarg;
+	break;
+      case 'd':
+	m_host_database = optarg;
+	break;
+      case 'c':
+	m_port_database = optarg;
+	break;
+      case 'u':
+	m_user_database = optarg;
+	break;
+      case 'j':
+	m_password_database = optarg;
 	break;
       default:
 	ret = true;
@@ -73,4 +90,24 @@ std::string const	&Option::get_host(void) const
 std::string const	&Option::get_port(void) const
 {
   return (m_port);
+}
+
+std::string const	&Option::get_host_database(void) const
+{
+  return (m_host_database);
+}
+
+std::string const	&Option::get_port_database(void) const
+{
+  return (m_port_database);
+}
+
+std::string const	&Option::get_user_database(void) const
+{
+  return (m_user_database);
+}
+
+std::string const	&Option::get_password_database(void) const
+{
+  return (m_password_database);
 }

@@ -1,11 +1,11 @@
-	//
+//
 // ISocket.hh for  in /home/bbr2394/renduTek3/cpp_spider/include
 // 
 // Made by Bertrand-Rapello Baptiste
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 20:47:26 2015 Bertrand-Rapello Baptiste
-// Last update Fri Nov  6 00:28:14 2015 Antoine Plaskowski
+// Last update Fri Nov  6 09:31:49 2015 Antoine Plaskowski
 //
 
 #ifndef		ISOCKET_HPP_

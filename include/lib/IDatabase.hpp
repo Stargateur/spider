@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Wed Oct 21 23:43:13 2015 Antoine Plaskowski
-// Last update Thu Nov  5 21:43:57 2015 Antoine Plaskowski
+// Last update Fri Nov  6 09:34:56 2015 Antoine Plaskowski
 //
 
 #ifndef		IDATABASE_HPP_
@@ -26,22 +26,35 @@ public:
   virtual bool show(std::string const &mac_addresse) = 0;
 };
 
+class	IDatabaseException
+{
+public:
+  virtual char const *what(void) const noexcept = 0;
+  virtual ~IDatabaseException(void);
+};
+
 extern "C"
 {
 # define	NAME_FCT_NEW_IDATABASE	"new_idatabase"
 #ifdef	__linux__
-  IDatabase	&new_idatabase(std::string const &host = "localhost",
-			       std::string const &port = "0",
-			       std::string const &user = "",
-			       std::string const &passwd = "");
+  IDatabase	&new_idatabase(std::string const &host,
+			       std::string const &port,
+			       std::string const &user,
+			       std::string const &passwd);
 #else
-  __declspec(dllexport) IDatabase	&new_idatabase(std::string const &host = "localhost",
-						       std::string const &port = "0",
-						       std::string const &user = "",
-						       std::string const &passwd = "");
+  __declspec(dllexport) IDatabase	&new_idatabase(std::string const &host,
+						       std::string const &port,
+						       std::string const &user,
+						       std::string const &passwd);
 #endif
-  typedef	IDatabase &(*fct_new_idatabase)(void);
-  typedef	IDatabase &(&ref_new_idatabase)(void);
+  typedef	IDatabase &(*fct_new_idatabase)(std::string const &host,
+						std::string const &port,
+						std::string const &user,
+						std::string const &passwd);
+typedef	IDatabase &(&ref_new_idatabase)(std::string const &host,
+					std::string const &port,
+					std::string const &user,
+					std::string const &passwd);
 }
 
 

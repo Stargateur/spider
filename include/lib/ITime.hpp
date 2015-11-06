@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 20:44:16 2015 Bertrand-Rapello Baptiste
-// Last update Thu Nov  5 18:17:17 2015 Antoine Plaskowski
+// Last update Fri Nov  6 09:34:44 2015 Antoine Plaskowski
 //
 
 #ifndef ITIME_HPP_
@@ -23,6 +23,13 @@ public:
   virtual bool	now(void) = 0;
   virtual ITime	&clone(void) const = 0;
   virtual	~ITime(void);
+};
+
+class	ITimeException
+{
+public:
+  virtual char const *what(void) const noexcept = 0;
+  virtual ~ITimeException(void);
 };
 
 extern "C"
