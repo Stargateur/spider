@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Wed Oct 21 23:43:13 2015 Antoine Plaskowski
-// Last update Fri Nov  6 09:34:56 2015 Antoine Plaskowski
+// Last update Fri Nov  6 12:11:54 2015 Antoine Plaskowski
 //
 
 #ifndef		IDATABASE_HPP_
@@ -39,22 +39,18 @@ extern "C"
 #ifdef	__linux__
   IDatabase	&new_idatabase(std::string const &host,
 			       std::string const &port,
-			       std::string const &user,
-			       std::string const &passwd);
+			       std::string const &user);
 #else
   __declspec(dllexport) IDatabase	&new_idatabase(std::string const &host,
 						       std::string const &port,
-						       std::string const &user,
-						       std::string const &passwd);
+						       std::string const &user);
 #endif
   typedef	IDatabase &(*fct_new_idatabase)(std::string const &host,
 						std::string const &port,
-						std::string const &user,
-						std::string const &passwd);
+						std::string const &user);
 typedef	IDatabase &(&ref_new_idatabase)(std::string const &host,
 					std::string const &port,
-					std::string const &user,
-					std::string const &passwd);
+					std::string const &user);
 }
 
 

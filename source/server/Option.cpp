@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sat Oct 24 15:42:58 2015 Antoine Plaskowski
-// Last update Fri Nov  6 09:25:06 2015 Antoine Plaskowski
+// Last update Fri Nov  6 12:13:22 2015 Antoine Plaskowski
 //
 
 #include	<unistd.h>
@@ -22,8 +22,7 @@ Option::Option(void) :
   m_port("4242"),
   m_host_database("localhost"),
   m_port_database("0"),
-  m_user_database("root"),
-  m_password_database("")
+  m_user_database("root")
 {
 }
 
@@ -35,7 +34,7 @@ bool	Option::getopt(int argc, char **argv)
 {
   bool	ret = false;
   int	c;
-  while ((c = ::getopt(argc, argv, "h:p:d:c:u:j:")) != -1)
+  while ((c = ::getopt(argc, argv, "h:p:d:c:u:")) != -1)
     switch (c)
       {
       case 'h':
@@ -52,9 +51,6 @@ bool	Option::getopt(int argc, char **argv)
 	break;
       case 'u':
 	m_user_database = optarg;
-	break;
-      case 'j':
-	m_password_database = optarg;
 	break;
       default:
 	ret = true;
@@ -105,9 +101,4 @@ std::string const	&Option::get_port_database(void) const
 std::string const	&Option::get_user_database(void) const
 {
   return (m_user_database);
-}
-
-std::string const	&Option::get_password_database(void) const
-{
-  return (m_password_database);
 }

@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sat Oct 24 15:43:06 2015 Antoine Plaskowski
-// Last update Fri Nov  6 09:17:08 2015 Antoine Plaskowski
+// Last update Fri Nov  6 12:12:58 2015 Antoine Plaskowski
 //
 
 #ifndef		OPTION_HPP_
@@ -39,7 +39,6 @@ private:
   std::string	m_host_database;
   std::string	m_port_database;
   std::string	m_user_database;
-  std::string	m_password_database;
 };
 
 #endif		/* !OPTION_HPP_ */

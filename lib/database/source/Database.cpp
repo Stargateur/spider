@@ -5,17 +5,24 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 21:04:15 2015 Bertrand-Rapello Baptiste
-// Last update Fri Nov  6 09:27:13 2015 Antoine Plaskowski
+// Last update Fri Nov  6 12:13:42 2015 Antoine Plaskowski
 //
 
+#include	<ncurses.h>
 #include	"Database.hpp"
 
 Database::Database(std::string const &host,
 		   std::string const &port,
-		   std::string const &user,
-		   std::string const &passwd) :
+		   std::string const &user) :
   m_sql(mysql_init(NULL))
 {
+  initscr();
+  noecho();
+  std::cout << "database password : ";
+  std::string passwd;
+  std::cin >> passwd;
+  std::cout << std::endl;
+  endwin();
   if (m_sql == NULL)
     throw std::exception();
   if (mysql_real_connect(m_sql, host.c_str(), user.c_str(), passwd.c_str(), NULL, std::stoul(port, nullptr, 10), NULL, 0) == NULL)
@@ -161,8 +168,7 @@ bool	Database::show(const std::string & mac_addresse)
 
 IDatabase	&new_idatabase(std::string const &host,
 			       std::string const &port,
-			       std::string const &user,
-			       std::string const &passwd)
+			       std::string const &user)
 {
-  return (*new Database(host, port, user, passwd));
+  return (*new Database(host, port, user));
 }

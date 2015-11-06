@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sat Oct 24 17:20:22 2015 Antoine Plaskowski
-// Last update Fri Nov  6 09:27:03 2015 Antoine Plaskowski
+// Last update Fri Nov  6 12:13:10 2015 Antoine Plaskowski
 //
 
 #include	"Server.hpp"
@@ -23,7 +23,7 @@ Server::Server(Option const &option) :
   m_iselect(m_dll_isocket.get_symbole<fct_iselect, ref_iselect>(NAME_FCT_ISELECT)),
   m_new_iserver(m_dll_isocket.get_symbole<fct_new_iserver, ref_new_iserver>(NAME_FCT_NEW_ISERVER)),
   m_new_istandard(m_dll_isocket.get_symbole<fct_new_istandard, ref_new_istandard>(NAME_FCT_NEW_ISTANDARD)),
-  m_database(m_new_idatabase(option.get_host_database(), option.get_port_database(), option.get_user_database(), option.get_password_database())),
+  m_database(m_new_idatabase(option.get_host_database(), option.get_port_database(), option.get_user_database())),
   m_server(m_new_iserver(option.get_host(), option.get_port())),
   m_in(m_new_istandard(ISocket::In)),
   m_clients(),
@@ -44,8 +44,8 @@ Server::~Server(void)
 
 bool	Server::run(void)
 {
-  select();
   m_clients.remove(nullptr);
+  select();
   if (m_server.can_read())
     m_clients.push_back(&m_new_iprotocol(m_server.accept(), m_new_itime()));
   if (m_in.can_read() == true && command() == true)

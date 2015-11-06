@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 20:57:19 2015 Bertrand-Rapello Baptiste
-// Last update Fri Nov  6 09:26:37 2015 Antoine Plaskowski
+// Last update Fri Nov  6 12:11:30 2015 Antoine Plaskowski
 //
 
 #ifndef		DATABASE_HPP_
@@ -23,8 +23,7 @@ class Database : public IDatabase
 public:
   Database(std::string const &host,
 	   std::string const &port,
-	   std::string const &user,
-	   std::string const &passwd);
+	   std::string const &user);
   ~Database(void);
   bool	select_db(std::string const &db);
   bool	insert_keyboard(std::string const &mac_address, IProtocol::Keyboard const &keyboard);

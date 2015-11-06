@@ -5,7 +5,7 @@
 ## Login   <plasko_a@epitech.eu>
 ## 
 ## Started on  Thu Oct 22 01:26:02 2015 Antoine Plaskowski
-## Last update Mon Oct 26 14:01:40 2015 Antoine Plaskowski
+## Last update Fri Nov  6 12:00:47 2015 Antoine Plaskowski
 ##
 
 NAME		=	lib_database_linux.so
@@ -20,7 +20,7 @@ LEVEL		?=	3
 
 COLOR		?=	no
 
-LIB		=	$(shell mysql_config --libs)
+LIB		=	$(shell mysql_config --libs) -l curses
 
 INCLUDE		=	-I include -I ../../include/lib
 INCLUDE		+=	$(shell mysql_config --cflags)
