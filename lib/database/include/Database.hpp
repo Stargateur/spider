@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 20:57:19 2015 Bertrand-Rapello Baptiste
-// Last update Fri Nov  6 15:31:56 2015 Antoine Plaskowski
+// Last update Fri Nov  6 16:19:39 2015 Antoine Plaskowski
 //
 
 #ifndef		DATABASE_HPP_
@@ -31,7 +31,7 @@ public:
   bool	insert_log(std::string const &mac_address, IProtocol::Log const &log);
   bool	show(std::string const &mac_address);
 private:
-  uint64_t	get_id_client(std::string const &mac_address);    
+  uint64_t	get_id(std::string const &table, std::string const &column, std::string const &id_name, std::string const &search);    
   MYSQL	*m_sql;
 };
 
