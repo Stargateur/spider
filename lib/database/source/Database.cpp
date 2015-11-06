@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 21:04:15 2015 Bertrand-Rapello Baptiste
-// Last update Fri Nov  6 17:14:33 2015 Antoine Plaskowski
+// Last update Fri Nov  6 17:31:46 2015 Antoine Plaskowski
 //
 
 #include	<ncurses.h>
@@ -75,7 +75,6 @@ bool	Database::select_db(std::string const &db)
 uint64_t	Database::get_id(std::string const &table, std::string const &column, std::string const &id_name, std::string const &search)
 {
   std::string	cmd = "SELECT " + id_name + " FROM " + table + " WHERE " + column + " = \"" + search + "\"";
-  std::cout << cmd << std::endl;
   if (mysql_query(m_sql, cmd.c_str()) != 0)
     throw std::exception();
   
@@ -91,12 +90,10 @@ uint64_t	Database::get_id(std::string const &table, std::string const &column, s
   else if (num_rows == 0)
     {
       cmd = "INSERT INTO " + table + " (" + column + ") VALUES (\"" + search + "\")";
-      std::cout << cmd << std::endl;
       if (mysql_query(m_sql, cmd.c_str()) != 0)
 	throw std::exception();
       return (get_id(table, column, id_name, search));
     }
-  std::cout << "lol" << std::endl;
   throw std::exception();
 }
 
@@ -107,7 +104,16 @@ bool	Database::insert_keyboard(std::string const &mac_address, IProtocol::Keyboa
   uint64_t	id_event = get_id("event_string", "string", "id_event", keyboard.event);
   uint64_t	id_process = get_id("process_string", "string", "id_process", keyboard.process);
 
-  std::cout << id_client << id_key << id_event << id_process << std::endl;
+  std::string cmd = "INSERT INTO keyboard_input (id_client, second, nano, id_key, id_event, id_process) VALUES (";
+  cmd += "\"" + std::to_string(id_client) + "\", ";
+  cmd += "\"" + std::to_string(keyboard.second) + "\", ";
+  cmd += "\"" + std::to_string(keyboard.nano) + "\", ";
+  cmd += "\"" + std::to_string(id_key) + "\", ";
+  cmd += "\"" + std::to_string(id_event) + "\", ";
+  cmd += "\"" + std::to_string(id_process) + "\")";
+  if (mysql_query(m_sql, cmd.c_str()) != 0)
+    throw std::exception();
+  return (false);
 }
 
 bool	Database::insert_mouse(std::string const &mac_address, IProtocol::Mouse const &mouse)
