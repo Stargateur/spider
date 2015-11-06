@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 20:57:19 2015 Bertrand-Rapello Baptiste
-// Last update Fri Nov  6 12:11:30 2015 Antoine Plaskowski
+// Last update Fri Nov  6 15:31:56 2015 Antoine Plaskowski
 //
 
 #ifndef		DATABASE_HPP_
@@ -27,11 +27,11 @@ public:
   ~Database(void);
   bool	select_db(std::string const &db);
   bool	insert_keyboard(std::string const &mac_address, IProtocol::Keyboard const &keyboard);
-  bool	insert_mouse(std::string const &mac_addresse, IProtocol::Mouse const &mouse);
-  bool	insert_log(std::string const &mac_addresse, IProtocol::Log const &log);
-  bool	show(std::string const &mac_addresse);
+  bool	insert_mouse(std::string const &mac_address, IProtocol::Mouse const &mouse);
+  bool	insert_log(std::string const &mac_address, IProtocol::Log const &log);
+  bool	show(std::string const &mac_address);
 private:
-  void	check_into_database(MYSQL_RES *res, std::string &cmd, const std::string &data);    
+  uint64_t	get_id_client(std::string const &mac_address);    
   MYSQL	*m_sql;
 };
 
