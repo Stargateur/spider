@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 21:04:15 2015 Bertrand-Rapello Baptiste
-// Last update Fri Nov  6 17:31:46 2015 Antoine Plaskowski
+// Last update Fri Nov  6 17:55:26 2015 Antoine Plaskowski
 //
 
 #include	<ncurses.h>
@@ -118,17 +118,54 @@ bool	Database::insert_keyboard(std::string const &mac_address, IProtocol::Keyboa
 
 bool	Database::insert_mouse(std::string const &mac_address, IProtocol::Mouse const &mouse)
 {
+  uint64_t	id_client = get_id("client", "mac_address", "id_client", mac_address);
+  uint64_t	id_button = get_id("button_string", "string", "id_button", mouse.button);
+  uint64_t	id_event = get_id("event_string", "string", "id_event", mouse.event);
+  uint64_t	id_process = get_id("process_string", "string", "id_process", mouse.process);
+
+  std::string cmd = "INSERT INTO mouse_input (id_client, second, nano, id_button, id_event, id_process) VALUES (";
+  cmd += "\"" + std::to_string(id_client) + "\", ";
+  cmd += "\"" + std::to_string(mouse.second) + "\", ";
+  cmd += "\"" + std::to_string(mouse.nano) + "\", ";
+  cmd += "\"" + std::to_string(id_button) + "\", ";
+  cmd += "\"" + std::to_string(id_event) + "\", ";
+  cmd += "\"" + std::to_string(id_process) + "\")";
+  if (mysql_query(m_sql, cmd.c_str()) != 0)
+    throw std::exception();
   return (false);
 }
 
 bool	Database::insert_log(std::string const &mac_address, IProtocol::Log const &log)
 {
+  uint64_t	id_client = get_id("client", "mac_address", "id_client", mac_address);
+  uint64_t	id_log = get_id("log_string", "string", "id_log", log.log);
+
+  std::string cmd = "INSERT INTO log_input (id_client, second, nano, id_log, id_event, id_process) VALUES (";
+  cmd += "\"" + std::to_string(id_client) + "\", ";
+  cmd += "\"" + std::to_string(id_log) + "\", ";
+  if (mysql_query(m_sql, cmd.c_str()) != 0)
+    throw std::exception();
   return (false);
 }
 
 bool	Database::show(const std::string &mac_address)
 {
-  "SELECT second, nano, mac_address, key_string.string, event_string.string, process_string.string FROM client NATUREL JOIN keyboard_input, key_string, event_string, process_string";
+  std::string cmd = "SELECT second, nano, mac_address, key_string.string, event_string.string, process_string.string FROM keyboard_input NATUREL JOIN client, key_string, event_string, process_string WHERE mac_address = \"" + mac_address + "\"";
+  if (mysql_query(m_sql, cmd.c_str()) != 0)
+    throw std::exception();
+  MYSQL_RES	*res = mysql_store_result(m_sql);
+  for (MYSQL_ROW rows = mysql_fetch_row(res); rows != NULL; rows = mysql_fetch_row(res))
+    {
+      uint64_t	*sizes = mysql_fetch_lengths(res);
+      std::string	second(rows[0], sizes[0]);
+      std::string	nano(rows[1], sizes[1]);
+      std::string	mac_address(rows[2], sizes[2]);
+      std::string	key_string(rows[3], sizes[3]);
+      std::string	event_string(rows[4], sizes[4]);
+      std::string	process_string(rows[5], sizes[5]);
+
+      std::cout << "second : " << second << " nano : " << nano << " mac_address : " << mac_address << " key : " << key_string << " event : " << event_string << " process : " << process_string << std::endl;
+    }
   return (false);
 }
 

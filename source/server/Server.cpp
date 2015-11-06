@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sat Oct 24 17:20:22 2015 Antoine Plaskowski
-// Last update Fri Nov  6 17:08:19 2015 Antoine Plaskowski
+// Last update Fri Nov  6 17:57:22 2015 Antoine Plaskowski
 //
 
 #include	"Server.hpp"
@@ -64,6 +64,7 @@ bool	Server::run(void)
 	      std::cout << "je check" << std::endl;
 	      for (auto lol = ret.begin(); lol != ret.end(); lol++)
 		m_database.insert_keyboard((*it)->get_mac_address(), **lol);
+	      m_database.show((*it)->get_mac_address());
 	    }
 	}
       catch (std::exception &e)
@@ -73,8 +74,6 @@ bool	Server::run(void)
 	  *it = nullptr;	      
 	}
     }
-  IProtocol::Keyboard *key = new IProtocol::Keyboard{55, 56, "press", "a", "rito"};
-  m_database.insert_keyboard("123123", *key);
   return (false);
 }
 
