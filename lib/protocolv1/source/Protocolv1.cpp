@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Thu Oct 22 09:18:51 2015 Antoine Plaskowski
-// Last update Fri Nov  6 17:06:08 2015 Antoine Plaskowski
+// Last update Fri Nov  6 18:39:39 2015 Antoine Plaskowski
 //
 
 #include	<iostream>
@@ -344,15 +344,17 @@ bool	Protocolv1::write_servercmd(Commandcode command)
 
 bool	Protocolv1::read_clientlog(void)
 {
-  std::string	log;
   uint8_t	size;
 
   if (m_read.get_int<uint8_t>(size) == true)
     return (true);
   for (uintmax_t i = 0; i < size; i++)
-    if (m_read.get_string(log) == true)
-      return (true);
-  std::cout << log << std::endl;
+    {
+      IProtocol::Log	*log = new IProtocol::Log;
+      if (m_read.get_string(log->log) == true)
+	return (true);
+      m_log.push_back(log);
+    }
   return (false);
 }
 
@@ -444,31 +446,24 @@ bool	Protocolv1::read_mouse(void)
     return (true);
   for (uintmax_t k = 0; k < size_array; k++)
     {
-      uint64_t	second;
-      if (m_read.get_int<uint64_t>(second) == true)
+      IProtocol::Mouse *mouse = new IProtocol::Mouse;
+      if (m_read.get_int<uint64_t>(mouse->second) == true)
 	return (true);
-      uint64_t	nano;
-      if (m_read.get_int<uint64_t>(nano) == true)
+      if (m_read.get_int<uint64_t>(mouse->nano) == true)
 	return (true);
-      uint32_t	x;
-      if (m_read.get_int<uint32_t>(x) == true)
+      if (m_read.get_int<uint32_t>(mouse->x) == true)
 	return (true);
-      uint32_t	y;
-      if (m_read.get_int<uint32_t>(y) == true)
+      if (m_read.get_int<uint32_t>(mouse->y) == true)
 	return (true);
-      uint64_t	amount;
-      if (m_read.get_int<uint64_t>(amount) == true)
+      if (m_read.get_int<uint64_t>(mouse->amount) == true)
 	return (true);
-      std::string	event;
-      if (m_read.get_string(event) == true)
+      if (m_read.get_string(mouse->event) == true)
 	return (true);
-      std::string	key;
-      if (m_read.get_string(key) == true)
+      if (m_read.get_string(mouse->button) == true)
 	return (true);
-      std::string	process;
-      if (m_read.get_string(process) == true)
+      if (m_read.get_string(mouse->process) == true)
 	return (true);
-      std::cout << second << "s " << nano << "n " << x << "x " << y << "y " << amount << "amount " << event << " " << key << " " << process << std::endl;
+      m_mouse.push_back(mouse);
     }
   return (false);
 }
@@ -532,6 +527,16 @@ std::list<IProtocol::Keyboard *>	&Protocolv1::get_keyboard(void)
 std::list<IProtocol::Mouse *>	&Protocolv1::get_mouse(void)
 {
   return (m_mouse);
+}
+
+bool	Protocolv1::is_stop(void) const
+{
+  return (m_is_stop);
+}
+
+bool	Protocolv1::is_mute(void) const
+{
+  return (m_is_mute);
 }
 
 IProtocol	&new_iprotocol(ISocket &socket, ITime &time)

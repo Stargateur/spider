@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 22:50:40 2015 Bertrand-Rapello Baptiste
-// Last update Tue Nov  3 14:15:50 2015 Antoine Plaskowski
+// Last update Fri Nov  6 18:38:51 2015 Antoine Plaskowski
 //
 
 #ifndef		PROTOCOLV1_HPP_
@@ -59,6 +59,8 @@ public:
   std::list<IProtocol::Log *>	&get_log(void);
   std::list<IProtocol::Keyboard *>	&get_keyboard(void);
   std::list<IProtocol::Mouse *>	&get_mouse(void);
+  bool	is_stop(void) const;
+  bool	is_mute(void) const;
 private:
   bool	read(void);
   bool	write(void);

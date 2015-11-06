@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Wed Oct 21 23:48:57 2015 Antoine Plaskowski
-// Last update Fri Nov  6 16:57:17 2015 Antoine Plaskowski
+// Last update Fri Nov  6 18:38:57 2015 Antoine Plaskowski
 //
 
 #ifndef		IPROTOCOL_HPP_
@@ -32,19 +32,19 @@ public:
   };
   struct	Keyboard
   {
-    uintmax_t	second;
-    uintmax_t	nano;
+    uint64_t	second;
+    uint64_t	nano;
     std::string	event;
     std::string	key;
     std::string	process;
   };
   struct	Mouse
   {
-    uintmax_t	second;
-    uintmax_t	nano;
-    uintmax_t	x;
-    uintmax_t	y;
-    uintmax_t	amount;
+    uint64_t	second;
+    uint64_t	nano;
+    uint32_t	x;
+    uint32_t	y;
+    uint64_t	amount;
     std::string	event;
     std::string	button;
     std::string	process;
@@ -63,6 +63,8 @@ public:
   virtual std::list<Log *>	&get_log(void) = 0;
   virtual std::list<Keyboard *>	&get_keyboard(void) = 0;
   virtual std::list<Mouse *>	&get_mouse(void) = 0;
+  virtual bool	is_stop(void) const = 0;
+  virtual bool	is_mute(void) const = 0;
 };
 
 class	IProtocolException
