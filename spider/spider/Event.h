@@ -23,18 +23,19 @@ class Event
 public:
 	Event();
 	Event(Event const &old);
-	Event(eEventType type, long time, std::string const &winName);
+	Event(eEventType type, intmax_t second, intmax_t nano, std::string const &winName);
 	~Event();
-	eEventType			getType(void);
-	long				getTime(void);
+	eEventType			getType(void) const;
+	intmax_t			getSecond(void) const;
+	intmax_t			getNano(void) const;
 	std::string			&getWinName(void);
 	void				setType(eEventType type);
-	void				setTime(long time);
 	void				setWinName(std::string const &winName);
 	virtual std::string toString(void);
 	virtual eInput		getInput(void);
 protected:
 	eEventType			m_type;
-	long				m_time;
+	intmax_t			m_second;
+	intmax_t			m_nano;
 	std::string			m_winName;
 };

@@ -10,7 +10,7 @@ KeyboardEvent::KeyboardEvent(KeyboardEvent const &old) : Event(old), m_keyData(o
 
 }
 
-KeyboardEvent::KeyboardEvent(Key const &keyData, Modifier const &mod, eEventType type, long time, std::string const &winName) : Event(type, time, winName), m_keyData(keyData), m_mod(mod)
+KeyboardEvent::KeyboardEvent(Key const &keyData, Modifier const &mod, eEventType type, intmax_t second, intmax_t nano, std::string const &winName) : Event(type, second, nano, winName), m_keyData(keyData), m_mod(mod)
 {
 
 }

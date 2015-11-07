@@ -8,7 +8,7 @@ MouseEvent::MouseEvent(MouseEvent &old) : Event(old), m_buttonData(old.m_buttonD
 {
 }
 
-MouseEvent::MouseEvent(Button buttonData, Position pos, eEventType type, long time, std::string &winName) : Event(type, time, winName), m_buttonData(buttonData), m_pos(pos)
+MouseEvent::MouseEvent(Button buttonData, Position pos, eEventType type, intmax_t second, intmax_t nano, std::string &winName) : Event(type, second, nano, winName), m_buttonData(buttonData), m_pos(pos)
 {
 }
 

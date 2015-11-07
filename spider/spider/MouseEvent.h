@@ -8,7 +8,7 @@ class MouseEvent : public Event
 public:
 	MouseEvent();
 	MouseEvent(MouseEvent &old);
-	MouseEvent(Button buttonData, Position pos, eEventType type, long time, std::string &winName);
+	MouseEvent(Button buttonData, Position pos, eEventType type, intmax_t second, intmax_t nano, std::string &winName);
 	~MouseEvent();
 	Button				getButtonData(void);
 	Position			getPos(void);

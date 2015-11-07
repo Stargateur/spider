@@ -8,7 +8,7 @@ class KeyboardEvent :	public Event
 public:
 	KeyboardEvent();
 	KeyboardEvent(KeyboardEvent const &old);
-	KeyboardEvent(Key const &keyData, Modifier const &mod, eEventType type, long time, std::string const &winName);
+	KeyboardEvent(Key const &keyData, Modifier const &mod, eEventType type, intmax_t second, intmax_t nano, std::string const &winName);
 	~KeyboardEvent();
 	Key					getKeyData(void);
 	Modifier			getModifier(void);
