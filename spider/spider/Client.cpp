@@ -317,11 +317,27 @@ void		Client::sendBackMessage(std::string const &host, std::string const &port)
 		for (auto it = m_events.begin(); it != m_events.end(); it++)
 		{
 			if ((*it)->getType() == Keyboard)
-				;
+			{
+				KeyboardEvent &key(*reinterpret_cast<KeyboardEvent *>(*it));
+				std::list<IProtocol::Keyboard *>	list;
+				IProtocol::Keyboard	keyboard{key.getSecond(), key.getNano(), key.getEvent(), key.getKeyData().getName(), key.getWinName()};
+				list.push_back(&keyboard);
+				protocol.keyboard(list);
+			}
 			else if ((*it)->getType() == Mouse)
-				;
+			{
+				MouseEvent &tmp(*reinterpret_cast<MouseEvent *>(*it));
+				std::list<IProtocol::Mouse *>	list;
+				IProtocol::Mouse	mouse{tmp.getSecond(), tmp.getNano(), tmp.getPos().getX(), tmp.getPos().getY(), 0, tmp.getEvent(), tmp.getButtonData().getName(), tmp.getWinName()};
+				list.push_back(&mouse);
+				protocol.mouse(list);
+			}
 			delete *it;
 		}
+		m_events.clear();
+		protocol.select();
+		m_iselect(&time);
+		protocol.run();
 	}
 }
 

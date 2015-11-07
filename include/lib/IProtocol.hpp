@@ -32,16 +32,16 @@ public:
   };
   struct	Keyboard
   {
-    uint64_t	second;
-    uint64_t	nano;
+    int64_t	second;
+    int64_t	nano;
     std::string	event;
     std::string	key;
     std::string	process;
   };
   struct	Mouse
   {
-    uint64_t	second;
-    uint64_t	nano;
+    int64_t	second;
+    int64_t	nano;
     uint32_t	x;
     uint32_t	y;
     uint64_t	amount;

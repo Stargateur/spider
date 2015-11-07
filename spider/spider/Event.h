@@ -25,6 +25,7 @@ public:
 	Event(Event const &old);
 	Event(eEventType type, intmax_t second, intmax_t nano, std::string const &winName);
 	~Event();
+	char const			*getEvent(void) const;
 	eEventType			getType(void) const;
 	intmax_t			getSecond(void) const;
 	intmax_t			getNano(void) const;

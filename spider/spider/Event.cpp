@@ -22,6 +22,24 @@ Event::~Event()
 {
 }
 
+char const	*Event::getEvent(void) const
+{
+	switch (m_type)
+	{
+	case Pressed:
+		return ("Pressed");
+	case Released:
+		return ("Released");
+	case Click:
+		return ("Click");
+	case Move:
+		return ("Move");
+	case Scroll:
+		return ("Scroll");
+	}
+	return ("");
+}
+
 eEventType		Event::getType(void) const
 {
 	return (m_type);
@@ -46,7 +64,6 @@ void			Event::setType(eEventType type)
 {
 	m_type = type;
 }
-
 
 void			Event::setWinName(std::string const &winName)
 {
