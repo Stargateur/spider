@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Thu Oct 22 09:18:51 2015 Antoine Plaskowski
-// Last update Fri Nov  6 18:39:39 2015 Antoine Plaskowski
+// Last update Sun Nov  8 00:17:43 2015 Antoine Plaskowski
 //
 
 #include	<iostream>
@@ -401,9 +401,9 @@ bool	Protocolv1::read_keyboard(void)
   for (uint8_t i = 0; i < size_array; i++)
     {
       IProtocol::Keyboard *key = new IProtocol::Keyboard;
-      if (m_read.get_int<uint64_t>(key->second) == true)
+      if (m_read.get_int<int64_t>(key->second) == true)
 	return (true);
-      if (m_read.get_int<uint64_t>(key->nano) == true)
+      if (m_read.get_int<int64_t>(key->nano) == true)
 	return (true);
       if (m_read.get_string(key->event) == true)
 	return (true);
@@ -424,9 +424,9 @@ bool	Protocolv1::write_keyboard(std::list<Keyboard *> const &keyboard)
     return (true);
   for (auto it = keyboard.begin(); it != keyboard.end(); it++)
     {
-      if (packet.put_int<uint64_t>((*it)->second) == true)
+      if (packet.put_int<int64_t>((*it)->second) == true)
 	return (true);
-      if (packet.put_int<uint64_t>((*it)->nano) == true)
+      if (packet.put_int<int64_t>((*it)->nano) == true)
 	return (true);
       if (packet.put_string((*it)->event) == true)
 	return (true);
@@ -447,9 +447,9 @@ bool	Protocolv1::read_mouse(void)
   for (uintmax_t k = 0; k < size_array; k++)
     {
       IProtocol::Mouse *mouse = new IProtocol::Mouse;
-      if (m_read.get_int<uint64_t>(mouse->second) == true)
+      if (m_read.get_int<int64_t>(mouse->second) == true)
 	return (true);
-      if (m_read.get_int<uint64_t>(mouse->nano) == true)
+      if (m_read.get_int<int64_t>(mouse->nano) == true)
 	return (true);
       if (m_read.get_int<uint32_t>(mouse->x) == true)
 	return (true);
@@ -476,9 +476,9 @@ bool	Protocolv1::write_mouse(std::list<IProtocol::Mouse *> const &mouse)
     return (true);
   for (auto it = mouse.begin(); it != mouse.end(); it++)
     {
-      if (packet.put_int<uint64_t>((*it)->second) == true)
+      if (packet.put_int<int64_t>((*it)->second) == true)
 	return (true);
-      if (packet.put_int<uint64_t>((*it)->nano) == true)
+      if (packet.put_int<int64_t>((*it)->nano) == true)
 	return (true);
       if (packet.put_int<uint32_t>((*it)->x) == true)
 	return (true);
