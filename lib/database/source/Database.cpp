@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 21:04:15 2015 Bertrand-Rapello Baptiste
-// Last update Sun Nov  8 19:08:30 2015 Antoine Plaskowski
+// Last update Sun Nov  8 22:16:19 2015 Antoine Plaskowski
 //
 
 #include	<ncurses.h>
@@ -43,7 +43,7 @@ bool	Database::select_db(std::string const &db)
       "CREATE TABLE IF NOT EXISTS keyboard_input"
       "(id_client BIGINT NOT NULL, second BIGINT NOT NULL, nano BIGINT NOT NULL, id_key BIGINT NOT NULL , id_event BIGINT NOT NULL, id_process BIGINT NOT NULL)",
       "CREATE TABLE IF NOT EXISTS mouse_input"
-      "(id_client BIGINT NOT NULL, second BIGINT NOT NULL, nano BIGINT NOT NULL, id_button BIGINT NOT NULL, id_event BIGINT NOT NULL, id_process BIGINT NOT NULL)",
+      "(id_client BIGINT NOT NULL, second BIGINT NOT NULL, nano BIGINT NOT NULL, x BIGINT NOT NULL, y BIGINT NOT NULL, id_button BIGINT NOT NULL, id_event BIGINT NOT NULL, id_process BIGINT NOT NULL)",
       "CREATE TABLE IF NOT EXISTS log_input"
       "(id_client BIGINT NOT NULL, id_log BIGINT NOT NULL)",
       "CREATE TABLE IF NOT EXISTS key_string"
@@ -123,10 +123,12 @@ bool	Database::insert_mouse(std::string const &mac_address, IProtocol::Mouse con
   uint64_t	id_event = get_id("event_string", "string", "id_event", mouse.event);
   uint64_t	id_process = get_id("process_string", "string", "id_process", mouse.process);
 
-  std::string cmd = "INSERT INTO mouse_input (id_client, second, nano, id_button, id_event, id_process) VALUES (";
+  std::string cmd = "INSERT INTO mouse_input (id_client, second, nano, x, y, id_button, id_event, id_process) VALUES (";
   cmd += "\"" + std::to_string(id_client) + "\", ";
   cmd += "\"" + std::to_string(mouse.second) + "\", ";
   cmd += "\"" + std::to_string(mouse.nano) + "\", ";
+  cmd += "\"" + std::to_string(mouse.x) + "\", ";
+  cmd += "\"" + std::to_string(mouse.y) + "\", ";
   cmd += "\"" + std::to_string(id_button) + "\", ";
   cmd += "\"" + std::to_string(id_event) + "\", ";
   cmd += "\"" + std::to_string(id_process) + "\")";

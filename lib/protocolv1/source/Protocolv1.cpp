@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Thu Oct 22 09:18:51 2015 Antoine Plaskowski
-// Last update Sun Nov  8 19:10:13 2015 Antoine Plaskowski
+// Last update Sun Nov  8 21:45:13 2015 Antoine Plaskowski
 //
 
 #include	<iostream>
@@ -232,7 +232,6 @@ bool	Protocolv1::read_result(void)
   uint8_t	id;
   if (m_read.get_int<uint8_t>(id) == true)
     return (true);
-  std::cout << "id du proccesus " << static_cast<uintmax_t>(id) << std::endl;
   return (true);
 }
 
@@ -257,7 +256,6 @@ bool	Protocolv1::read_mac_address(void)
 	return (true);
       m_mac_address += c;
     }
-  std::cout << m_mac_address << std::endl;
   return (false);
 }
 
