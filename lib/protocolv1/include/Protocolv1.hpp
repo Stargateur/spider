@@ -92,7 +92,7 @@ private:
   ISocket	&m_socket;
   ITime	&m_last_read;
   std::string	m_mac_address;
-  std::array<Packetwrite, UINT8_MAX>	m_packets;
+  std::array<Packetwrite, UINT8_MAX + 1>	m_packets;
   uint8_t	m_write;
   uint8_t	m_to_write;
   Packetread	m_read;
