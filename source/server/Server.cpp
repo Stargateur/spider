@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Sat Oct 24 17:20:22 2015 Antoine Plaskowski
-// Last update Sun Nov  8 19:08:07 2015 Antoine Plaskowski
+// Last update Sun Nov  8 22:58:58 2015 Antoine Plaskowski
 //
 
 #include	"Server.hpp"
@@ -67,15 +67,24 @@ bool	Server::run(void)
 	    {
 	      auto &keyboard = (*it)->get_keyboard();
 	      for (auto key = keyboard.begin(); key != keyboard.end(); key++)
-		m_database.insert_keyboard((*it)->get_mac_address(), **key);
+		{
+		  m_database.insert_keyboard((*it)->get_mac_address(), **key);
+		  delete *key;
+		}
 	      keyboard.clear();
 	      auto &mouse = (*it)->get_mouse();
 	      for (auto key = mouse.begin(); key != mouse.end(); key++)
-		m_database.insert_mouse((*it)->get_mac_address(), **key);
+		{
+		  m_database.insert_mouse((*it)->get_mac_address(), **key);
+		  delete *key;
+		}
 	      mouse.clear();
 	      auto &log = (*it)->get_log();
 	      for (auto key = log.begin(); key != log.end(); key++)
-		m_database.insert_log((*it)->get_mac_address(), **key);
+		{
+		  m_database.insert_log((*it)->get_mac_address(), **key);
+		  delete *key;
+		}
 	      log.clear();
 	    }
 	}
