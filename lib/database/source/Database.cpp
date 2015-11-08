@@ -5,7 +5,7 @@
 // Login   <bertra_l@epitech.net>
 // 
 // Started on  Wed Oct 21 21:04:15 2015 Bertrand-Rapello Baptiste
-// Last update Sun Nov  8 18:41:27 2015 Antoine Plaskowski
+// Last update Sun Nov  8 19:08:30 2015 Antoine Plaskowski
 //
 
 #include	<ncurses.h>
@@ -75,7 +75,6 @@ bool	Database::select_db(std::string const &db)
 uint64_t	Database::get_id(std::string const &table, std::string const &column, std::string const &id_name, std::string const &search)
 {
   std::string	cmd = "SELECT " + id_name + " FROM " + table + " WHERE " + column + " = \"" + search + "\"";
-  std::cout << cmd << std::endl;
   if (mysql_real_query(m_sql, cmd.c_str(), cmd.size()) != 0)
     throw std::exception();
   
@@ -91,7 +90,6 @@ uint64_t	Database::get_id(std::string const &table, std::string const &column, s
   else if (num_rows == 0)
     {
       cmd = "INSERT INTO " + table + " (" + column + ") VALUES (\"" + search + "\")";
-      std::cout << cmd << std::endl;
       if (mysql_real_query(m_sql, cmd.c_str(), cmd.size()) != 0)
 	throw std::exception();
       return (get_id(table, column, id_name, search));
@@ -132,7 +130,6 @@ bool	Database::insert_mouse(std::string const &mac_address, IProtocol::Mouse con
   cmd += "\"" + std::to_string(id_button) + "\", ";
   cmd += "\"" + std::to_string(id_event) + "\", ";
   cmd += "\"" + std::to_string(id_process) + "\")";
-  std::cout << cmd << std::endl;
   if (mysql_real_query(m_sql, cmd.c_str(), cmd.size()) != 0)
     throw std::exception();
   return (false);

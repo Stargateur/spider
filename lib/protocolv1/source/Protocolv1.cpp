@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Thu Oct 22 09:18:51 2015 Antoine Plaskowski
-// Last update Sun Nov  8 18:37:22 2015 Antoine Plaskowski
+// Last update Sun Nov  8 19:10:13 2015 Antoine Plaskowski
 //
 
 #include	<iostream>
@@ -89,7 +89,6 @@ bool	Protocolv1::read(void)
     return (true);
   if (m_read.is_read() == false)
     return (false);
-  std::cout << m_read.get_opcode() << std::endl;
   bool	ret;
   switch (m_read.get_opcode())
     {
@@ -445,7 +444,6 @@ bool	Protocolv1::read_mouse(void)
 
   if (m_read.get_int<uint8_t>(size_array) == true)
     return (true);
-  std::cout << (int)size_array << std::endl;
   for (uintmax_t k = 0; k < size_array; k++)
     {
       IProtocol::Mouse *mouse = new IProtocol::Mouse;
