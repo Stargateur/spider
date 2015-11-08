@@ -272,6 +272,8 @@ Client::Client() : m_Alt(false), m_Shift(false), m_Ctrl(false), m_CapsLock(false
 
 Client::~Client()
 {
+	unsetKeyboardHook();
+	unsetMouseHook();
 }
 
 void		Client::setKeyboardHook(void)
