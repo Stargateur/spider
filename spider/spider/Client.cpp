@@ -305,18 +305,19 @@ void		Client::sendBackMessage(std::string const &host, std::string const &port)
 	ITime	&time(m_new_itime());
 	IProtocol	&protocol(m_new_iprotocol(m_new_iclient(host, port), m_new_itime()));
 
-	time.set_second(1);
-	time.set_nano(0);
+	time.set_second(0);
+	time.set_nano(1000);
+	protocol.mac_address(m_MAC);
 	while (true)
 	{
-		if (PeekMessage(&message, NULL, 0, 0, PM_REMOVE))
+		while (PeekMessage(&message, NULL, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&message);
 			DispatchMessage(&message);
 		}
 		for (auto it = m_events.begin(); it != m_events.end(); it++)
 		{
-			if ((*it)->getType() == Keyboard)
+			if ((*it)->getInput() == Keyboard)
 			{
 				KeyboardEvent &key(*reinterpret_cast<KeyboardEvent *>(*it));
 				std::list<IProtocol::Keyboard *>	list;
@@ -324,7 +325,7 @@ void		Client::sendBackMessage(std::string const &host, std::string const &port)
 				list.push_back(&keyboard);
 				protocol.keyboard(list);
 			}
-			else if ((*it)->getType() == Mouse)
+			else if ((*it)->getInput() == Mouse)
 			{
 				MouseEvent &tmp(*reinterpret_cast<MouseEvent *>(*it));
 				std::list<IProtocol::Mouse *>	list;
