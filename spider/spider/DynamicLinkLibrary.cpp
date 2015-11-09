@@ -5,7 +5,7 @@
 // Login   <antoine.plaskowski@epitech.eu>
 // 
 // Started on  Mon Mar 30 22:28:36 2015 Antoine Plaskowski
-// Last update Thu Nov  5 13:46:59 2015 Antoine Plaskowski
+// Last update Mon Nov  9 14:15:39 2015 Antoine Plaskowski
 //
 
 #include	"DynamicLinkLibrary.hpp"
@@ -15,7 +15,7 @@ DynamicLinkLibrary::DynamicLinkLibrary(std::string const &name) :
 {
   if (m_handle == NULL)
     {
-      std::cerr << "LoadLibrary :" << GetLastError() << std::endl;
+      std::cerr << "LoadLibrary :" << GetLastError() << " for " << name << std::endl;
       throw std::exception();
     }
 }
